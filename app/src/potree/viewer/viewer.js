@@ -34,6 +34,7 @@ import { ClassificationScheme } from "../materials/ClassificationScheme.js";
 import { VRButton } from '../../libs/three.js/extra/VRButton.js';
 
 import JSON5 from "../../libs/json5-2.1.3/json5.mjs";
+import $ from "../../libs/jquery/jquery-3.1.1.js";
 
 
 export class Viewer extends EventDispatcher{
@@ -77,7 +78,7 @@ export class Viewer extends EventDispatcher{
 				let potreeAnnotationContainer = $(`
 					<div id="potree_annotation_container" 
 						style="position: absolute; z-index: 100000; width: 100%; height: 100%; pointer-events: none;"></div>`);
-				$(domElement).append(potreeAnnotationContainer);
+						$(domElement).append(potreeAnnotationContainer);
 			}
 
 			if ($(domElement).find('#potree_quick_buttons').length === 0) {
@@ -243,7 +244,7 @@ export class Viewer extends EventDispatcher{
 			// infoNode.lookAt(0, 1, 0)
 			// this.sceneVR.add(infoNode);
 
-			// window.infoNode = infoNode;
+			// infoNode = infoNode;
 		}
 
 		this.setScene(scene);
