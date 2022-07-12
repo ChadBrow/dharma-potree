@@ -1,5 +1,7 @@
 
 import * as THREE from "../../libs/three.js/build/three.module.js";
+import * as Potree from "../Potree.js";
+import * as i18n from "../../libs/i18next/i18next.js";
 import {ClipTask, ClipMethod, CameraMode, LengthUnits, ElevationGradientRepeat} from "../defines.js";
 import {Renderer} from "../PotreeRenderer.js";
 import {PotreeRenderer} from "./PotreeRenderer.js";

@@ -182,7 +182,7 @@ export class TransformationTool {
 		let sgPlane = new THREE.PlaneGeometry(4, 4, 1, 1);
 		let sgLowPolySphere = new THREE.SphereGeometry(1, 16, 16);
 
-		let texture = new THREE.TextureLoader().load(`${exports.resourcePath}/icons/eye_2.png`);
+		let texture = new THREE.TextureLoader().load(`../../assets/icons/eye_2.png`);
 
 		for(let handleName of Object.keys(this.focusHandles)){
 			let handle = this.focusHandles[handleName];

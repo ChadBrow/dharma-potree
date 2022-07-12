@@ -1,5 +1,6 @@
 
 import * as THREE from "../../libs/three.js/build/three.module.js";
+import * as Potree from "../Potree.js";
 import {EventDispatcher} from "../EventDispatcher.js";
 import { XRControllerModelFactory } from '../../libs/three.js/webxr/XRControllerModelFactory.js';
 import {Line2} from "../../libs/three.js/lines/Line2.js";
