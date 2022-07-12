@@ -5,32 +5,36 @@
 	</div>
 </template>
 
-<style>
+<script>   
+    //import libraries
     import THREE from 'three';
-	
+    import Potree from '../build/potree/potree.js'
+
+    //Initialize Potree viewer
     window.viewer = new Potree.Viewer(document.getElementById("potree_render_area"));
-    
+
+    //Configure viewer settings
     viewer.setEDLEnabled(true);
     viewer.setFOV(60);
     viewer.setPointBudget(1_000_000);
     viewer.loadSettingsFromURL();
-    
+
     viewer.setDescription("");
-    
+
     viewer.loadGUI(() => {
-        viewer.setLanguage('en');
-        $("#menu_appearance").next().show();
-        //viewer.toggleSidebar();
+    viewer.setLanguage('en');
+    $("#menu_appearance").next().show();
+        //viewer.toggleSidebar();   
     });
-    
-    // Lion
-    Potree.loadPointCloud("../pointclouds/lion_takanawa/cloud.js", "lion", function(e){
+
+    // Load pointcloud
+    Potree.loadPointCloud("../renderingData/pointclouds/lion_takanawa/cloud.js", "lion", function(e){
         viewer.scene.addPointCloud(e.pointcloud);
-        
+
         let material = e.pointcloud.material;
         material.size = 1;
         material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
-        
+
         viewer.fitToScreen();
     });
-</style>
+</script>
