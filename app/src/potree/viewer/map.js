@@ -1,5 +1,6 @@
 
 import * as THREE from "../../libs/three.js/build/three.module.js";
+import * as proj4 from "../../libs/proj4/proj4.js"
 
 // http://epsg.io/
 proj4.defs([
