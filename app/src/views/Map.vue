@@ -14,16 +14,16 @@
     window.viewer = new Potree.Viewer(document.getElementById("potree_render_area"));
 
     //Configure viewer settings
-    viewer.setEDLEnabled(true);
-    viewer.setFOV(60);
-    viewer.setPointBudget(1_000_000);
-    viewer.loadSettingsFromURL();
+    window.viewer.setEDLEnabled(true);
+    window.viewer.setFOV(60);
+    window.viewer.setPointBudget(1_000_000);
+    window.viewer.loadSettingsFromURL();
 
-    viewer.setDescription("");
+    window.viewer.setDescription("");
 
-    viewer.loadGUI(() => {
-    viewer.setLanguage('en');
-    $("#menu_appearance").next().show();
+    window.viewer.loadGUI(() => {
+    window.viewer.setLanguage('en');
+    window.$("#menu_appearance").next().show();
         //viewer.toggleSidebar();   
     });
 
@@ -35,6 +35,6 @@
         material.size = 1;
         material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
 
-        viewer.fitToScreen();
+        window.viewer.fitToScreen();
     });
 </script>
