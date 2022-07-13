@@ -1,6 +1,7 @@
 
 import * as THREE from "../libs/three.js/build/three.module.js";
 import * as Potree from "./Potree.js";
+import {exports} from "../libs/zstd-codec/bundle.js";
 import {ClipTask, ClipMethod} from "./defines.js";
 import {Box3Helper} from "./utils/Box3Helper.js";
 import {PriorityQueue} from "./../libs/other/BinaryHeap.js";
