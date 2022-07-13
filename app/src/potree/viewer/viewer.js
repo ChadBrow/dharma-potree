@@ -2,6 +2,7 @@
 import * as THREE from "../../libs/three.js/build/three.module.js";
 import * as Potree from "../Potree.js";
 import * as i18n from "../../libs/i18next/i18next.js";
+import * as TWEEN from "../../libs/tween/Tween.js";
 import {ClipTask, ClipMethod, CameraMode, LengthUnits, ElevationGradientRepeat} from "../defines.js";
 import {Renderer} from "../PotreeRenderer.js";
 import {PotreeRenderer} from "./PotreeRenderer.js";
@@ -36,7 +37,7 @@ import { ClassificationScheme } from "../materials/ClassificationScheme.js";
 import { VRButton } from '../../libs/three.js/extra/VRButton.js';
 
 import JSON5 from "../../libs/json5-2.1.3/json5.mjs";
-import $ from "../../libs/jquery/jquery-3.1.1.js";
+import jQuery from "../../libs/jquery/jquery-3.1.1.js";
 
 
 export class Viewer extends EventDispatcher{
@@ -51,40 +52,40 @@ export class Viewer extends EventDispatcher{
 		this.onVrListeners = [];
 
 		this.messages = [];
-		this.elMessages = $(`
+		this.elMessages = jQuery(`
 		<div id="message_listing" 
 			style="position: absolute; z-index: 1000; left: 10px; bottom: 10px">
 		</div>`);
-		$(domElement).append(this.elMessages);
+		jQuery(domElement).append(this.elMessages);
 		
 		try{
 
 		{ // generate missing dom hierarchy
-			if ($(domElement).find('#potree_map').length === 0) {
-				let potreeMap = $(`
+			if (jQuery(domElement).find('#potree_map').length === 0) {
+				let potreeMap = jQuery(`
 					<div id="potree_map" class="mapBox" style="position: absolute; left: 50px; top: 50px; width: 400px; height: 400px; display: none">
 						<div id="potree_map_header" style="position: absolute; width: 100%; height: 25px; top: 0px; background-color: rgba(0,0,0,0.5); z-index: 1000; border-top-left-radius: 3px; border-top-right-radius: 3px;">
 						</div>
 						<div id="potree_map_content" class="map" style="position: absolute; z-index: 100; top: 25px; width: 100%; height: calc(100% - 25px); border: 2px solid rgba(0,0,0,0.5); box-sizing: border-box;"></div>
 					</div>
 				`);
-				$(domElement).append(potreeMap);
+				jQuery(domElement).append(potreeMap);
 			}
 
-			if ($(domElement).find('#potree_description').length === 0) {
-				let potreeDescription = $(`<div id="potree_description" class="potree_info_text"></div>`);
-				$(domElement).append(potreeDescription);
+			if (jQuery(domElement).find('#potree_description').length === 0) {
+				let potreeDescription = jQuery(`<div id="potree_description" class="potree_info_text"></div>`);
+				jQuery(domElement).append(potreeDescription);
 			}
 
-			if ($(domElement).find('#potree_annotations').length === 0) {
-				let potreeAnnotationContainer = $(`
+			if (jQuery(domElement).find('#potree_annotations').length === 0) {
+				let potreeAnnotationContainer = jQuery(`
 					<div id="potree_annotation_container" 
 						style="position: absolute; z-index: 100000; width: 100%; height: 100%; pointer-events: none;"></div>`);
-						$(domElement).append(potreeAnnotationContainer);
+						jQuery(domElement).append(potreeAnnotationContainer);
 			}
 
-			if ($(domElement).find('#potree_quick_buttons').length === 0) {
-				let potreeMap = $(`
+			if (jQuery(domElement).find('#potree_quick_buttons').length === 0) {
+				let potreeMap = jQuery(`
 					<div id="potree_quick_buttons" class="quick_buttons_container" style="">
 					</div>
 				`);
@@ -118,7 +119,7 @@ export class Viewer extends EventDispatcher{
 
 				
 
-				$(domElement).append(potreeMap);
+				jQuery(domElement).append(potreeMap);
 			}
 		}
 
@@ -236,7 +237,7 @@ export class Viewer extends EventDispatcher{
 		{ // create VR scene
 			this.sceneVR = new THREE.Scene();
 
-			// let texture = new THREE.TextureLoader().load(`${Potree.resourcePath}/images/vr_controller_help.jpg`);
+			// let texture = new THREE.TextureLoader().load(`jQuery{Potree.resourcePath}/images/vr_controller_help.jpg`);
 
 			// let plane = new THREE.PlaneBufferGeometry(1, 1, 1, 1);
 			// let infoMaterial = new THREE.MeshBasicMaterial({map: texture});
@@ -336,10 +337,10 @@ export class Viewer extends EventDispatcher{
 
 	onCrash(error){
 
-		$(this.renderArea).empty();
+		jQuery(this.renderArea).empty();
 
-		if ($(this.renderArea).find('#potree_failpage').length === 0) {
-			let elFailPage = $(`
+		if (jQuery(this.renderArea).find('#potree_failpage').length === 0) {
+			let elFailPage = jQuery(`
 			<div id="#potree_failpage" class="potree_failpage"> 
 				
 				<h1>Potree Encountered An Error </h1>
@@ -372,7 +373,7 @@ export class Viewer extends EventDispatcher{
 			let elErrorMessage = elFailPage.find('#potree_error_console');
 			elErrorMessage.html(error.stack);
 
-			$(this.renderArea).append(elFailPage);
+			jQuery(this.renderArea).append(elFailPage);
 		}
 
 		throw error;
@@ -397,7 +398,7 @@ export class Viewer extends EventDispatcher{
 		});
 
 		{ // Annotations
-			$('.annotation').detach();
+			jQuery('.annotation').detach();
 
 			// for(let annotation of this.scene.annotations){
 			//	this.renderArea.appendChild(annotation.domElement[0]);
@@ -413,7 +414,7 @@ export class Viewer extends EventDispatcher{
 
 					e.annotation.traverse(node => {
 
-						$("#potree_annotation_container").append(node.domElement);
+						jQuery("#potree_annotation_container").append(node.domElement);
 						//this.renderArea.appendChild(node.domElement[0]);
 						node.scene = this.scene;
 					});
@@ -481,8 +482,8 @@ export class Viewer extends EventDispatcher{
 	setDescription (value) {
 		this.description = value;
 		
-		$('#potree_description').html(value);
-		//$('#potree_description').text(value);
+		jQuery('#potree_description').html(value);
+		//jQuery('#potree_description').text(value);
 	}
 
 	getDescription(){
@@ -865,8 +866,8 @@ export class Viewer extends EventDispatcher{
 	}
 
 	showAbout () {
-		$(function () {
-			$('#about-panel').dialog();
+		jQuery(function () {
+			jQuery('#about-panel').dialog();
 		});
 	};
 
@@ -1162,7 +1163,7 @@ export class Viewer extends EventDispatcher{
 	};
 
 	toggleSidebar () {
-		let renderArea = $('#potree_render_area');
+		let renderArea = jQuery('#potree_render_area');
 		let isVisible = renderArea.css('left') !== '0px';
 
 		if (isVisible) {
@@ -1173,7 +1174,7 @@ export class Viewer extends EventDispatcher{
 	};
 
 	toggleMap () {
-		// let map = $('#potree_map');
+		// let map = jQuery('#potree_map');
 		// map.toggle(100);
 
 		if (this.mapView) {
@@ -1208,7 +1209,7 @@ export class Viewer extends EventDispatcher{
 		}
 
 		let viewer = this;
-		let sidebarContainer = $('#potree_sidebar_container');
+		let sidebarContainer = jQuery('#potree_sidebar_container');
 		sidebarContainer.load(new URL(Potree.scriptPath + '/sidebar.html').href, () => {
 			sidebarContainer.css('width', '300px');
 			sidebarContainer.css('height', '100%');
@@ -1226,7 +1227,7 @@ export class Viewer extends EventDispatcher{
 
 			
 
-			let elButtons = $("#potree_quick_buttons").get(0);
+			let elButtons = jQuery("#potree_quick_buttons").get(0);
 
 			elButtons.append(imgMenuToggle);
 			elButtons.append(imgMapToggle);
@@ -1269,18 +1270,19 @@ export class Viewer extends EventDispatcher{
 			this.mapView = new MapView(this);
 			this.mapView.init();
 
-			i18n.init({
-				lng: 'en',
-				resGetPath: Potree.resourcePath + '/lang/__lng__/__ns__.json',
-				preload: ['en', 'fr', 'de', 'jp', 'se', 'es', 'zh'],
-				getAsync: true,
-				debug: false
-			}, function (t) {
-				// Start translation once everything is loaded
-				$('body').i18n();
-			});
+			//Chad commented this junk out
+			// i18n.init({
+			// 	lng: 'en',
+			// 	resGetPath: Potree.resourcePath + '/lang/__lng__/__ns__.json',
+			// 	preload: ['en', 'fr', 'de', 'jp', 'se', 'es', 'zh'],
+			// 	getAsync: true,
+			// 	debug: false
+			// }, function (t) {
+			// 	// Start translation once everything is loaded
+			// 	jQuery('body').i18n();
+			// });
 
-			$(() => {
+			jQuery(() => {
 				//initSidebar(this);
 				let sidebar = new Sidebar(this);
 				sidebar.init();
@@ -1288,24 +1290,24 @@ export class Viewer extends EventDispatcher{
 				this.sidebar = sidebar;
 
 				//if (callback) {
-				//	$(callback);
+				//	jQuery(callback);
 				//}
 
-				let elProfile = $('<div>').load(new URL(Potree.scriptPath + '/profile.html').href, () => {
-					$(document.body).append(elProfile.children());
+				let elProfile = jQuery('<div>').load(new URL(Potree.scriptPath + '/profile.html').href, () => {
+					jQuery(document.body).append(elProfile.children());
 					this.profileWindow = new ProfileWindow(this);
 					this.profileWindowController = new ProfileWindowController(this);
 
-					$('#profile_window').draggable({
-						handle: $('#profile_titlebar'),
-						containment: $(document.body)
+					jQuery('#profile_window').draggable({
+						handle: jQuery('#profile_titlebar'),
+						containment: jQuery(document.body)
 					});
-					$('#profile_window').resizable({
-						containment: $(document.body),
+					jQuery('#profile_window').resizable({
+						containment: jQuery(document.body),
 						handles: 'n, e, s, w'
 					});
 
-					$(() => {
+					jQuery(() => {
 						this.guiLoaded = true;
 						for(let task of this.guiLoadTasks){
 							task();
@@ -1326,7 +1328,7 @@ export class Viewer extends EventDispatcher{
 
 	setLanguage (lang) {
 		i18n.setLng(lang);
-		$('body').i18n();
+		jQuery('body').i18n();
 	}
 
 	setServer (server) {
@@ -1397,14 +1399,14 @@ export class Viewer extends EventDispatcher{
 		};
 
 
-		$("body")[0].addEventListener("dragenter", allowDrag);
-		$("body")[0].addEventListener("dragover", allowDrag);
-		$("body")[0].addEventListener("drop", dropHandler);
+		jQuery("body")[0].addEventListener("dragenter", allowDrag);
+		jQuery("body")[0].addEventListener("dragover", allowDrag);
+		jQuery("body")[0].addEventListener("drop", dropHandler);
 	}
 
 	initThree () {
 
-		console.log(`initializing three.js ${THREE.REVISION}`);
+		console.log(`initializing three.js jQuery{THREE.REVISION}`);
 
 		let width = this.renderArea.clientWidth;
 		let height = this.renderArea.clientHeight;
@@ -1878,7 +1880,7 @@ export class Viewer extends EventDispatcher{
 		if(this.mapView){
 			this.mapView.update(delta);
 			if(this.mapView.sceneProjection){
-				$( "#potree_map_toggle" ).css("display", "block");
+				jQuery( "#potree_map_toggle" ).css("display", "block");
 				
 			}
 		}
@@ -2184,7 +2186,7 @@ export class Viewer extends EventDispatcher{
 						max: Math.max(...value)
 					};
 
-					let groupname = `[tq] ${key}`;
+					let groupname = `[tq] jQuery{key}`;
 					groups.set(groupname, group);
 					names.add(groupname);
 				}
@@ -2207,12 +2209,12 @@ export class Viewer extends EventDispatcher{
 				let cmax = 10;
 				let csam = 6;
 				
-				let message = ` ${"NAME".padEnd(cn)} |` 
-					+ ` ${"MIN".padStart(cmin)} |`
-					+ ` ${"MEDIAN".padStart(cmed)} |`
-					+ ` ${"MAX".padStart(cmax)} |`
-					+ ` ${"SAMPLES".padStart(csam)} \n`;
-				message += ` ${"-".repeat(message.length) }\n`;
+				let message = ` jQuery{"NAME".padEnd(cn)} |` 
+					+ ` jQuery{"MIN".padStart(cmin)} |`
+					+ ` jQuery{"MEDIAN".padStart(cmed)} |`
+					+ ` jQuery{"MAX".padStart(cmax)} |`
+					+ ` jQuery{"SAMPLES".padStart(csam)} \n`;
+				message += ` jQuery{"-".repeat(message.length) }\n`;
 				
 				names = Array.from(names).sort();
 				for(let name of names){
@@ -2222,11 +2224,11 @@ export class Viewer extends EventDispatcher{
 					let max = group.max.toFixed(3);
 					let n = group.n;
 					
-					message += ` ${name.padEnd(cn)} |`
-						+ ` ${min.padStart(cmin)} |`
-						+ ` ${median.padStart(cmed)} |`
-						+ ` ${max.padStart(cmax)} |`
-						+ ` ${n.toString().padStart(csam)}\n`;
+					message += ` jQuery{name.padEnd(cn)} |`
+						+ ` jQuery{min.padStart(cmin)} |`
+						+ ` jQuery{median.padStart(cmed)} |`
+						+ ` jQuery{max.padStart(cmax)} |`
+						+ ` jQuery{n.toString().padStart(csam)}\n`;
 				}
 				message += `\n`;
 				console.log(message);
@@ -2269,7 +2271,7 @@ export class Viewer extends EventDispatcher{
 		
 		this.resolveTimings(timestamp);
 
-		Potree.framenumber++;
+		// Potree.framenumber = Potree.framenumber + 1;
 
 		if(this.stats){
 			this.stats.end();

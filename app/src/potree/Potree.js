@@ -222,6 +222,7 @@ export function loadPointCloud(path, name, callback){
 };
 
 
+
 // add selectgroup
 // (function($){
 // 	$.fn.extend({

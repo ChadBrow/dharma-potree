@@ -1,7 +1,6 @@
 
 import * as THREE from "../libs/three.js/build/three.module.js";
 import * as Potree from "./Potree.js";
-import {exports} from "../libs/zstd-codec/bundle.js";
 import {ClipTask, ClipMethod} from "./defines.js";
 import {Box3Helper} from "./utils/Box3Helper.js";
 import {PriorityQueue} from "./../libs/other/BinaryHeap.js";
@@ -30,7 +29,7 @@ export function updatePointClouds(pointclouds, camera, renderer){
 		pointcloud.updateVisibleBounds();
 	}
 
-	exports.lru.freeMemory();
+	Potree.lru.freeMemory();
 
 	return result;
 };
@@ -310,7 +309,7 @@ export function updateVisibility(pointclouds, camera, renderer){
 		}
 
 		if (node.isTreeNode()) {
-			exports.lru.touch(node.geometryNode);
+			Potree.lru.touch(node.geometryNode);
 			node.sceneNode.visible = true;
 			node.sceneNode.material = pointcloud.material;
 
