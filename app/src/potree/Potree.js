@@ -129,7 +129,6 @@ let resourcePath = scriptPath + '/resources';
 // resourcePath:build/potree/resources
 export {scriptPath, resourcePath};
 
-
 export function loadPointCloud(path, name, callback){
 	let loaded = function(e){
 		e.pointcloud.name = name;

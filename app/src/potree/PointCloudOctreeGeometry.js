@@ -1,6 +1,7 @@
 
 
 import * as THREE from "../libs/three.js/build/three.module.js";
+import * as Potree from "./Potree.js";
 import {PointCloudTreeNode} from "./PointCloudTree.js";
 import {XHRFactory} from "./XHRFactory.js";
 import {Utils} from "./utils.js";
@@ -123,8 +124,8 @@ export class PointCloudOctreeGeometryNode extends PointCloudTreeNode{
 		}
 
 		this.loading = true;
-
-		Potree.numNodesLoading++;
+		
+		// Potree.numNodesLoading++;
 
 		if (this.pcoGeometry.loader.version.equalOrHigher('1.5')) {
 			if ((this.level % this.pcoGeometry.hierarchyStepSize) === 0 && this.hasChildren) {
