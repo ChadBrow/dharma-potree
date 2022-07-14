@@ -124,7 +124,7 @@ if (document.currentScript && document.currentScript.src) {
 }
 
 let resourcePath = scriptPath + '/../assets';
-console.log(resourcePath);
+// console.log(resourcePath);
 
 // scriptPath: build/potree
 // resourcePath:build/potree/resources
