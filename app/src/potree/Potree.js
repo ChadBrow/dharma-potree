@@ -123,7 +123,8 @@ if (document.currentScript && document.currentScript.src) {
 	console.error('Potree was unable to find its script path using document.currentScript. Is Potree included with a script tag? Does your browser support this function?');
 }
 
-let resourcePath = scriptPath + '/resources';
+let resourcePath = scriptPath + '/../assets';
+console.log(resourcePath);
 
 // scriptPath: build/potree
 // resourcePath:build/potree/resources
@@ -220,7 +221,9 @@ export function loadPointCloud(path, name, callback){
 	}
 };
 
-
+export function changeNumNodesLoading(num){
+	numNodesLoading += num;
+};
 
 // add selectgroup
 (function($){

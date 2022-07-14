@@ -125,7 +125,7 @@ export class PointCloudOctreeGeometryNode extends PointCloudTreeNode{
 
 		this.loading = true;
 		
-		// Potree.numNodesLoading++;
+		Potree.changeNumNodesLoading(1);
 
 		if (this.pcoGeometry.loader.version.equalOrHigher('1.5')) {
 			if ((this.level % this.pcoGeometry.hierarchyStepSize) === 0 && this.hasChildren) {
