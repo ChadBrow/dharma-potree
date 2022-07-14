@@ -32,7 +32,7 @@ export default{
         });
 
         // Load pointcloud
-        Potree.loadPointCloud("../assets/pointclouds/lion_takanawa/cloud.js", "lion", function(e){
+        Potree.loadPointCloud("src/assets/pointclouds/lion_takanawa/cloud.js", "lion", function(e){
             viewer.scene.addPointCloud(e.pointcloud);
 
             let material = e.pointcloud.material;
