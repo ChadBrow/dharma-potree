@@ -3,7 +3,7 @@ import * as THREE from "../three.js/build/three.module.js";
 import * as Potree from "./Potree.js";
 import {ClipTask, ClipMethod} from "./defines.js";
 import {Box3Helper} from "./utils/Box3Helper.js";
-import {PriorityQueue} from "../other/BinaryHeap.js";
+import {BinaryHeap, PriorityQueue} from "../other/BinaryHeap.js";
 
 export function updatePointClouds(pointclouds, camera, renderer){
 
@@ -39,7 +39,7 @@ export function updatePointClouds(pointclouds, camera, renderer){
 export function updateVisibilityStructures(pointclouds, camera, renderer) {
 	let frustums = [];
 	let camObjPositions = [];
-	let priorityQueue = new PriorityQueue();
+	let priorityQueue = new BinaryHeap();
 
 	for (let i = 0; i < pointclouds.length; i++) {
 		let pointcloud = pointclouds[i];
