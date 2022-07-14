@@ -11,8 +11,11 @@
 export default{
 
     mounted(){
+        const Potree = window.Potree
+        console.log(Potree)
+
         console.log(window)
-        // console.log(document.getElementById("potree_render_area"));
+        console.log(document.getElementById("potree_render_area"));
 
         // //Initialize Potree viewer
         // window.viewer = new Potree.Viewer(document.getElementById("potree_render_area"));
