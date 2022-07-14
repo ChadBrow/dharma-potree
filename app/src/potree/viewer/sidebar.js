@@ -17,6 +17,7 @@ import {HierarchicalSlider} from "./HierarchicalSlider.js"
 import {OrientedImage} from "../modules/OrientedImages/OrientedImages.js";
 import {Images360} from "../modules/Images360/Images360.js";
 
+import $ from "../../libs/jquery/jquery-3.1.1.js";
 import JSON5 from "../../libs/json5-2.1.3/json5.mjs";
 
 export class Sidebar{
@@ -895,7 +896,7 @@ export class Sidebar{
 			let sldReturnNumber = elReturnFilterPanel.find('#sldReturnNumber');
 			let lblReturnNumber = elReturnFilterPanel.find('#lblReturnNumber');
 
-			sldReturnNumber.slider({
+			sldReturnNumber.slideToggle({
 				range: true,
 				min: 0, max: 7, step: 1,
 				values: [0, 7],
@@ -908,7 +909,7 @@ export class Sidebar{
 				let [from, to] = this.viewer.filterReturnNumberRange;
 
 				lblReturnNumber[0].innerHTML = `${from} to ${to}`;
-				sldReturnNumber.slider({values: [from, to]});
+				sldReturnNumber.slideToggle({values: [from, to]});
 			};
 
 			this.viewer.addEventListener('filter_return_number_range_changed', onReturnNumberChanged);
@@ -920,7 +921,7 @@ export class Sidebar{
 			let sldNumberOfReturns = elReturnFilterPanel.find('#sldNumberOfReturns');
 			let lblNumberOfReturns = elReturnFilterPanel.find('#lblNumberOfReturns');
 
-			sldNumberOfReturns.slider({
+			sldNumberOfReturns.slideToggle({
 				range: true,
 				min: 0, max: 7, step: 1,
 				values: [0, 7],
@@ -933,7 +934,7 @@ export class Sidebar{
 				let [from, to] = this.viewer.filterNumberOfReturnsRange;
 
 				lblNumberOfReturns[0].innerHTML = `${from} to ${to}`;
-				sldNumberOfReturns.slider({values: [from, to]});
+				sldNumberOfReturns.slideToggle({values: [from, to]});
 			};
 
 			this.viewer.addEventListener('filter_number_of_returns_range_changed', onNumberOfReturnsChanged);
@@ -1273,7 +1274,9 @@ export class Sidebar{
 
 		const sldPointBudget = this.dom.find('#sldPointBudget');
 
-		sldPointBudget.slider({
+		// console.log(sldPointBudget);
+
+		sldPointBudget.slideToggle({
 			value: this.viewer.getPointBudget(),
 			min: 100 * 1000,
 			max: 10 * 1000 * 1000,
@@ -1281,7 +1284,7 @@ export class Sidebar{
 			slide: (event, ui) => { this.viewer.setPointBudget(ui.value); }
 		});
 
-		this.dom.find('#sldFOV').slider({
+		this.dom.find('#sldFOV').slideToggle({
 			value: this.viewer.getFOV(),
 			min: 20,
 			max: 100,
@@ -1289,7 +1292,7 @@ export class Sidebar{
 			slide: (event, ui) => { this.viewer.setFOV(ui.value); }
 		});
 
-		$('#sldEDLRadius').slider({
+		$('#sldEDLRadius').slideToggle({
 			value: this.viewer.getEDLRadius(),
 			min: 1,
 			max: 4,
@@ -1297,7 +1300,7 @@ export class Sidebar{
 			slide: (event, ui) => { this.viewer.setEDLRadius(ui.value); }
 		});
 
-		$('#sldEDLStrength').slider({
+		$('#sldEDLStrength').slideToggle({
 			value: this.viewer.getEDLStrength(),
 			min: 0,
 			max: 5,
@@ -1305,7 +1308,7 @@ export class Sidebar{
 			slide: (event, ui) => { this.viewer.setEDLStrength(ui.value); }
 		});
 
-		$('#sldEDLOpacity').slider({
+		$('#sldEDLOpacity').slideToggle({
 			value: this.viewer.getEDLOpacity(),
 			min: 0,
 			max: 1,
@@ -1315,12 +1318,12 @@ export class Sidebar{
 
 		this.viewer.addEventListener('point_budget_changed', (event) => {
 			$('#lblPointBudget')[0].innerHTML = Utils.addCommas(this.viewer.getPointBudget());
-			sldPointBudget.slider({value: this.viewer.getPointBudget()});
+			sldPointBudget.slideToggle({value: this.viewer.getPointBudget()});
 		});
 
 		this.viewer.addEventListener('fov_changed', (event) => {
 			$('#lblFOV')[0].innerHTML = parseInt(this.viewer.getFOV());
-			$('#sldFOV').slider({value: this.viewer.getFOV()});
+			$('#sldFOV').slideToggle({value: this.viewer.getFOV()});
 		});
 
 		this.viewer.addEventListener('use_edl_changed', (event) => {
@@ -1329,12 +1332,12 @@ export class Sidebar{
 
 		this.viewer.addEventListener('edl_radius_changed', (event) => {
 			$('#lblEDLRadius')[0].innerHTML = this.viewer.getEDLRadius().toFixed(1);
-			$('#sldEDLRadius').slider({value: this.viewer.getEDLRadius()});
+			$('#sldEDLRadius').slideToggle({value: this.viewer.getEDLRadius()});
 		});
 
 		this.viewer.addEventListener('edl_strength_changed', (event) => {
 			$('#lblEDLStrength')[0].innerHTML = this.viewer.getEDLStrength().toFixed(1);
-			$('#sldEDLStrength').slider({value: this.viewer.getEDLStrength()});
+			$('#sldEDLStrength').slideToggle({value: this.viewer.getEDLStrength()});
 		});
 
 		this.viewer.addEventListener('background_changed', (event) => {
@@ -1499,7 +1502,7 @@ export class Sidebar{
 			return Math.pow((value - speedRange.x) / speedRange.y, 1 / 4);
 		};
 
-		sldMoveSpeed.slider({
+		sldMoveSpeed.slideToggle({
 			value: toExpSpeed(this.viewer.getMoveSpeed()),
 			min: 0,
 			max: 1,
@@ -1509,7 +1512,7 @@ export class Sidebar{
 
 		this.viewer.addEventListener('move_speed_changed', (event) => {
 			lblMoveSpeed.html(this.viewer.getMoveSpeed().toFixed(1));
-			sldMoveSpeed.slider({value: toExpSpeed(this.viewer.getMoveSpeed())});
+			sldMoveSpeed.slideToggle({value: toExpSpeed(this.viewer.getMoveSpeed())});
 		});
 
 		lblMoveSpeed.html(this.viewer.getMoveSpeed().toFixed(1));
@@ -1519,7 +1522,7 @@ export class Sidebar{
 	initSettings(){
 
 		{
-			$('#sldMinNodeSize').slider({
+			$('#sldMinNodeSize').slideToggle({
 				value: this.viewer.getMinNodeSize(),
 				min: 0,
 				max: 1000,
@@ -1529,7 +1532,7 @@ export class Sidebar{
 
 			this.viewer.addEventListener('minnodesize_changed', (event) => {
 				$('#lblMinNodeSize').html(parseInt(this.viewer.getMinNodeSize()));
-				$('#sldMinNodeSize').slider({value: this.viewer.getMinNodeSize()});
+				$('#sldMinNodeSize').slideToggle({value: this.viewer.getMinNodeSize()});
 			});
 			$('#lblMinNodeSize').html(parseInt(this.viewer.getMinNodeSize()));
 		}

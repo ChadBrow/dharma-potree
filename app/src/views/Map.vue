@@ -1,7 +1,6 @@
 <template>
     <v-container class="potree_container" style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px; ">
 		<div id="potree_render_area" style="background-image: '../build/potree/resources/images/background.jpg';"></div>
-		<div id="potree_sidebar_container"> </div>
 	</v-container>
 </template>
 
@@ -33,7 +32,7 @@ export default{
         });
 
         // Load pointcloud
-        Potree.loadPointCloud("../renderingData/pointclouds/lion_takanawa/cloud.js", "lion", function(e){
+        Potree.loadPointCloud("../assets/pointclouds/lion_takanawa/cloud.js", "lion", function(e){
             viewer.scene.addPointCloud(e.pointcloud);
 
             let material = e.pointcloud.material;
