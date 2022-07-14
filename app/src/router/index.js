@@ -9,12 +9,14 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    props: true
   },
   {
     path: '/map',
     name: 'map',
-    component: Map
+    component: Map,
+    props: true
   },
   {
     path: '/about',
