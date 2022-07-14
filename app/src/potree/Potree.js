@@ -225,6 +225,10 @@ export function changeNumNodesLoading(num){
 	numNodesLoading += num;
 };
 
+export function changeNumFrames(num){
+	framenumber += num;
+};
+
 // add selectgroup
 (function($){
 	$.fn.extend({

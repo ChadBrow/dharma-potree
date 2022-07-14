@@ -2271,7 +2271,7 @@ export class Viewer extends EventDispatcher{
 		
 		this.resolveTimings(timestamp);
 
-		// Potree.framenumber = Potree.framenumber + 1;
+		Potree.changeNumFrames(1);
 
 		if(this.stats){
 			this.stats.end();
