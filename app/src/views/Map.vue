@@ -1,5 +1,5 @@
 <template>
-    <div id="potree_render_area" style="background-image: '../build/potree/resources/images/background.jpg';"></div>
+    <div id="potree_render_area" style="height: 100%; width: 100%; background-image: '../build/potree/resources/images/background.jpg';"></div>
 </template>
 
 <script>   
