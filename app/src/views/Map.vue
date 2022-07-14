@@ -1,5 +1,11 @@
 <template>
-    <div id="potree_render_area" style="height: 100%; width: 100%; background-image: '../build/potree/resources/images/background.jpg';"></div>
+    <div id="potree_container" style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px; ">
+        <v-container style="height: 5%; padding: 0">
+            <v-btn>Test</v-btn>
+        </v-container>
+        <div id="potree_render_area" style="height: 95%; width: 100%; background-image: '../build/potree/resources/images/background.jpg';">
+        </div>
+    </div>
 </template>
 
 <script>   
@@ -34,9 +40,15 @@ export default{
 
         // Load pointcloud
         Potree.loadPointCloud("./assets/pointclouds/lion_takanawa/cloud.js", "lion", function(e){
-            viewer.scene.addPointCloud(e.pointcloud);
+            //Initialize some important variable
+            let pointcloud = e.pointcloud;
+			let scene = window.viewer.scene;
+			let material = pointcloud.material;
 
-            let material = e.pointcloud.material;
+            //Add pointcloud to seen
+            scene.addPointCloud(pointcloud);
+
+            //Setting for material
             material.size = 1;
             material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
 
