@@ -1,5 +1,6 @@
 
 import * as THREE from "../libs/three.js/build/three.module.js";
+import * as Potree from "./Potree.js";
 import {PointCloudTree, PointCloudTreeNode} from "./PointCloudTree.js";
 import {PointCloudOctreeGeometryNode} from "./PointCloudOctreeGeometry.js";
 import {Utils} from "./utils.js";
