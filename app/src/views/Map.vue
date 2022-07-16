@@ -4,6 +4,7 @@
             <v-btn 
                 v-on:click="()=>{showIntersectionOnClick = !showIntersectionOnClick}" >
                 Show Intersection on Click</v-btn>
+            <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
         </v-container>
         <div id="potree_render_area" style="height: 95%; width: 100%; background-image: '../build/potree/resources/images/background.jpg';">
         </div>
@@ -13,6 +14,7 @@
 <script>   
 //import libraries
 // import THREE from 'three';
+import proj4 from "proj4";
 
 export default{
     data(){
@@ -41,10 +43,13 @@ export default{
 
         window.viewer.setDescription("");
 
+        //Load Potree GUI
         window.viewer.loadGUI(() => {
-        window.viewer.setLanguage('en');
-        window.$("#menu_appearance").next().show();
-            viewer.toggleSidebar();   
+            window.viewer.setLanguage('en');
+            window.$("#menu_appearance").next().show();
+			window.$("#menu_tools").next().show();
+			window.$("#menu_scene").next().show();
+			window.viewer.toggleSidebar();
         });
 
         // Load pointcloud
@@ -60,6 +65,77 @@ export default{
             material.size = 1;
             material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
 
+            //Create projections
+            let pointcloudProjection = e.pointcloud.projection;
+			let mapProjection = proj4.defs("WGS84");
+
+			window.toMap = proj4.defs(pointcloudProjection, mapProjection);
+			window.toScene = proj4.defs(mapProjection, pointcloudProjection);
+
+            {//Add annotations
+                //Declare root annotation
+                let aRoot = scene.annotations;
+
+                //Declare base annotation
+                let aBase = new Potree.Annotation({
+                    title: "Base Pedestal",
+                    position: [1.51, -1.98, 4.13],
+                    cameraPosition: [3.08, -4.72, 6.14],
+                    cameraTarget: [1.51, -1.98, 4.13]
+                });
+                aRoot.add(aBase);
+
+            }
+
+            { // TREE RETURNS POI - ANNOTATION & VOLUME
+				let aRoot = scene.annotations;
+
+				let elTitle = $(`
+				<span>
+					Tree Returns:
+					<img name="action_return_number" src="${Potree.resourcePath}/icons/return_number.svg" class="annotation-action-icon"/>
+					<img name="action_rgb" src="${Potree.resourcePath}/icons/rgb.png" class="annotation-action-icon"/>
+				</span>`);
+
+				elTitle.find("img[name=action_return_number]").click( () => {
+					event.stopPropagation();
+					material.activeAttributeName = "return_number";
+					material.pointSizeType = Potree.PointSizeType.FIXED;
+					material.size = 5;
+					potreeViewer.setClipTask(Potree.ClipTask.SHOW_INSIDE);
+				});
+				
+				elTitle.find("img[name=action_rgb]").click( () => {
+					event.stopPropagation();
+					material.activeAttributeName = "rgba";
+					material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+					material.size = 1;
+					potreeViewer.setClipTask(Potree.ClipTask.HIGHLIGHT);
+				});
+
+				elTitle.toString = () => "Tree Returns";
+				
+
+				let aTreeReturns = new Potree.Annotation({
+					title: elTitle,
+					position: [0.807, -1.700, 6.999],
+					cameraPosition: [5.141, -7.602, 9.546],
+					cameraTarget: [0.807, -1.700, 6.999],
+				});
+				aRoot.add(aTreeReturns);
+				aTreeReturns.domElement.find(".annotation-action-icon:first").css("filter", "invert(1)");
+
+				let volume = new Potree.BoxVolume();
+				volume.position.set(675755.4039368022, 3937586.911614576, 85);
+				volume.scale.set(119.87189835418388, 68.3925257233834, 51.757483718373265);
+				volume.rotation.set(0, 0, 0.8819755090987993, "XYZ");
+				volume.clip = true;
+				volume.visible = false;
+				volume.name = "Trees";
+				scene.addVolume(volume);
+			}
+
+
             window.viewer.fitToScreen();
         });
 
@@ -73,7 +149,12 @@ export default{
                 console.log(hit);
             }
         });
-    }
+    },
+    methods: {
+        displayCameraPos(){
+            console.log(window.viewer.scene.getActiveCamera());
+        }
+    },
 }
 
 </script>
