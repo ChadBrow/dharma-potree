@@ -7,6 +7,9 @@
             <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
         </v-container>
         <div id="potree_render_area" style="height: 95%; width: 100%; background-image: '../build/potree/resources/images/background.jpg';">
+            <div  id="potree_toolbar">
+
+            </div>
         </div>
     </div>
 </template>
@@ -15,6 +18,7 @@
 //import libraries
 // import THREE from 'three';
 import proj4 from "proj4";
+import $ from "jquery";
 
 export default{
     data(){
@@ -47,9 +51,9 @@ export default{
         window.viewer.loadGUI(() => {
             window.viewer.setLanguage('en');
             window.$("#menu_appearance").next().show();
-			window.$("#menu_tools").next().show();
-			window.$("#menu_scene").next().show();
-			window.viewer.toggleSidebar();
+			// window.$("#menu_tools").next().show();
+			// window.$("#menu_scene").next().show();
+			// window.viewer.toggleSidebar();
         });
 
         // Load pointcloud
@@ -72,58 +76,87 @@ export default{
 			window.toMap = proj4.defs(pointcloudProjection, mapProjection);
 			window.toScene = proj4.defs(mapProjection, pointcloudProjection);
 
+            // //I have no clue what this does
+            // window.viewer.onGUILoaded(() => {
+			// 	// Add entries to object list in sidebar
+			// 	let tree = window.$(`#jstree_scene`);
+			// 	let parentNode = "other";
+
+			// 	let meshID = tree.jstree('create_node', parentNode, {
+			// 		"text": "Temple of Antoninus and Faustina",
+			// 		"icon": `${Potree.resourcePath}/icons/triangle.svg`,
+			// 		"data": geometry
+			// 	},
+			// 		"last", false, false);
+			// 	tree.jstree(mesh.visible ? "check_node" : "uncheck_node", meshID);
+
+			// });
+
             {//Add annotations
                 //Declare root annotation
-                let aRoot = scene.annotations;
+                    let aRoot = scene.annotations;
+                {
 
-                //Declare base annotation
-                let aBase = new Potree.Annotation({
-                    title: "Base Pedestal",
-                    position: [1.51, -1.98, 4.13],
-                    cameraPosition: [3.08, -4.72, 6.14],
-                    cameraTarget: [1.51, -1.98, 4.13]
-                });
-                aRoot.add(aBase);
+                    //Create title element
+                    let baseTitle = $(`
+                    <span>
+                        Base Pedestal
+                    </span>`);
+                    baseTitle.toString = ()=> "Base Pedestal";
 
-            }
+                    //Declare base annotation
+                    let aBase = new Potree.Annotation({
+                        title: baseTitle,
+                        position: [1.51, -1.98, 4.13],
+                        cameraPosition: [3.08, -4.72, 6.14],
+                        cameraTarget: [1.51, -1.98, 4.13]
+                    });
+                    aRoot.add(aBase);
 
-            { // TREE RETURNS POI - ANNOTATION & VOLUME
-				let aRoot = scene.annotations;
+                }
 
-				let elTitle = $(`
-				<span>
-					Tree Returns:
-					<img name="action_return_number" src="${Potree.resourcePath}/icons/return_number.svg" class="annotation-action-icon"/>
-					<img name="action_rgb" src="${Potree.resourcePath}/icons/rgb.png" class="annotation-action-icon"/>
-				</span>`);
+                {
+                    //Create title element
+                    // let returnTitle = document.createElement("span");
+                    // returnTitle.innerHTML = `Tree Returns:
+                    //     <img name="action_return_number" src="${Potree.resourcePath}/icons/return_number.svg" class="annotation-action-icon"/>
+                    //     <img name="action_rgb" src="${Potree.resourcePath}/icons/rgb.png" class="annotation-action-icon"/>`
+                    let returnTitle = $(`
+                    <span>
+                        Tree Returns:
+                        <img name="action_return_number" src="${Potree.resourcePath}/icons/return_number.svg" class="annotation-action-icon"/>
+                        <img name="action_rgb" src="${Potree.resourcePath}/icons/rgb.png" class="annotation-action-icon"/>
+                    </span>`);
 
-				elTitle.find("img[name=action_return_number]").click( () => {
-					event.stopPropagation();
-					material.activeAttributeName = "return_number";
-					material.pointSizeType = Potree.PointSizeType.FIXED;
-					material.size = 5;
-					potreeViewer.setClipTask(Potree.ClipTask.SHOW_INSIDE);
-				});
-				
-				elTitle.find("img[name=action_rgb]").click( () => {
-					event.stopPropagation();
-					material.activeAttributeName = "rgba";
-					material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
-					material.size = 1;
-					potreeViewer.setClipTask(Potree.ClipTask.HIGHLIGHT);
-				});
+                    //give on click effects to its two icons
+                    returnTitle.find("img[name=action_return_number]").click( () => {
+                        event.stopPropagation();
+                        material.activeAttributeName = "return_number";
+                        material.pointSizeType = Potree.PointSizeType.FIXED;
+                        material.size = 5;
+                        window.viewer.setClipTask(Potree.ClipTask.SHOW_INSIDE);
+                    });
+                    
+                    returnTitle.find("img[name=action_rgb]").click( () => {
+                        event.stopPropagation();
+                        material.activeAttributeName = "rgba";
+                        material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+                        material.size = 1;
+                        window.viewer.setClipTask(Potree.ClipTask.HIGHLIGHT);
+                    });
 
-				elTitle.toString = () => "Tree Returns";
-				
+                    returnTitle.toString = () => "Tree Returns";
+                    
 
-				let aTreeReturns = new Potree.Annotation({
-					title: elTitle,
-					position: [0.807, -1.700, 6.999],
-					cameraPosition: [5.141, -7.602, 9.546],
-					cameraTarget: [0.807, -1.700, 6.999],
-				});
-				aRoot.add(aTreeReturns);
-				aTreeReturns.domElement.find(".annotation-action-icon:first").css("filter", "invert(1)");
+                    let aTreeReturns = new Potree.Annotation({
+                        title: returnTitle,
+                        position: [0.807, -1.700, 6.999],
+                        cameraPosition: [5.141, -7.602, 9.546],
+                        cameraTarget: [0.807, -1.700, 6.999],
+                    });
+                    aRoot.add(aTreeReturns);
+                    // aTreeReturns.domElement.find(".annotation-action-icon:first").css("filter", "invert(1)");
+                }
 			}
 
 
