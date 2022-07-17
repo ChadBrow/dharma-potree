@@ -9,11 +9,27 @@
             </v-container> -->
         <div id="potree_render_area" style="height: 100%; width: 100%; background-image: '../build/potree/resources/images/background.jpg';">
             <div id="potree_toolbar">
-                <v-btn 
-                    v-on:click="()=>{showIntersectionOnClick = !showIntersectionOnClick}" >
-                    Show Intersection on Click
-                </v-btn>
-                <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
+                <v-container>
+                    <v-row>
+                        <v-col cols="4">
+                            <v-btn 
+                                v-on:click="()=>{showIntersectionOnClick = !showIntersectionOnClick}" >
+                                Show Intersection on Click
+                            </v-btn>
+                        </v-col>
+                        <v-col cols="4">
+                            <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
+                        </v-col>
+                        <!-- <v-col cols="4">
+                            <v-row>
+                                <v-btn>Return to Parent Annotation</v-btn>
+                            </v-row>
+                            <v-row>
+                                <v-btn v-on:click="returnToRoot()">Return to Root Annotation</v-btn>
+                            </v-row>
+                        </v-col> -->
+                    </v-row>
+                </v-container>
             </div>
         </div>
         <!-- <div  id="potree_sidebar_container"/> -->
@@ -30,7 +46,7 @@ export default{
     data(){
         return {
             showIntersectionOnClick: false,
-            mouseLoc: null
+            scene: null
         }
     },
 
@@ -44,6 +60,7 @@ export default{
         //Initialize Potree viewer and scene
         window.viewer = new Potree.Viewer(document.getElementById("potree_render_area"));
         let scene = window.viewer.scene;
+        this.scene = scene;
 
         //Configure viewer settings
         window.viewer.setEDLEnabled(true);
@@ -163,7 +180,6 @@ export default{
                 }
 			}
 
-
             window.viewer.fitToScreen();
         });
 
@@ -181,7 +197,10 @@ export default{
     methods: {
         displayCameraPos(){
             console.log(window.viewer.scene.getActiveCamera());
-        }
+        },
+        returnToRoot(){
+            console.log(this.scene);
+        },
     },
 }
 
@@ -194,14 +213,15 @@ export default{
     #potree_toolbar{
         position: absolute; 
         z-index: 10000; 
-        left: 100px; 
         top: 0px;
         background: rgba(255, 255, 255, 0.5);
         color: white;
         padding: 0.3em 0.8em;
         font-family: "system-ui";
         border-radius: 0em 0em 0.3em 0.3em;
-        display: flex;
-        flex-direction: row;
+        /* display: flex;
+        flex-direction: row; */
+        height: 8%;
+        width: 50%;
     }
 </style>
