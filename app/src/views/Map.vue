@@ -80,7 +80,7 @@ export default{
         });
 
         // Load pointcloud
-        Potree.loadPointCloud("./assets/pointclouds/lion_takanawa/cloud.js", "lion", function(e){
+        Potree.loadPointCloud("./assets/pointclouds/RomeForum/metadata.json", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
@@ -90,7 +90,9 @@ export default{
 
             //Setting for material
             material.size = 1;
-            material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+            material.pointSizeType = Potree.PointSizeType.ATTENUATED;
+
+            window.viewer.fitToScreen();
 
             //Create projections
             let pointcloudProjection = e.pointcloud.projection;
@@ -115,72 +117,70 @@ export default{
 
 			// });
 
-            {//Add annotations
-                //Declare root annotation
-                    let aRoot = scene.annotations;
-                {//Base annotations
+            // {//Add annotations
+            //     //Declare root annotation
+            //         let aRoot = scene.annotations;
+            //     {//Base annotations
 
-                    //Declare base annotation
-                    let aBase = new Potree.Annotation({
-                        title: "Base Pedestal",
-                        position: [1.51, -1.98, 4.13],
-                        cameraPosition: [3.08, -4.72, 6.14],
-                        cameraTarget: [1.51, -1.98, 4.13]
-                    });
-                    aRoot.add(aBase);
+            //         //Declare base annotation
+            //         let aBase = new Potree.Annotation({
+            //             title: "Base Pedestal",
+            //             position: [1.51, -1.98, 4.13],
+            //             cameraPosition: [3.08, -4.72, 6.14],
+            //             cameraTarget: [1.51, -1.98, 4.13]
+            //         });
+            //         aRoot.add(aBase);
 
-                    //Child annos
-                    let aTest1 = new Potree.Annotation({
-                        title: "Test 1",
-                        position: [0.602, -2.128, 3.733],
-                        cameraPosition: [-0.299, -3.536, 5.020],
-                        cameraTarget: [0.602, -2.128, 3.733]
-                    })
-                    aBase.add(aTest1);
+            //         //Child annos
+            //         let aTest1 = new Potree.Annotation({
+            //             title: "Test 1",
+            //             position: [0.602, -2.128, 3.733],
+            //             cameraPosition: [-0.299, -3.536, 5.020],
+            //             cameraTarget: [0.602, -2.128, 3.733]
+            //         })
+            //         aBase.add(aTest1);
 
-                }
+            //     }
 
-                {
-                    //Create title element. This is only necessary if we want to put images in the name
-                    let returnTitle = $(`
-                    <span>
-                        Tree Returns:
-                        <img name="action_return_number" src="${Potree.resourcePath}/icons/return_number.svg" class="annotation-action-icon"/>
-                        <img name="action_rgb" src="${Potree.resourcePath}/icons/rgb.png" class="annotation-action-icon"/>
-                    </span>`);
+            //     {
+            //         //Create title element. This is only necessary if we want to put images in the name
+            //         let returnTitle = $(`
+            //         <span>
+            //             Tree Returns:
+            //             <img name="action_return_number" src="${Potree.resourcePath}/icons/return_number.svg" class="annotation-action-icon"/>
+            //             <img name="action_rgb" src="${Potree.resourcePath}/icons/rgb.png" class="annotation-action-icon"/>
+            //         </span>`);
 
-                    //give on click effects to its two icons
-                    returnTitle.find("img[name=action_return_number]").click( () => {
-                        event.stopPropagation();
-                        material.activeAttributeName = "return_number";
-                        material.pointSizeType = Potree.PointSizeType.FIXED;
-                        material.size = 5;
-                        window.viewer.setClipTask(Potree.ClipTask.SHOW_INSIDE);
-                    });
+            //         //give on click effects to its two icons
+            //         returnTitle.find("img[name=action_return_number]").click( () => {
+            //             event.stopPropagation();
+            //             material.activeAttributeName = "return_number";
+            //             material.pointSizeType = Potree.PointSizeType.FIXED;
+            //             material.size = 5;
+            //             window.viewer.setClipTask(Potree.ClipTask.SHOW_INSIDE);
+            //         });
                     
-                    returnTitle.find("img[name=action_rgb]").click( () => {
-                        event.stopPropagation();
-                        material.activeAttributeName = "rgba";
-                        material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
-                        material.size = 1;
-                        window.viewer.setClipTask(Potree.ClipTask.HIGHLIGHT);
-                    });
+            //         returnTitle.find("img[name=action_rgb]").click( () => {
+            //             event.stopPropagation();
+            //             material.activeAttributeName = "rgba";
+            //             material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+            //             material.size = 1;
+            //             window.viewer.setClipTask(Potree.ClipTask.HIGHLIGHT);
+            //         });
 
-                    returnTitle.toString = () => "Tree Returns";
+            //         returnTitle.toString = () => "Tree Returns";
                     
 
-                    let aTreeReturns = new Potree.Annotation({
-                        title: returnTitle,
-                        position: [0.807, -1.700, 6.999],
-                        cameraPosition: [5.141, -7.602, 9.546],
-                        cameraTarget: [0.807, -1.700, 6.999],
-                    });
-                    aRoot.add(aTreeReturns);
-                    // aTreeReturns.domElement.find(".annotation-action-icon:first").css("filter", "invert(1)");
-                }
-			}
-
-            window.viewer.fitToScreen();
+            //         let aTreeReturns = new Potree.Annotation({
+            //             title: returnTitle,
+            //             position: [0.807, -1.700, 6.999],
+            //             cameraPosition: [5.141, -7.602, 9.546],
+            //             cameraTarget: [0.807, -1.700, 6.999],
+            //         });
+            //         aRoot.add(aTreeReturns);
+            //         // aTreeReturns.domElement.find(".annotation-action-icon:first").css("filter", "invert(1)");
+            //     }
+			// }
         });
 
         //Add event listner for mouse movement. This allows us to get pointcloud intersection with mouse
