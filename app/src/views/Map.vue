@@ -84,7 +84,7 @@ export default{
         });
 
         // Load pointcloud
-        Potree.loadPointCloud("./assets/pointclouds/vol_total/cloud.js", "lion", function(e){
+        Potree.loadPointCloud("./assets/pointclouds/roman_forum/metadata.json", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
@@ -96,12 +96,12 @@ export default{
             material.size = 1;
             material.pointSizeType = Potree.PointSizeType.ATTENUATED;
 
-            // //Create projections
-            // let pointcloudProjection = pointcloud.projection;
-			// let mapProjection = proj4.defs("WGS84");
+            //Create projections
+            let pointcloudProjection = pointcloud.projection;
+			let mapProjection = proj4.defs("WGS84");
 
-			// window.toMap = proj4.defs(pointcloudProjection, mapProjection);
-			// window.toScene = proj4.defs(mapProjection, pointcloudProjection);
+			window.toMap = proj4.defs(pointcloudProjection, mapProjection);
+			window.toScene = proj4.defs(mapProjection, pointcloudProjection);
 
             // //I have no clue what this does
             // window.viewer.onGUILoaded(() => {
