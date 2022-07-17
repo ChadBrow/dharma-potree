@@ -38,7 +38,7 @@
 
 <script>   
 //import libraries
-// import THREE from 'three';
+import * as THREE from 'three';
 import proj4 from "proj4";
 import $ from "jquery";
 
@@ -69,6 +69,10 @@ export default{
         window.viewer.loadSettingsFromURL();
 
         window.viewer.setDescription("");
+        
+        //Set initial view
+        viewer.scene.view.position.set(100,210,0);
+		viewer.scene.view.lookAt(new THREE.Vector3(100,210,0));
 
         //Load Potree GUI
         window.viewer.loadGUI(() => {
@@ -80,7 +84,7 @@ export default{
         });
 
         // Load pointcloud
-        Potree.loadPointCloud("./assets/pointclouds/RomeForum/metadata.json", "lion", function(e){
+        Potree.loadPointCloud("./assets/pointclouds/vol_total/cloud.js", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
@@ -92,14 +96,12 @@ export default{
             material.size = 1;
             material.pointSizeType = Potree.PointSizeType.ATTENUATED;
 
-            window.viewer.fitToScreen();
+            // //Create projections
+            // let pointcloudProjection = pointcloud.projection;
+			// let mapProjection = proj4.defs("WGS84");
 
-            //Create projections
-            let pointcloudProjection = e.pointcloud.projection;
-			let mapProjection = proj4.defs("WGS84");
-
-			window.toMap = proj4.defs(pointcloudProjection, mapProjection);
-			window.toScene = proj4.defs(mapProjection, pointcloudProjection);
+			// window.toMap = proj4.defs(pointcloudProjection, mapProjection);
+			// window.toScene = proj4.defs(mapProjection, pointcloudProjection);
 
             // //I have no clue what this does
             // window.viewer.onGUILoaded(() => {
@@ -181,6 +183,8 @@ export default{
             //         // aTreeReturns.domElement.find(".annotation-action-icon:first").css("filter", "invert(1)");
             //     }
 			// }
+
+            window.viewer.fitToScreen();
         });
 
         //Add event listner for mouse movement. This allows us to get pointcloud intersection with mouse
