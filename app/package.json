@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^3.8.3",
     "jquery": "^3.6.0",
+    "jquery-ui": "^1.13.2",
     "proj4": "^2.8.0",
     "three": "^0.124.0",
     "vue": "^2.6.14",

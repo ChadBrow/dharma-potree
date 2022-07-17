@@ -7,10 +7,8 @@
             <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
         </v-container>
         <div id="potree_render_area" style="height: 95%; width: 100%; background-image: '../build/potree/resources/images/background.jpg';">
-            <div  id="potree_toolbar">
-
-            </div>
         </div>
+        <div  id="potree_sidebar_container"/>
     </div>
 </template>
 
@@ -30,17 +28,17 @@ export default{
 
     mounted(){
         const Potree = window.Potree
-        console.log(Potree)
+        // console.log(Potree)
 
-        console.log(window)
-        console.log(document.getElementById("potree_render_area"));
+        // console.log(window)
+        // console.log(document.getElementById("potree_render_area"));
 
         //Initialize Potree viewer and scene
         window.viewer = new Potree.Viewer(document.getElementById("potree_render_area"));
         let scene = window.viewer.scene;
 
         //Configure viewer settings
-        // window.viewer.setEDLEnabled(true);
+        window.viewer.setEDLEnabled(true);
         window.viewer.setFOV(60);
         window.viewer.setPointBudget(1_000_000);
         window.viewer.loadSettingsFromURL();
@@ -51,8 +49,8 @@ export default{
         window.viewer.loadGUI(() => {
             window.viewer.setLanguage('en');
             window.$("#menu_appearance").next().show();
-			// window.$("#menu_tools").next().show();
-			// window.$("#menu_scene").next().show();
+			window.$("#menu_tools").next().show();
+			window.$("#menu_scene").next().show();
 			// window.viewer.toggleSidebar();
         });
 
@@ -103,6 +101,8 @@ export default{
                         Base Pedestal
                     </span>`);
                     baseTitle.toString = ()=> "Base Pedestal";
+
+                    console.log(baseTitle);
 
                     //Declare base annotation
                     let aBase = new Potree.Annotation({
