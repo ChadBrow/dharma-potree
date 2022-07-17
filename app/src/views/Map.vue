@@ -1,12 +1,19 @@
 <template>
     <div id="potree_container" style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px; ">
-        <v-container style="height: 5%; padding: 0">
-            <v-btn 
-                v-on:click="()=>{showIntersectionOnClick = !showIntersectionOnClick}" >
-                Show Intersection on Click</v-btn>
-            <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
-        </v-container>
-        <div id="potree_render_area" style="height: 95%; width: 100%; background-image: '../build/potree/resources/images/background.jpg';">
+        <!-- <v-container style="height: 5%; padding: 0">
+                <v-btn 
+                    v-on:click="()=>{showIntersectionOnClick = !showIntersectionOnClick}" >
+                    Show Intersection on Click
+                </v-btn>
+                <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
+            </v-container> -->
+        <div id="potree_render_area" style="height: 100%; width: 100%; background-image: '../build/potree/resources/images/background.jpg';">
+            <div id="potree_toolbar">
+                <v-btn 
+                    v-on:click="()=>{showIntersectionOnClick = !showIntersectionOnClick}" >
+                    Show Intersection on Click
+                </v-btn>
+            </div>
         </div>
         <!-- <div  id="potree_sidebar_container"/> -->
     </div>
@@ -51,7 +58,7 @@ export default{
             // window.$("#menu_appearance").next().show();
 			// window.$("#menu_tools").next().show();
 			window.$("#menu_scene").next().show();
-			window.viewer.toggleSidebar();
+			// window.viewer.toggleSidebar();
         });
 
         // Load pointcloud
@@ -93,34 +100,25 @@ export default{
             {//Add annotations
                 //Declare root annotation
                     let aRoot = scene.annotations;
-                {
-
-                    //Create title element
-                    let baseTitle = $(`
-                    <span>
-                        Base Pedestal
-                    </span>`);
-                    baseTitle.toString = ()=> "Base Pedestal";
-
-                    console.log(baseTitle);
+                {//Base annotations
 
                     //Declare base annotation
                     let aBase = new Potree.Annotation({
-                        title: baseTitle,
+                        title: "Base Pedestal",
                         position: [1.51, -1.98, 4.13],
                         cameraPosition: [3.08, -4.72, 6.14],
                         cameraTarget: [1.51, -1.98, 4.13]
                     });
                     aRoot.add(aBase);
 
+                    // let aTest1 = new Potree.Annotation({
+                    //     title: "Test 1",
+                    // })
+
                 }
 
                 {
-                    //Create title element
-                    // let returnTitle = document.createElement("span");
-                    // returnTitle.innerHTML = `Tree Returns:
-                    //     <img name="action_return_number" src="${Potree.resourcePath}/icons/return_number.svg" class="annotation-action-icon"/>
-                    //     <img name="action_rgb" src="${Potree.resourcePath}/icons/rgb.png" class="annotation-action-icon"/>`
+                    //Create title element. This is only necessary if we want to put images in the name
                     let returnTitle = $(`
                     <span>
                         Tree Returns:
@@ -184,6 +182,20 @@ export default{
 </script>
 
 <style>
+    /* This import statement is necessary to make annotations appear correctly */
     @import "../../public/build/potree/potree.css";
     /* @import "../../public/libs/jquery-ui/jquery-ui.min.css"; */
+    #potree_toolbar{
+        position: absolute; 
+        z-index: 10000; 
+        left: 100px; 
+        top: 0px;
+        background: black;
+        color: white;
+        padding: 0.3em 0.8em;
+        font-family: "system-ui";
+        border-radius: 0em 0em 0.3em 0.3em;
+        display: flex;
+        flex-direction: row;
+    }
 </style>
