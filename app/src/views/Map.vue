@@ -8,7 +8,7 @@
         </v-container>
         <div id="potree_render_area" style="height: 95%; width: 100%; background-image: '../build/potree/resources/images/background.jpg';">
         </div>
-        <div  id="potree_sidebar_container"/>
+        <!-- <div  id="potree_sidebar_container"/> -->
     </div>
 </template>
 
@@ -48,8 +48,8 @@ export default{
         //Load Potree GUI
         window.viewer.loadGUI(() => {
             window.viewer.setLanguage('en');
-            window.$("#menu_appearance").next().show();
-			window.$("#menu_tools").next().show();
+            // window.$("#menu_appearance").next().show();
+			// window.$("#menu_tools").next().show();
 			window.$("#menu_scene").next().show();
 			window.viewer.toggleSidebar();
         });
@@ -182,3 +182,8 @@ export default{
 }
 
 </script>
+
+<style>
+    @import "../../public/build/potree/potree.css";
+    /* @import "../../public/libs/jquery-ui/jquery-ui.min.css"; */
+</style>
