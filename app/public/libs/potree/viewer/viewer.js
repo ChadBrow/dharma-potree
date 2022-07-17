@@ -36,8 +36,7 @@ import { ClassificationScheme } from "../materials/ClassificationScheme.js";
 import { VRButton } from '../../three.js/extra/VRButton.js';
 
 import JSON5 from "../../json5-2.1.3/json5.mjs";
-
-// import { i18n } from "../../i18next/i18next.js";
+// import * as i18n from "../../i18next/i18next.js";
 
 
 export class Viewer extends EventDispatcher{
@@ -1278,7 +1277,7 @@ export class Viewer extends EventDispatcher{
 				debug: false
 			}, function (t) {
 				// Start translation once everything is loaded
-				jQuery('body').i18n.t();
+				jQuery('body').i18n();
 			});
 
 			jQuery(() => {
@@ -1328,6 +1327,7 @@ export class Viewer extends EventDispatcher{
 	setLanguage (lang) {
 		i18n.setLng(lang);
 		jQuery('body').i18n();
+		console.log(lang);
 	}
 
 	setServer (server) {

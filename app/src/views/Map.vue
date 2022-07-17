@@ -51,7 +51,7 @@ export default{
             window.$("#menu_appearance").next().show();
 			window.$("#menu_tools").next().show();
 			window.$("#menu_scene").next().show();
-			// window.viewer.toggleSidebar();
+			window.viewer.toggleSidebar();
         });
 
         // Load pointcloud
