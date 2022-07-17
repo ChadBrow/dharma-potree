@@ -13,6 +13,7 @@
                     v-on:click="()=>{showIntersectionOnClick = !showIntersectionOnClick}" >
                     Show Intersection on Click
                 </v-btn>
+                <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
             </div>
         </div>
         <!-- <div  id="potree_sidebar_container"/> -->
@@ -111,9 +112,14 @@ export default{
                     });
                     aRoot.add(aBase);
 
-                    // let aTest1 = new Potree.Annotation({
-                    //     title: "Test 1",
-                    // })
+                    //Child annos
+                    let aTest1 = new Potree.Annotation({
+                        title: "Test 1",
+                        position: [0.602, -2.128, 3.733],
+                        cameraPosition: [-0.299, -3.536, 5.020],
+                        cameraTarget: [0.602, -2.128, 3.733]
+                    })
+                    aBase.add(aTest1);
 
                 }
 
@@ -190,7 +196,7 @@ export default{
         z-index: 10000; 
         left: 100px; 
         top: 0px;
-        background: black;
+        background: rgba(255, 255, 255, 0.5);
         color: white;
         padding: 0.3em 0.8em;
         font-family: "system-ui";
