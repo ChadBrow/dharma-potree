@@ -8,6 +8,7 @@
                 <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
             </v-container> -->
         <div id="potree_render_area" style="height: 100%; width: 100%; background-image: '../build/potree/resources/images/background.jpg';">
+            <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green"/>
             <div id="potree_toolbar">
                 <v-container>
                     <v-row>
@@ -41,6 +42,7 @@
 // import * as THREE from 'three';
 import proj4 from "proj4";
 import $ from "jquery";
+import * as Cesium from "cesium";
 
 export default{
     data(){
@@ -51,11 +53,36 @@ export default{
     },
 
     mounted(){
-        const Potree = window.Potree
-        // console.log(Potree)
+        const Potree = window.Potree;
 
-        // console.log(window)
-        // console.log(document.getElementById("potree_render_area"));
+        //Initialize Cesium Viewer
+        window.CESIUM_BASE_URL = Potree.resourcePath;
+        window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
+            useDefaultRenderLoop: false,
+            animation: false,
+            baseLayerPicker : false,
+            fullscreenButton: false, 
+            geocoder: false,
+            homeButton: false,
+            infoBox: false,
+            sceneModePicker: false,
+            selectionIndicator: false,
+            timeline: false,
+            navigationHelpButton: false,
+            imageryProvider : new Cesium.OpenStreetMapImageryProvider({url : 'https://a.tile.openstreetmap.org/'}),
+            terrainShadows: Cesium.ShadowMode.DISABLED,
+        });
+
+        //Set Cesium location
+        let cp = new Cesium.Cartesian3(4303414.154026048, 552161.235598733, 4660771.704035539);
+        cesiumViewer.camera.setView({
+            destination : cp,
+            orientation: {
+                heading : 10, 
+                pitch : -Cesium.Math.PI_OVER_TWO * 0.5, 
+                roll : 0.0 
+            }
+        });
 
         //Initialize Potree viewer and scene
         window.viewer = new Potree.Viewer(document.getElementById("potree_render_area"));
@@ -185,7 +212,68 @@ export default{
                 }
 			}
 
-            window.viewer.fitToScreen();
+            function loop(timestamp){
+                requestAnimationFrame(loop);
+
+                window.viewer.update(window.viewer.clock.getDelta(), timestamp);
+
+                window.viewer.render();
+
+                if(window.toMap !== undefined){
+
+                    {
+                        let camera = window.viewer.scene.getActiveCamera();
+
+                        let pPos		= new THREE.Vector3(0, 0, 0).applyMatrix4(camera.matrixWorld);
+                        let pRight  = new THREE.Vector3(600, 0, 0).applyMatrix4(camera.matrixWorld);
+                        let pUp		 = new THREE.Vector3(0, 600, 0).applyMatrix4(camera.matrixWorld);
+                        let pTarget = window.viewer.scene.view.getPivot();
+
+                        let toCes = (pos) => {
+                            let xy = [pos.x, pos.y];
+                            let height = pos.z;
+                            let deg = toMap.forward(xy);
+                            let cPos = Cesium.Cartesian3.fromDegrees(...deg, height);
+
+                            return cPos;
+                        };
+
+                        let cPos = toCes(pPos);
+                        let cUpTarget = toCes(pUp);
+                        let cTarget = toCes(pTarget);
+
+                        let cDir = Cesium.Cartesian3.subtract(cTarget, cPos, new Cesium.Cartesian3());
+                        let cUp = Cesium.Cartesian3.subtract(cUpTarget, cPos, new Cesium.Cartesian3());
+
+                        cDir = Cesium.Cartesian3.normalize(cDir, new Cesium.Cartesian3());
+                        cUp = Cesium.Cartesian3.normalize(cUp, new Cesium.Cartesian3());
+
+                        cesiumViewer.camera.setView({
+                            destination : cPos,
+                            orientation : {
+                                direction : cDir,
+                                up : cUp
+                            }
+                        });
+                        
+                    }
+
+                    let aspect = window.viewer.scene.getActiveCamera().aspect;
+                    if(aspect < 1){
+                        let fovy = Math.PI * (window.viewer.scene.getActiveCamera().fov / 180);
+                        window.cesiumViewer.camera.frustum.fov = fovy;
+                    }else{
+                        let fovy = Math.PI * (window.viewer.scene.getActiveCamera().fov / 180);
+                        let fovx = Math.atan(Math.tan(0.5 * fovy) * aspect) * 2
+                        window.cesiumViewer.camera.frustum.fov = fovx;
+                    }
+                            
+                }
+
+                window.cesiumViewer.render();
+            }
+
+            requestAnimationFrame(loop);
         });
 
         //Add event listner for mouse movement. This allows us to get pointcloud intersection with mouse
@@ -206,6 +294,7 @@ export default{
         returnToRoot(){
             console.log(this.scene);
         },
+        
     },
 }
 
@@ -214,7 +303,9 @@ export default{
 <style>
     /* This import statement is necessary to make annotations appear correctly */
     @import "../../public/build/potree/potree.css";
-    /* @import "../../public/libs/jquery-ui/jquery-ui.min.css"; */
+    /* This import statement is necessary to make cesium work */
+    @import "../../public/libs/Cesium/Widgets/CesiumWidget/CesiumWidget.css";
+
     #potree_toolbar{
         position: absolute; 
         z-index: 10000; 
