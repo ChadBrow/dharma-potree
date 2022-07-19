@@ -9,7 +9,11 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-connect": "^5.7.0",
     "jquery": "^3.6.0",
+    "jquery-ui": "^1.13.2",
     "proj4": "^2.8.0",
     "three": "^0.124.0",
     "vue": "^2.6.14",

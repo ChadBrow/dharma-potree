@@ -1,7 +1,6 @@
 
 import * as THREE from "../../three.js/build/three.module.js";
 import * as Potree from "../Potree.js";
-import * as i18n from "../../i18next/i18next.js";
 import * as TWEEN from "../../tween/Tween.js";
 import {ClipTask, ClipMethod, CameraMode, LengthUnits, ElevationGradientRepeat} from "../defines.js";
 import {Renderer} from "../PotreeRenderer.js";
@@ -37,7 +36,7 @@ import { ClassificationScheme } from "../materials/ClassificationScheme.js";
 import { VRButton } from '../../three.js/extra/VRButton.js';
 
 import JSON5 from "../../json5-2.1.3/json5.mjs";
-import jQuery from "../../jquery/jquery-3.1.1.js";
+// import * as i18n from "../../i18next/i18next.js";
 
 
 export class Viewer extends EventDispatcher{
@@ -1269,18 +1268,17 @@ export class Viewer extends EventDispatcher{
 
 			this.mapView = new MapView(this);
 			this.mapView.init();
-
-			//Chad commented this junk out
-			// i18n.init({
-			// 	lng: 'en',
-			// 	resGetPath: Potree.resourcePath + '/lang/__lng__/__ns__.json',
-			// 	preload: ['en', 'fr', 'de', 'jp', 'se', 'es', 'zh'],
-			// 	getAsync: true,
-			// 	debug: false
-			// }, function (t) {
-			// 	// Start translation once everything is loaded
-			// 	jQuery('body').i18n();
-			// });
+			
+			i18n.init({
+				lng: 'en',
+				resGetPath: Potree.resourcePath + '/lang/__lng__/__ns__.json',
+				preload: ['en', 'fr', 'de', 'jp', 'se', 'es', 'zh'],
+				getAsync: true,
+				debug: false
+			}, function (t) {
+				// Start translation once everything is loaded
+				jQuery('body').i18n();
+			});
 
 			jQuery(() => {
 				//initSidebar(this);
@@ -1329,6 +1327,7 @@ export class Viewer extends EventDispatcher{
 	setLanguage (lang) {
 		i18n.setLng(lang);
 		jQuery('body').i18n();
+		console.log(lang);
 	}
 
 	setServer (server) {
