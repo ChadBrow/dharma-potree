@@ -9,9 +9,10 @@
             </v-container> -->
         <div id="potree_render_area" style="height: 100%; width: 100%; background-image: '../build/potree/resources/images/background.jpg';">
             <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green"/>
-            <div id="potree_toolbar">
-                <v-container>
-                    <v-row>
+            <v-card shaped id="potree_toolbar">
+                <v-card-subtitle style="padding: 4px;">Viewer Settings</v-card-subtitle>
+                <v-container style="padding-top: 0px;">
+                    <!-- <v-row>
                         <v-col cols="4">
                             <v-btn 
                                 v-on:click="()=>{showIntersectionOnClick = !showIntersectionOnClick}" >
@@ -21,17 +22,11 @@
                         <v-col cols="4">
                             <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
                         </v-col>
-                        <!-- <v-col cols="4">
-                            <v-row>
-                                <v-btn>Return to Parent Annotation</v-btn>
-                            </v-row>
-                            <v-row>
-                                <v-btn v-on:click="returnToRoot()">Return to Root Annotation</v-btn>
-                            </v-row>
-                        </v-col> -->
-                    </v-row>
+                    </v-row> -->
+                    <v-switch v-model="showIntersectionOnClick" :label="`Show Intrsection on Click`"/>
+                    <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
                 </v-container>
-            </div>
+            </v-card>
         </div>
         <!-- <div  id="potree_sidebar_container"/> -->
     </div>
@@ -143,9 +138,11 @@ export default{
 
             {
                 let bb = window.viewer.getBoundingBox();
-
-                let minWGS84 = proj4(pointcloudProjection, mapProjection, bb.min.toArray());
-                let maxWGS84 = proj4(pointcloudProjection, mapProjection, bb.max.toArray());
+                
+                proj4.defs("minWGS84", proj4(pointcloudProjection, mapProjection, bb.min.toArray()));
+			    proj4.defs("maxWGS84", proj4(pointcloudProjection, mapProjection, bb.max.toArray()));
+                // let minWGS84 = proj4(pointcloudProjection, mapProjection, bb.min.toArray());
+                // let maxWGS84 = proj4(pointcloudProjection, mapProjection, bb.max.toArray());
             }
 
             // //I have no clue what this does
@@ -249,7 +246,6 @@ export default{
             window.viewer.render();
             
             if(window.toMap !== undefined){
-                console.log("Here1");
                 {
                     let camera = window.viewer.scene.getActiveCamera();
 
@@ -295,7 +291,7 @@ export default{
                     let fovy = Math.PI * (window.viewer.scene.getActiveCamera().fov / 180);
                     let fovx = Math.atan(Math.tan(0.5 * fovy) * aspect) * 2
                     window.cesiumViewer.camera.frustum.fov = fovx;
-                }       
+                }  
             }
             window.cesiumViewer.render();
         }
@@ -329,14 +325,14 @@ export default{
         position: absolute; 
         z-index: 10000; 
         top: 0px;
-        background: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.3);
         color: white;
-        padding: 0.3em 0.8em;
+        /* padding: 0.3em 0.8em; */
         font-family: "system-ui";
         border-radius: 0em 0em 0.3em 0.3em;
         /* display: flex;
         flex-direction: row; */
-        height: 8%;
-        width: 50%;
+        /* height: 8%;
+        width: 50%; */
     }
 </style>
