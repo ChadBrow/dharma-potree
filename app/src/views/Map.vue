@@ -138,8 +138,8 @@ export default{
             let pointcloudProjection = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
 			let mapProjection = proj4.defs("WGS84");
 
-			window.toMap = proj4.defs(pointcloudProjection, mapProjection);
-			window.toScene = proj4.defs(mapProjection, pointcloudProjection);
+			window.toMap = proj4(pointcloudProjection, mapProjection);
+			window.toScene = proj4(mapProjection, pointcloudProjection);
 
             {
                 let bb = window.viewer.getBoundingBox();
@@ -243,14 +243,13 @@ export default{
 
         function loop(timestamp){
             requestAnimationFrame(loop);
-            console.log("We do a little looping...");
 
             window.viewer.update(window.viewer.clock.getDelta(), timestamp);
 
             window.viewer.render();
-
+            
             if(window.toMap !== undefined){
-
+                console.log("Here1");
                 {
                     let camera = window.viewer.scene.getActiveCamera();
 
@@ -278,7 +277,7 @@ export default{
                     cDir = Cesium.Cartesian3.normalize(cDir, new Cesium.Cartesian3());
                     cUp = Cesium.Cartesian3.normalize(cUp, new Cesium.Cartesian3());
 
-                    window.viewer.camera.setView({
+                    window.cesiumViewer.camera.setView({
                         destination : cPos,
                         orientation : {
                             direction : cDir,
@@ -291,18 +290,18 @@ export default{
                 let aspect = window.viewer.scene.getActiveCamera().aspect;
                 if(aspect < 1){
                     let fovy = Math.PI * (window.viewer.scene.getActiveCamera().fov / 180);
-                    window.viewer.camera.frustum.fov = fovy;
+                    window.cesiumViewer.camera.frustum.fov = fovy;
                 }else{
                     let fovy = Math.PI * (window.viewer.scene.getActiveCamera().fov / 180);
                     let fovx = Math.atan(Math.tan(0.5 * fovy) * aspect) * 2
-                    window.viewer.camera.frustum.fov = fovx;
-                }
-                        
+                    window.cesiumViewer.camera.frustum.fov = fovx;
+                }       
             }
             window.cesiumViewer.render();
         }
         requestAnimationFrame(loop);
     },
+
     methods: {
         displayCameraPos(){
             console.log(window.viewer.scene.getActiveCamera());
