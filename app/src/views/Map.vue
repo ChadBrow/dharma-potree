@@ -108,7 +108,8 @@ export default{
         });
 
         // Load pointcloud
-        Potree.loadPointCloud("http://5.9.65.151/mschuetz/potree/resources/pointclouds/riegl/retz/cloud.js", "Retz",  function(e){
+        // Potree.loadPointCloud("http://5.9.65.151/mschuetz/potree/resources/pointclouds/riegl/retz/cloud.js", "Retz",  function(e){
+        Potree.loadPointCloud("./assets/pointclouds/roman_forum/metadata.json", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
@@ -239,7 +240,7 @@ export default{
         });
 
         function loop(timestamp){
-            requestAnimationFrame(loop);
+            // window.requestAnimationFrame(loop);
 
             window.viewer.update(window.viewer.clock.getDelta(), timestamp);
 
@@ -295,7 +296,7 @@ export default{
             }
             window.cesiumViewer.render();
         }
-        requestAnimationFrame(loop);
+        window.requestAnimationFrame(loop);
     },
 
     methods: {
