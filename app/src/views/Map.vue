@@ -7,7 +7,7 @@
                 </v-btn>
                 <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
             </v-container> -->
-        <div id="potree_render_area" style="height: 100%; width: 100%; background-image: '../build/potree/resources/images/background.jpg';">
+        <div id="potree_render_area">
             <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green;">
                 <v-card shaped id="potree_toolbar">
                     <v-card-subtitle style="padding: 4px;">Viewer Settings</v-card-subtitle>
@@ -92,6 +92,7 @@ export default{
         window.viewer.setFOV(60);
         window.viewer.setPointBudget(1_000_000);
         window.viewer.loadSettingsFromURL();
+        window.viewer.setBackground(null);
 
         window.viewer.setDescription("");
         
