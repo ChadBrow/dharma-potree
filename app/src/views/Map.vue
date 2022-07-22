@@ -8,25 +8,26 @@
                 <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
             </v-container> -->
         <div id="potree_render_area" style="height: 100%; width: 100%; background-image: '../build/potree/resources/images/background.jpg';">
-            <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green"/>
-            <v-card shaped id="potree_toolbar">
-                <v-card-subtitle style="padding: 4px;">Viewer Settings</v-card-subtitle>
-                <v-container style="padding-top: 0px;">
-                    <!-- <v-row>
-                        <v-col cols="4">
-                            <v-btn 
-                                v-on:click="()=>{showIntersectionOnClick = !showIntersectionOnClick}" >
-                                Show Intersection on Click
-                            </v-btn>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
-                        </v-col>
-                    </v-row> -->
-                    <v-switch v-model="showIntersectionOnClick" :label="`Show Intrsection on Click`"/>
-                    <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
-                </v-container>
-            </v-card>
+            <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green;">
+                <v-card shaped id="potree_toolbar">
+                    <v-card-subtitle style="padding: 4px;">Viewer Settings</v-card-subtitle>
+                    <v-container style="padding-top: 0px;">
+                        <!-- <v-row>
+                            <v-col cols="4">
+                                <v-btn 
+                                    v-on:click="()=>{showIntersectionOnClick = !showIntersectionOnClick}" >
+                                    Show Intersection on Click
+                                </v-btn>
+                            </v-col>
+                            <v-col cols="4">
+                                <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
+                            </v-col>
+                        </v-row> -->
+                        <v-switch v-model="showIntersectionOnClick" :label="`Show Intrsection on Click`"/>
+                        <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
+                    </v-container>
+                </v-card>
+            </div>
         </div>
         <!-- <div  id="potree_sidebar_container"/> -->
     </div>
@@ -35,15 +36,14 @@
 <script>   
 //import libraries
 // import * as THREE from 'three';
-import proj4 from "proj4";
+// import proj4 from "proj4";
 import $ from "jquery";
-import * as Cesium from "cesium";
+// import Cesium from "cesium";
 
 export default{
     data(){
         return {
             showIntersectionOnClick: false,
-            scene: null
         }
     },
 
@@ -52,7 +52,7 @@ export default{
         const Potree = window.Potree;
 
         //Initialize Cesium Viewer
-        window.CESIUM_BASE_URL = Potree.resourcePath + "/../libs/Cesium";
+        // window.CESIUM_BASE_URL = Potree.resourcePath + "/../libs/Cesium";
         window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
             useDefaultRenderLoop: false,
             animation: false,
@@ -65,9 +65,10 @@ export default{
             selectionIndicator: false,
             timeline: false,
             navigationHelpButton: false,
-            imageryProvider : new Cesium.OpenStreetMapImageryProvider({url : 'https://a.tile.openstreetmap.org/'}),
+            imageryProvider : Cesium.createOpenStreetMapImageryProvider({url : 'https://a.tile.openstreetmap.org/'}),
             terrainShadows: Cesium.ShadowMode.DISABLED,
         });
+        console.log(window.cesiumViewer);
 
         //Set Cesium location
         let cp = new Cesium.Cartesian3(4303414.154026048, 552161.235598733, 4660771.704035539);
@@ -85,7 +86,6 @@ export default{
             useDefaultRenderLoop: false //This setting seems to be necessary to get cesium to work
         });
         let scene = window.viewer.scene;
-        this.scene = scene;
 
         //Configure viewer settings
         window.viewer.setEDLEnabled(true);
@@ -105,7 +105,7 @@ export default{
             $("#menu_appearance").next().show();
             $("#menu_tools").next().show();
             $("#menu_scene").next().show();
-			// window.viewer.toggleSidebar();
+			window.viewer.toggleSidebar();
         });
 
         // Load pointcloud
@@ -141,10 +141,10 @@ export default{
             {
                 let bb = window.viewer.getBoundingBox();
                 
-                proj4.defs("minWGS84", proj4(pointcloudProjection, mapProjection, bb.min.toArray()));
-			    proj4.defs("maxWGS84", proj4(pointcloudProjection, mapProjection, bb.max.toArray()));
-                // let minWGS84 = proj4(pointcloudProjection, mapProjection, bb.min.toArray());
-                // let maxWGS84 = proj4(pointcloudProjection, mapProjection, bb.max.toArray());
+                // proj4.defs("minWGS84", proj4(pointcloudProjection, mapProjection, bb.min.toArray()));
+			    // proj4.defs("maxWGS84", proj4(pointcloudProjection, mapProjection, bb.max.toArray()));
+                let minWGS84 = proj4(pointcloudProjection, mapProjection, bb.min.toArray());
+                let maxWGS84 = proj4(pointcloudProjection, mapProjection, bb.max.toArray());
             }
 
             // //I have no clue what this does
@@ -241,7 +241,8 @@ export default{
         });
 
         function loop(timestamp){
-            // window.requestAnimationFrame(loop);
+            // console.log("We loopin...");
+            window.requestAnimationFrame(loop);
 
             window.viewer.update(window.viewer.clock.getDelta(), timestamp);
 
