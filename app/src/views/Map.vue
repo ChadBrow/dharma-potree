@@ -36,9 +36,6 @@
 <script>   
 //import libraries
 // import * as THREE from 'three';
-// import proj4 from "proj4";
-import $ from "jquery";
-// import Cesium from "cesium";
 
 export default{
     data(){
