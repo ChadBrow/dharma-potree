@@ -48,6 +48,7 @@ export default{
     },
 
     mounted(){
+        console.log(document);
         const Potree = window.Potree;
 
         //Initialize Cesium Viewer
@@ -108,8 +109,8 @@ export default{
         });
 
         // Load pointcloud
-        // Potree.loadPointCloud("http://5.9.65.151/mschuetz/potree/resources/pointclouds/riegl/retz/cloud.js", "Retz",  function(e){
-        Potree.loadPointCloud("./assets/pointclouds/roman_forum/metadata.json", "lion", function(e){
+        Potree.loadPointCloud("http://5.9.65.151/mschuetz/potree/resources/pointclouds/riegl/retz/cloud.js", "Retz",  function(e){
+        // Potree.loadPointCloud("../pointclouds/lion_takanawa/cloud.js", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
