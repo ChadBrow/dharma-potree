@@ -35,7 +35,8 @@
 
 <script>   
 //import libraries
-// import * as THREE from 'three';
+import * as THREE from 'three';
+import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
 
 export default{
     data(){
@@ -45,8 +46,8 @@ export default{
     },
 
     mounted(){
-        console.log(document);
         const Potree = window.Potree;
+        const loader = new PLYLoader();
 
         //Initialize Cesium Viewer
         // window.CESIUM_BASE_URL = Potree.resourcePath + "/../libs/Cesium";
@@ -136,7 +137,7 @@ export default{
 			window.toMap = proj4(pointcloudProjection, mapProjection);
 			window.toScene = proj4(mapProjection, pointcloudProjection);
 
-            {
+            {//Declare bounding box and projections. I believe Cesium uses these
                 let bb = window.viewer.getBoundingBox();
                 
                 // proj4.defs("minWGS84", proj4(pointcloudProjection, mapProjection, bb.min.toArray()));
@@ -145,21 +146,7 @@ export default{
                 let maxWGS84 = proj4(pointcloudProjection, mapProjection, bb.max.toArray());
             }
 
-            // //I have no clue what this does
-            // window.viewer.onGUILoaded(() => {
-			// 	// Add entries to object list in sidebar
-			// 	let tree = window.$(`#jstree_scene`);
-			// 	let parentNode = "other";
-
-			// 	let meshID = tree.jstree('create_node', parentNode, {
-			// 		"text": "Temple of Antoninus and Faustina",
-			// 		"icon": `${Potree.resourcePath}/icons/triangle.svg`,
-			// 		"data": geometry
-			// 	},
-			// 		"last", false, false);
-			// 	tree.jstree(mesh.visible ? "check_node" : "uncheck_node", meshID);
-
-			// });
+            
 
             // {//Add annotations
             //     //Declare root annotation
@@ -226,6 +213,57 @@ export default{
             //     }
 			// }// end load annotations
         });//end load pointcloud
+
+        //Create lighting for meshes
+        const light = new THREE.AmbientLight(); // soft white light
+        scene.scene.add( light );
+
+        // load mesh
+		loader.load(Potree.resourcePath + "/models/toaf.ply", (geometry) => {
+			const textureLoader = new THREE.TextureLoader();
+
+			const diffuseMap = textureLoader.load(Potree.resourcePath + "/models/toaf_tex.jpg");
+			diffuseMap.encoding = THREE.sRGBEncoding;
+
+			const normalMap = textureLoader.load(Potree.resourcePath + "/models/toaf_norm.jpg");
+			normalMap.encoding = THREE.sRGBEncoding;
+
+			geometry.computeVertexNormals();
+
+			let mesh;
+			{
+				const material = new THREE.MeshStandardMaterial({
+					color: 0xffffff,
+					roughness: 0.5,
+					map: diffuseMap,
+					normalMap: normalMap,
+					normalMapType: THREE.ObjectSpaceNormalMap,
+				});
+				mesh = new THREE.Mesh(geometry, material);
+				// mesh.position.set(48.5, 238.5, -13);
+                mesh.position.set(570547.7, 5400268.1, 62.2);
+				mesh.rotation.set(0, 0, -Math.PI * .19);
+				mesh.visible = true;
+
+				scene.scene.add(mesh);
+			}
+
+            //This adds the mesh to the sidebar. Since we don't use the sidebar we do not need this
+			viewer.onGUILoaded(() => {
+				// Add entries to object list in sidebar
+				let tree = $(`#jstree_scene`);
+				let parentNode = "other";
+
+				let meshID = tree.jstree('create_node', parentNode, {
+					"text": "Temple of Antoninus and Faustina",
+					"icon": `${Potree.resourcePath}/icons/triangle.svg`,
+					"data": geometry
+				},
+					"last", false, false);
+				tree.jstree(mesh.visible ? "check_node" : "uncheck_node", meshID);
+
+			});
+        });
 
         //Add event listner for mouse movement. This allows us to get pointcloud intersection with mouse
         window.viewer.renderer.domElement.addEventListener('mousedown', (event) => {
