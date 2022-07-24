@@ -107,9 +107,12 @@ export default{
 			window.viewer.toggleSidebar();
         });
 
+        // Potree.resourcePath = "../"
+        // console.log(Potree.resourcePath)
+
         // Load pointcloud
-        Potree.loadPointCloud("http://5.9.65.151/mschuetz/potree/resources/pointclouds/riegl/retz/cloud.js", "Retz",  function(e){
-        // Potree.loadPointCloud("../pointclouds/lion_takanawa/cloud.js", "lion", function(e){
+        // Potree.loadPointCloud("http://5.9.65.151/mschuetz/potree/resources/pointclouds/riegl/retz/cloud.js", "Retz",  function(e){
+        Potree.loadPointCloud("/pointclouds/roman_forum/metadata.json", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
