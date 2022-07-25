@@ -6,11 +6,15 @@ import Map from '../views/Map.vue'
 Vue.use(VueRouter)
 
 const routes = [
+  // {
+  //   path: '/',
+  //   name: 'home',
+  //   component: HomeView,
+  //   props: true
+  // },
   {
     path: '/',
-    name: 'home',
-    component: HomeView,
-    props: true
+    redirect: '/map'
   },
   {
     path: '/map',
