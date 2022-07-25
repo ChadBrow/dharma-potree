@@ -68,7 +68,7 @@ export default{
         });
         console.log(window.cesiumViewer);
 
-        //Set Cesium location
+        //Set Cesium location. This seems unecessary
         // let cp = new Cesium.Cartesian3(281238.4, 4632572.1, 15729.4);
         // cesiumViewer.camera.setView({
         //     destination : cp,
@@ -88,9 +88,10 @@ export default{
         //Configure viewer settings
         window.viewer.setEDLEnabled(true);
         window.viewer.setFOV(60);
-        window.viewer.setPointBudget(2_000_000);
+        window.viewer.setPointBudget(3_000_000);
         window.viewer.loadSettingsFromURL();
         window.viewer.setBackground(null);
+        window.viewer.setControls(window.viewer.earthControls);
 
         window.viewer.setDescription("");
         
@@ -112,7 +113,7 @@ export default{
 
         // Load pointcloud
         // Potree.loadPointCloud("http://5.9.65.151/mschuetz/potree/resources/pointclouds/riegl/retz/cloud.js", "Retz",  function(e){
-        Potree.loadPointCloud("http://10.0.0.229:8080/metadata.json", "lion", function(e){
+        Potree.loadPointCloud("http://10.0.0.229:8080/cloud.js", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
@@ -133,7 +134,6 @@ export default{
             // material.weightElevation = 1.0;
 
             //Create projections
-            // let pointcloudProjection = proj4.defs(pointcloud.projection);
             let pointcloudProjection = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
 			let mapProjection = proj4.defs("WGS84");
 
@@ -278,6 +278,25 @@ export default{
                 console.log(hit);
             }
         });
+
+        //Add event listener for cesium coords
+        let handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+        handler.setInputAction((event) => {
+            if (this.showIntersectionOnClick){
+                // let ray = window.cesiumViewer.camera.getPickRay(event.position);
+                // let cartesian = window.cesiumViewer.scene.globe.pick(ray, viewer.scene);
+                // let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+                // let lng = Cesium.Math.toDegrees(cartographic.longitude); // longitude
+                // let lat = Cesium.Math.toDegrees(cartographic.latitude); // latitude
+                // let alt = cartographic.height; // height
+                // let coordinate = {
+                //     longitude: Number(lng.toFixed(6)),
+                //     latitude: Number(lat.toFixed(6)),
+                //     altitude: Number(alt.toFixed(2))
+                // };
+                console.log(event.position);
+            }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
         function loop(timestamp){
             // console.log("We loopin...");
