@@ -69,15 +69,15 @@ export default{
         console.log(window.cesiumViewer);
 
         //Set Cesium location
-        let cp = new Cesium.Cartesian3(4303414.154026048, 552161.235598733, 4660771.704035539);
-        cesiumViewer.camera.setView({
-            destination : cp,
-            orientation: {
-                heading : 10, 
-                pitch : -Cesium.Math.PI_OVER_TWO * 0.5, 
-                roll : 0.0 
-            }
-        });
+        // let cp = new Cesium.Cartesian3(281238.4, 4632572.1, 15729.4);
+        // cesiumViewer.camera.setView({
+        //     destination : cp,
+        //     orientation: {
+        //         heading : 10, 
+        //         pitch : -Cesium.Math.PI_OVER_TWO * 0.5, 
+        //         roll : 0.0 
+        //     }
+        // });
 
         //Initialize Potree viewer and scene
         window.viewer = new Potree.Viewer(document.getElementById("potree_render_area"), {
@@ -88,7 +88,7 @@ export default{
         //Configure viewer settings
         window.viewer.setEDLEnabled(true);
         window.viewer.setFOV(60);
-        window.viewer.setPointBudget(1_000_000);
+        window.viewer.setPointBudget(2_000_000);
         window.viewer.loadSettingsFromURL();
         window.viewer.setBackground(null);
 
@@ -125,12 +125,12 @@ export default{
 		    e.pointcloud.rotation.set(0, 0, -0.035);
 
             //Setting for material
-            // material.pointSizeType = Potree.PointSizeType.ATTENUATED;
-            material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
-            material.size = 0.7;
-            material.elevationRange = [0, 70];
-            material.weightRGB = 1.0;
-            material.weightElevation = 1.0;
+            material.pointSizeType = Potree.PointSizeType.ATTENUATED;
+            // material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+            material.size = 1;
+            // material.elevationRange = [0, 70];
+            // material.weightRGB = 1.0;
+            // material.weightElevation = 1.0;
 
             //Create projections
             // let pointcloudProjection = proj4.defs(pointcloud.projection);
