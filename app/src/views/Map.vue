@@ -42,6 +42,9 @@ export default{
     data(){
         return {
             showIntersectionOnClick: false,
+            offX: 569277.402752,
+            offY: 5400050.599046,
+            rot: -0.035,
         }
     },
 
@@ -68,8 +71,8 @@ export default{
         });
         console.log(window.cesiumViewer);
 
-        //Set Cesium location. This seems unecessary
-        // let cp = new Cesium.Cartesian3(281238.4, 4632572.1, 15729.4);
+        // Set Cesium location. I don't think this does anything
+        // let cp = new Cesium.Cartesian3(4051050.968118943, 1158563.8215692928, 4772196.877004735);
         // cesiumViewer.camera.setView({
         //     destination : cp,
         //     orientation: {
@@ -91,7 +94,7 @@ export default{
         window.viewer.setPointBudget(3_000_000);
         window.viewer.loadSettingsFromURL();
         window.viewer.setBackground(null);
-        window.viewer.setControls(window.viewer.earthControls);
+        window.viewer.setControls(window.viewer.fpControls);
 
         window.viewer.setDescription("");
         
@@ -113,7 +116,7 @@ export default{
 
         // Load pointcloud
         // Potree.loadPointCloud("http://5.9.65.151/mschuetz/potree/resources/pointclouds/riegl/retz/cloud.js", "Retz",  function(e){
-        Potree.loadPointCloud("http://10.0.0.229:8080/cloud.js", "lion", function(e){
+        Potree.loadPointCloud("http://10.0.0.229:8080/metadata.json", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
@@ -273,6 +276,7 @@ export default{
             if (this.showIntersectionOnClick){
                 let mouseLoc = window.viewer.inputHandler.mouse;
                 let camera = scene.getActiveCamera();
+                console.log(Potree.Utils);
 
                 let hit = Potree.Utils.getMousePointCloudIntersection(mouseLoc, camera, viewer, scene.pointclouds);
                 console.log(hit);
@@ -283,18 +287,19 @@ export default{
         let handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
         handler.setInputAction((event) => {
             if (this.showIntersectionOnClick){
-                // let ray = window.cesiumViewer.camera.getPickRay(event.position);
-                // let cartesian = window.cesiumViewer.scene.globe.pick(ray, viewer.scene);
-                // let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-                // let lng = Cesium.Math.toDegrees(cartographic.longitude); // longitude
-                // let lat = Cesium.Math.toDegrees(cartographic.latitude); // latitude
-                // let alt = cartographic.height; // height
-                // let coordinate = {
-                //     longitude: Number(lng.toFixed(6)),
-                //     latitude: Number(lat.toFixed(6)),
-                //     altitude: Number(alt.toFixed(2))
-                // };
-                console.log(event.position);
+                let ray = window.cesiumViewer.camera.getPickRay(event.position);
+                let cartesian = window.cesiumViewer.scene.globe.pick(ray, window.cesiumViewer.scene);
+                let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+                let lng = Cesium.Math.toDegrees(cartographic.longitude); // longitude
+                let lat = Cesium.Math.toDegrees(cartographic.latitude); // latitude
+                let alt = cartographic.height; // height
+                let coordinate = {
+                    longitude: Number(lng.toFixed(6)),
+                    latitude: Number(lat.toFixed(6)),
+                    altitude: Number(alt.toFixed(2))
+                };
+                console.log(cartesian);
+                console.log(coordinate);
             }
         }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
