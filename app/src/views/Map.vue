@@ -72,7 +72,7 @@ export default{
         console.log(window.cesiumViewer);
 
         // Set Cesium location. I don't think this does anything
-        // let cp = new Cesium.Cartesian3(4051050.968118943, 1158563.8215692928, 4772196.877004735);
+        // let cp = new Cesium.Cartesian3(281238.4, 4632572.1, 15729.4);
         // cesiumViewer.camera.setView({
         //     destination : cp,
         //     orientation: {
@@ -99,8 +99,8 @@ export default{
         window.viewer.setDescription("");
         
         //Set initial view
-        viewer.scene.view.position.set(570975.577, 5398630.521, 1659.311);
-		viewer.scene.view.lookAt(570115.285, 5400866.092, 30.009);
+        viewer.scene.view.position.set(290975.577, 4638630.521, 1659.311);
+		viewer.scene.view.lookAt(290115.285, 4640866.092, 30.009);
 
         //Load Potree GUI
         window.viewer.loadGUI(() => {
@@ -125,7 +125,7 @@ export default{
             scene.addPointCloud(pointcloud);
 
             //Place and orient pointcloud so that it lines up with cesium
-            e.pointcloud.position.set(569277.402752, 5400050.599046, 0);
+            e.pointcloud.position.set(289277.402752, 4640050.599046, 0);
 		    e.pointcloud.rotation.set(0, 0, -0.035);
 
             //Setting for material
