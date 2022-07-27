@@ -1,33 +1,15 @@
 <template>
     <div id="potree_container" style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px; ">
-        <!-- <v-container style="height: 5%; padding: 0">
-                <v-btn 
-                    v-on:click="()=>{showIntersectionOnClick = !showIntersectionOnClick}" >
-                    Show Intersection on Click
-                </v-btn>
-                <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
-            </v-container> -->
         <div id="potree_render_area">
-            <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green;">
-                <v-card shaped id="potree_toolbar">
-                    <v-card-subtitle style="padding: 4px;">Viewer Settings</v-card-subtitle>
-                    <v-container style="padding-top: 0px;">
-                        <!-- <v-row>
-                            <v-col cols="4">
-                                <v-btn 
-                                    v-on:click="()=>{showIntersectionOnClick = !showIntersectionOnClick}" >
-                                    Show Intersection on Click
-                                </v-btn>
-                            </v-col>
-                            <v-col cols="4">
-                                <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
-                            </v-col>
-                        </v-row> -->
-                        <v-switch v-model="showIntersectionOnClick" :label="`Show Intrsection on Click`"/>
-                        <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
-                    </v-container>
-                </v-card>
-            </div>
+            <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green;"/>
+            <v-card shaped id="potree_toolbar">
+                <v-card-subtitle style="padding: 4px;">Viewer Settings</v-card-subtitle>
+                <v-container style="padding-top: 0px;">
+                    <v-switch v-model="showIntersectionOnClick" :label="`Show Pointcloud`"/>
+                    <v-switch v-model="showPointcloud" :label="`Show Intrsection on Click`"/>
+                    <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
+                </v-container>
+            </v-card>
         </div>
         <!-- <div  id="potree_sidebar_container"/> -->
     </div>
@@ -42,6 +24,7 @@ export default{
     data(){
         return {
             showIntersectionOnClick: false,
+            showPointcloud: true,
             offX: 569277.402752,
             offY: 5400050.599046,
             rot: -0.035,
@@ -67,9 +50,10 @@ export default{
             timeline: false,
             navigationHelpButton: false,
             // imageryProvider : Cesium.createOpenStreetMapImageryProvider({url : 'https://a.tile.openstreetmap.org/'}),
-            imageryProvider: new Cesium.UrlTemplateImageryProvider({
-                url: 'https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=7pbgLwKILW7HCj4i701O',
-                credit: new Cesium.Credit("\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e", true)
+            imageryProvider: new Cesium.BingMapsImageryProvider({
+                url : 'https://dev.virtualearth.net',
+                key : 'AkUghO_-dVbRnryWxAF63Uhb-NPNq7zo-wGinQMlqaMazeHNMyC3qoRq7sH-V_Jj',
+                mapStyle : Cesium.BingMapsStyle.AERIAL
                 }),
             terrainShadows: Cesium.ShadowMode.DISABLED,
         });
@@ -98,25 +82,19 @@ export default{
         window.viewer.setPointBudget(3_000_000);
         window.viewer.loadSettingsFromURL();
         window.viewer.setBackground(null);
-        window.viewer.setControls(window.viewer.fpControls);
+        window.viewer.setControls(window.viewer.earthControls);
 
         window.viewer.setDescription("");
         
         //Set initial view
-        viewer.scene.view.position.set(290975.577, 4638630.521, 1659.311);
-		viewer.scene.view.lookAt(290115.285, 4640866.092, 30.009);
+        viewer.scene.view.position.set(291422, 4640854, 120);
+		viewer.scene.view.lookAt(291364, 4640882, 50);
 
         //Load Potree GUI
         window.viewer.loadGUI(() => {
             potreeViewer.setLanguage('en');
             $("#menu_appearance").next().show();
-            $("#menu_tools").next().show();
-            $("#menu_scene").next().show();
-			window.viewer.toggleSidebar();
         });
-
-        // Potree.resourcePath = "../"
-        // console.log(Potree.resourcePath)
 
         // Load pointcloud
         // Potree.loadPointCloud("http://5.9.65.151/mschuetz/potree/resources/pointclouds/riegl/retz/cloud.js", "Retz",  function(e){
@@ -129,16 +107,13 @@ export default{
             scene.addPointCloud(pointcloud);
 
             //Place and orient pointcloud so that it lines up with cesium
-            e.pointcloud.position.set(289277.402752, 4640050.599046, 0);
-		    e.pointcloud.rotation.set(0, 0, -0.035);
+            pointcloud.position.set(291050, 4641150, 0);
+		    pointcloud.rotation.set(0, 0, -1.6);
 
             //Setting for material
             material.pointSizeType = Potree.PointSizeType.ATTENUATED;
             // material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
-            material.size = 1;
-            // material.elevationRange = [0, 70];
-            // material.weightRGB = 1.0;
-            // material.weightElevation = 1.0;
+            material.size = 1.5;
 
             //Create projections
             let pointcloudProjection = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
@@ -386,23 +361,35 @@ export default{
     @import "../../public/build/potree/potree.css";
     /* This import statement is necessary to make cesium work */
     @import "../../public/libs/Cesium/Widgets/CesiumWidget/CesiumWidget.css";
-    /* @import "../../public/libs/jquery-ui/jquery-ui.min.css";
-    @import "../../public/libs/openlayers3/ol.css";
-    @import "../../public/libs/spectrum/spectrum.css";
-    @import "../../public/libs/jstree/themes/mixed/style.css"; */
+    /* @import "../../public/libs/jquery-ui/jquery-ui.min.css"; */
+    /* @import "../../public/libs/openlayers3/ol.css"; */
+    /* @import "../../public/libs/spectrum/spectrum.css"; */
+    @import "../../public/libs/jstree/themes/mixed/style.css";
 
     #potree_toolbar{
         position: absolute; 
         z-index: 10000; 
+        left: 100px; 
         top: 0px;
-        background: rgba(255, 255, 255, 0.3);
+        background: black;
         color: white;
-        /* padding: 0.3em 0.8em; */
+        padding: 0.3em 0.8em;
         font-family: "system-ui";
         border-radius: 0em 0em 0.3em 0.3em;
-        /* display: flex;
-        flex-direction: row; */
-        /* height: 8%;
-        width: 50%; */
+        display: flex;
+        flex-direction: row;
+    }
+
+    .potree_toolbar_label{
+        text-align: center;
+        font-size: smaller;
+        opacity: 0.9;
+    }
+
+    .potree_toolbar_separator{
+        background: white;
+        padding: 0px;
+        margin: 5px 10px;
+        width: 1px;
     }
 </style>
