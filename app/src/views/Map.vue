@@ -66,7 +66,11 @@ export default{
             selectionIndicator: false,
             timeline: false,
             navigationHelpButton: false,
-            imageryProvider : Cesium.createOpenStreetMapImageryProvider({url : 'https://a.tile.openstreetmap.org/'}),
+            // imageryProvider : Cesium.createOpenStreetMapImageryProvider({url : 'https://a.tile.openstreetmap.org/'}),
+            imageryProvider: new Cesium.UrlTemplateImageryProvider({
+                url: 'https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=7pbgLwKILW7HCj4i701O',
+                credit: new Cesium.Credit("\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e", true)
+                }),
             terrainShadows: Cesium.ShadowMode.DISABLED,
         });
         console.log(window.cesiumViewer);
