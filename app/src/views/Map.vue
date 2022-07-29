@@ -297,6 +297,37 @@ export default{
                 let minWGS84 = proj4(pointcloudProjection, mapProjection, bb.min.toArray());
                 let maxWGS84 = proj4(pointcloudProjection, mapProjection, bb.max.toArray());
             }
+
+            //Add annotations
+            let anno = new Potree.Annotation({
+                title: "Test",
+                position: [291276, 4640928, 35],
+                cameraPosition: [291294, 4640953, 30],
+                cameraTarget: [291276, 4640929, 21]
+            });
+            aRoot.add(anno);
+            // let addAnno = function(currAnno, parAnno){
+            //     let anno = new Potree.Annotation({
+            //         title: currAnno.title,
+            //         position: [291276, 4640928, 35],
+            //         cameraPosition: [291294, 4640953, 30],
+            //         cameraTarget: [291276, 4640929, 21],
+            //     });
+
+            //     if (currAnno.children){
+            //         for (let i = 0; i < currAnno.children.length; i++){
+            //             addAnno(currAnno.children[i], anno);
+            //         }
+            //     }
+
+            //     parAnno.add(anno);
+            // }
+
+            // if (data.annos){
+            //     for (let i = 0; i < data.annos.length; i++){
+            //         addAnno(data.annos[i], aRoot);
+            //     }
+            // }
         });//end load pointcloud
 
         // //Create lighting for meshes
@@ -351,11 +382,11 @@ export default{
         });
 
         // Add annotations
-        if (data.annos){
-            for (let i = 0; i < data.annos.length; i++){
-                this.addAnno(data.annos[i], aRoot);
-            }
-        }
+        // if (data.annos){
+        //     for (let i = 0; i < data.annos.length; i++){
+        //         this.addAnno(data.annos[i], aRoot);
+        //     }
+        // }
 
         //Add event listner for mouse movement. This allows us to get pointcloud intersection with mouse
         window.viewer.renderer.domElement.addEventListener('mousedown', (event) => {
@@ -470,6 +501,12 @@ export default{
 
             console.log(arr1);
             return arr1;
+        },
+
+        transformCoords(coords){
+            let len = Math.sqrt(coords[0] * coords[0] + coords[1] * coords[1] + coords[2] * coords[2]);
+            let angle = Math.atan(coords[1] / coords[0]);
+            
         },
 
         addAnno(currAnno, parAnno){
