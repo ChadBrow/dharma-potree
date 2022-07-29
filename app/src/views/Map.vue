@@ -39,6 +39,144 @@ export default{
         const Potree = window.Potree;
         const loader = new PLYLoader();
 
+        let resourcePath = '../resources';
+
+        //Make Toolbar 
+        const elToolbar = $("#potree_toolbar");
+        elToolbar.html(`
+            <span>
+                <div class="potree_toolbar_label">
+                    View
+                </div>
+                <div>
+                    <img title="toggle mesh" name="action_mesh" src="${resourcePath}/icons/triangle.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
+                    <img title="toggle reconstructions" name="action_recon" src="${resourcePath}/icons/navigation_cube.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
+                    <img title="toggle pointcloud" name="action_point" src="${resourcePath}/icons/rgb.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
+                </div>
+            </span>
+            <span class="potree_toolbar_separator" />
+            <span>
+                <div class="potree_toolbar_label">
+                    Measure
+                </div>
+                <div>
+                    <img title="press esc to clear all measurements" name="action_measure_point" src="${resourcePath}/icons/point.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
+                    <img title="press esc to clear all measurements" name="action_measure_distance" src="${resourcePath}/icons/distance.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
+                </div>
+            </span>
+            <span class="potree_toolbar_separator" />
+            <span>
+                <div class="potree_toolbar_label">
+                    Quality
+                </div>
+                <div>
+                    <selectgroup id="quality_options"
+                        <fieldset style="border:none; margin: 0px; padding: 0px;">
+                            <legend></legend>
+                            <span style="display:flex">
+                                <span style="flex-grow: 1; display: inherit">	
+                                    <label for="quality_options_low" class="ui-button ui-state-default" style="width: 100%; padding: 0.4em 0.1em; margin: 0px; border-radius: 4px 0px 0px 4px; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial;">Low</label>
+                                    <input type="radio" name="background_options" id="quality_options_low" value="low" style="display: none">
+                                </span>
+                                <span style="flex-grow: 1; display: inherit">
+                                    <label for="quality_options_med" class="ui-button ui-state-default ui-state-active" style="width: 100%; padding: 0.4em 0.1em; margin: 0px; border-radius: 0px; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial;">Medium</label>
+                                    <input type="radio" name="background_options" id="quality_options_med" value="med" style="display: none">
+                                </span>
+                                <span style="flex-grow: 1; display: inherit">
+                                    <label for="quality_options_high" class="ui-button ui-state-default " style="width: 100%; padding: 0.4em 0.1em; margin: 0px; border-radius: 0px 4px 4px 0px; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial;">High</label>
+                                    <input type="radio" name="background_options" id="quality_options_high" value="high" style="display: none">
+                                </span>
+                            </span>
+                        </fieldset>
+                    </selectgroup>
+                </div>
+            </span>
+        `);
+
+        {   // QUALITY TOGGLES  ---- TODO
+            document.getElementById("quality_options_high").addEventListener("click", (el) => {
+                elToolbar.find("label[for=quality_options_med]").removeClass("ui-state-active");
+                elToolbar.find("label[for=quality_options_high]").addClass("ui-state-active");
+                viewer.setPointBudget(10_000_000);
+            });
+        }
+
+        {   // POINTCLOUD MESH AND RECON TOGGLES
+            elToolbar.find("img[name=action_point]").click( () => {
+                viewer.scene.pointclouds.forEach( pc => pc.visible = !pc.visible);
+            });
+
+
+            elToolbar.find("img[name=action_recon]").click( () => {
+                viewer.scene.scene.children.forEach( rc => {
+                    if(rc.name.includes('recon') && selector == rc.name.split(" ")[0]) {
+                        if(rc.name.includes('reconline')) {
+                                console.log(rc)
+                                rc.material.color.setHex(0x4d3319);
+                            }
+                        rc.visible = !rc.visible; 
+                        
+                    }
+                });
+            });
+
+            elToolbar.find("img[name=action_mesh]").click( () => {
+                console.log("mesh");
+                viewer.scene.scene.children.forEach( ms => {
+                    console.log(ms.name.split(' ')[0]);
+                    if (ms.name &&  ms.name.split(' ')[0] == selector) {
+                        console.log(ms.name.split())
+                        console.log(ms.name.split().length)
+                        
+                        if (ms.name.includes('reconline') || ms.name.split(' ').length == 1) {
+                            ms.visible = !ms.visible;
+                            if(ms.name.includes('reconline')) {
+                                console.log(ms)
+                                ms.material.color.setHex(0xecd9c6);
+                            }
+                        }
+                    }
+
+                });
+            });
+        }
+
+        { // MEASUREMENT TOOLS
+            elToolbar.find("img[name=action_measure_point]").click( () => {
+                const measurement = viewer.measuringTool.startInsertion({
+                    showDistances: false,
+                    showAngles: false,
+                    showCoordinates: true,
+                    showArea: false,
+                    closed: true,
+                    maxMarkers: 1,
+                    name: 'Point'
+                });
+            });
+
+            elToolbar.find("img[name=action_measure_distance]").click( () => {
+                const measurement = viewer.measuringTool.startInsertion({
+                    showDistances: true,
+                    showArea: false,
+                    closed: false,
+                    name: 'Distance'
+                });
+            });
+
+            elToolbar.find("img[name=action_measure_circle]").click( () => {
+                const measurement = viewer.measuringTool.startInsertion({
+                    showDistances: false,
+                    showHeight: false,
+                    showArea: false,
+                    showCircle: true,
+                    showEdges: false,
+                    closed: false,
+                    maxMarkers: 3,
+                    name: 'Circle'
+                });
+            });
+        }
+
         //Initialize Cesium Viewer
         // window.CESIUM_BASE_URL = Potree.resourcePath + "/../libs/Cesium";
         window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
