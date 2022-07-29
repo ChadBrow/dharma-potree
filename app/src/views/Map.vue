@@ -13,6 +13,17 @@
                 </v-container>
             </v-card> -->
         </div>
+        <!-- <div class="credits">
+			<div class="logo">
+				<a href="https://dharma3d.org/" target="_blank">
+					<img src="../../public/resources/images/DHARMA_logo_long.png" style="width: 100%;"/>
+				</a>
+			</div>
+			
+			<div style="background-color: rgba(255, 255, 255, 0.5); padding: 3px;" class="logo">
+				<img src="../../public/resources/logo_small.png">
+			</div>
+		</div> -->
     </div>
 </template>
 
@@ -257,7 +268,6 @@ export default{
         });
 
         // Load pointcloud
-        // Potree.loadPointCloud("http://5.9.65.151/mschuetz/potree/resources/pointclouds/riegl/retz/cloud.js", "Retz",  function(e){
         Potree.loadPointCloud("http://10.0.0.229:8080/metadata.json", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
@@ -272,7 +282,6 @@ export default{
 
             //Setting for material
             material.pointSizeType = Potree.PointSizeType.ATTENUATED;
-            // material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
             material.size = data.materialSize;
 
             //Create projections
@@ -284,82 +293,15 @@ export default{
 
             {//Declare bounding box and projections. I believe Cesium uses these
                 let bb = window.viewer.getBoundingBox();
-                
-                // proj4.defs("minWGS84", proj4(pointcloudProjection, mapProjection, bb.min.toArray()));
-			    // proj4.defs("maxWGS84", proj4(pointcloudProjection, mapProjection, bb.max.toArray()));
+
                 let minWGS84 = proj4(pointcloudProjection, mapProjection, bb.min.toArray());
                 let maxWGS84 = proj4(pointcloudProjection, mapProjection, bb.max.toArray());
             }
-            
-            // {//Add annotations
-            //     //Declare root annotation
-            //         let aRoot = scene.annotations;
-            //     {//Base annotations
-
-            //         //Declare base annotation
-            //         let aBase = new Potree.Annotation({
-            //             title: "Base Pedestal",
-            //             position: [1.51, -1.98, 4.13],
-            //             cameraPosition: [3.08, -4.72, 6.14],
-            //             cameraTarget: [1.51, -1.98, 4.13]
-            //         });
-            //         aRoot.add(aBase);
-
-            //         //Child annos
-            //         let aTest1 = new Potree.Annotation({
-            //             title: "Test 1",
-            //             position: [0.602, -2.128, 3.733],
-            //             cameraPosition: [-0.299, -3.536, 5.020],
-            //             cameraTarget: [0.602, -2.128, 3.733]
-            //         })
-            //         aBase.add(aTest1);
-
-            //     }
-
-            //     {
-            //         //Create title element. This is only necessary if we want to put images in the name
-            //         let returnTitle = $(`
-            //         <span>
-            //             Tree Returns:
-            //             <img name="action_return_number" src="${Potree.resourcePath}/icons/return_number.svg" class="annotation-action-icon"/>
-            //             <img name="action_rgb" src="${Potree.resourcePath}/icons/rgb.png" class="annotation-action-icon"/>
-            //         </span>`);
-
-            //         //give on click effects to its two icons
-            //         returnTitle.find("img[name=action_return_number]").click( () => {
-            //             event.stopPropagation();
-            //             material.activeAttributeName = "return_number";
-            //             material.pointSizeType = Potree.PointSizeType.FIXED;
-            //             material.size = 5;
-            //             window.viewer.setClipTask(Potree.ClipTask.SHOW_INSIDE);
-            //         });
-                    
-            //         returnTitle.find("img[name=action_rgb]").click( () => {
-            //             event.stopPropagation();
-            //             material.activeAttributeName = "rgba";
-            //             material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
-            //             material.size = 1;
-            //             window.viewer.setClipTask(Potree.ClipTask.HIGHLIGHT);
-            //         });
-
-            //         returnTitle.toString = () => "Tree Returns";
-                    
-
-            //         let aTreeReturns = new Potree.Annotation({
-            //             title: returnTitle,
-            //             position: [0.807, -1.700, 6.999],
-            //             cameraPosition: [5.141, -7.602, 9.546],
-            //             cameraTarget: [0.807, -1.700, 6.999],
-            //         });
-            //         aRoot.add(aTreeReturns);
-            //         // aTreeReturns.domElement.find(".annotation-action-icon:first").css("filter", "invert(1)");
-            //     }
-			// }// end load annotations
         });//end load pointcloud
 
-        //Create lighting for meshes
-        const light = new THREE.AmbientLight(); // soft white light
-        scene.scene.add( light );
+        // //Create lighting for meshes
+        // const light = new THREE.AmbientLight(); // soft white light
+        // scene.scene.add( light );
 
         // load mesh
 		loader.load(Potree.resourcePath + "/models/toaf.ply", (geometry) => {
@@ -409,11 +351,11 @@ export default{
         });
 
         // Add annotations
-        // if (data.annos){
-        //     for (let i = 0; i < data.annos.length; i++){
-        //         this.addAnno(data.annos[i], aRoot);
-        //     }
-        // }
+        if (data.annos){
+            for (let i = 0; i < data.annos.length; i++){
+                this.addAnno(data.annos[i], aRoot);
+            }
+        }
 
         //Add event listner for mouse movement. This allows us to get pointcloud intersection with mouse
         window.viewer.renderer.domElement.addEventListener('mousedown', (event) => {
@@ -531,12 +473,10 @@ export default{
         },
 
         addAnno(currAnno, parAnno){
-            console.log("Adding:", currAnno.title);
+            console.log(currAnno);
+            console.log(parAnno);
             let anno = new Potree.Annotation({
 				title: currAnno.title,
-				// position: this.addArrays(currAnno.position, this.data.pos),
-				// cameraPosition: this.addArrays(currAnno.cameraPosition, this.data.pos), // relative position
-				// cameraTarget: this.addArrays(currAnno.cameraTarget, this.data.pos),
                 position: currAnno.position,
                 cameraPosition: currAnno.cameraPosition,
                 cameraTarget: currAnno.cameraTarget
@@ -565,6 +505,13 @@ export default{
     @import "../../public/libs/spectrum/spectrum.css";
     @import "../../public/libs/jstree/themes/mixed/style.css";
 
+    div.annotation {    
+        opacity: 1 !important;
+    }
+    /* div.annotation-titlebar {
+        background-color: white;
+        color: black;
+    } */
     .popup {
         position: fixed;
         top: 5%;

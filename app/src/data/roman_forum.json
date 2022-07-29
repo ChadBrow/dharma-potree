@@ -10,9 +10,9 @@
     "annos": [
         {
             "title": "Temple of Vespasian and Titus",
-            "position": [-18, 22, 30],
-            "cameraPosition": [0, 47, 25],
-            "cameraTarget": [-18, 23, 16],
+            "position": [291276, 4640928, 35],
+            "cameraPosition": [291294, 4640953, 30],
+            "cameraTarget": [291276, 4640929, 21],
             "children": [
                 {
                     "title": "Capital",
