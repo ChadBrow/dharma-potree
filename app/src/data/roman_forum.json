@@ -1,0 +1,26 @@
+
+{
+    "view": {
+        "pos": [291422, 4640854, 120],
+        "lookAt": [291364, 4640882, 50]
+    },
+    "pos": [291050, 4641150, 0],
+    "rot": -1.6,
+    "materialSize": 1.5,
+    "annos": [
+        {
+            "title": "Temple of Vespasian and Titus",
+            "position": [-18, 22, 30],
+            "cameraPosition": [0, 47, 25],
+            "cameraTarget": [-18, 23, 16],
+            "children": [
+                {
+                    "title": "Capital",
+                    "position": [-18, 24, 25],
+                    "cameraPosition": [-14, 30, 24],
+                    "cameraTarget": [-18, 24, 23]
+                }
+            ]
+        }
+    ]
+}

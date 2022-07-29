@@ -1,17 +1,18 @@
 <template>
     <div id="potree_container" style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px; ">
         <div id="potree_render_area">
+            <div id="potree_toolbar">
+			</div>
             <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green;"/>
-            <v-card shaped id="potree_toolbar">
+            <!-- <v-card shaped id="potree_toolbar">
                 <v-card-subtitle style="padding: 4px;">Viewer Settings</v-card-subtitle>
                 <v-container style="padding-top: 0px;">
                     <v-switch v-model="showIntersectionOnClick" :label="`Show Pointcloud`"/>
                     <v-switch v-model="showPointcloud" :label="`Show Intrsection on Click`"/>
                     <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
                 </v-container>
-            </v-card>
+            </v-card> -->
         </div>
-        <!-- <div  id="potree_sidebar_container"/> -->
     </div>
 </template>
 
@@ -24,14 +25,17 @@ export default{
     data(){
         return {
             showIntersectionOnClick: false,
-            showPointcloud: true,
-            offX: 569277.402752,
-            offY: 5400050.599046,
-            rot: -0.035,
+            data: null
+            
         }
     },
 
     mounted(){
+        //Load data about current map
+        let data = require("../data/roman_forum.json");
+        this.data = data;
+
+        //Declare Potree and mesh loader
         const Potree = window.Potree;
         const loader = new PLYLoader();
 
@@ -57,7 +61,6 @@ export default{
                 }),
             terrainShadows: Cesium.ShadowMode.DISABLED,
         });
-        console.log(window.cesiumViewer);
 
         // Set Cesium location. I don't think this does anything
         // let cp = new Cesium.Cartesian3(281238.4, 4632572.1, 15729.4);
@@ -72,23 +75,42 @@ export default{
 
         //Initialize Potree viewer and scene
         window.viewer = new Potree.Viewer(document.getElementById("potree_render_area"), {
-            useDefaultRenderLoop: false //This setting seems to be necessary to get cesium to work
+            useDefaultRenderLoop: false //This setting is necessary to get cesium to work
         });
         let scene = window.viewer.scene;
+        let aRoot = scene.annotations;
 
         //Configure viewer settings
+        window.viewer.setDescription("");
         window.viewer.setEDLEnabled(true);
         window.viewer.setFOV(60);
         window.viewer.setPointBudget(3_000_000);
         window.viewer.loadSettingsFromURL();
         window.viewer.setBackground(null);
         window.viewer.setControls(window.viewer.earthControls);
+        window.viewer.useHQ = true;
+	
+		
+		// Lights
+		let directionalLight, pointLight, ambientLight, hemiLight;
 
-        window.viewer.setDescription("");
+		hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 2);
+		window.viewer.scene.scene.add(hemiLight);
+
+		window.viewer.pRenderer.threeRenderer.toneMapping = THREE.ReinhardToneMapping;
+		window.viewer.pRenderer.threeRenderer.toneMappingExposure = 2.3;
+		window.viewer.pRenderer.threeRenderer.shadowMap.enabled = true;
+
+		pointLight = new THREE.SpotLight(0xffa95c, 4);
+		pointLight.castShadow = true;
+		pointLight.shadow.bias = -0.0001;
+		pointLight.shadow.mapSize.width = 1024*4;
+		pointLight.shadow.mapSize.height = 1024*4;
+		viewer.scene.scene.add(pointLight);
         
         //Set initial view
-        viewer.scene.view.position.set(291422, 4640854, 120);
-		viewer.scene.view.lookAt(291364, 4640882, 50);
+        viewer.scene.view.position.set(data.view.pos[0], data.view.pos[1], data.view.pos[2]);
+		viewer.scene.view.lookAt(data.view.lookAt[0], data.view.lookAt[1], data.view.lookAt[2]);
 
         //Load Potree GUI
         window.viewer.loadGUI(() => {
@@ -107,13 +129,13 @@ export default{
             scene.addPointCloud(pointcloud);
 
             //Place and orient pointcloud so that it lines up with cesium
-            pointcloud.position.set(291050, 4641150, 0);
-		    pointcloud.rotation.set(0, 0, -1.6);
+            pointcloud.position.set(data.pos[0], data.pos[1], data.pos[2]);
+		    pointcloud.rotation.set(0, 0, data.rot);
 
             //Setting for material
             material.pointSizeType = Potree.PointSizeType.ATTENUATED;
             // material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
-            material.size = 1.5;
+            material.size = data.materialSize;
 
             //Create projections
             let pointcloudProjection = "+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs";
@@ -130,9 +152,7 @@ export default{
                 let minWGS84 = proj4(pointcloudProjection, mapProjection, bb.min.toArray());
                 let maxWGS84 = proj4(pointcloudProjection, mapProjection, bb.max.toArray());
             }
-
             
-
             // {//Add annotations
             //     //Declare root annotation
             //         let aRoot = scene.annotations;
@@ -250,6 +270,13 @@ export default{
 			});
         });
 
+        // Add annotations
+        // if (data.annos){
+        //     for (let i = 0; i < data.annos.length; i++){
+        //         this.addAnno(data.annos[i], aRoot);
+        //     }
+        // }
+
         //Add event listner for mouse movement. This allows us to get pointcloud intersection with mouse
         window.viewer.renderer.domElement.addEventListener('mousedown', (event) => {
             if (this.showIntersectionOnClick){
@@ -283,12 +310,18 @@ export default{
         }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
         function loop(timestamp){
-            // console.log("We loopin...");
             window.requestAnimationFrame(loop);
 
             window.viewer.update(window.viewer.clock.getDelta(), timestamp);
 
             window.viewer.render();
+
+            //Light position
+            pointLight.position.set(
+				viewer.scene.cameraP.position.x + 10,
+				viewer.scene.cameraP.position.y + 10,
+				viewer.scene.cameraP.position.z + 10
+			);
             
             if(window.toMap !== undefined){
                 {
@@ -347,9 +380,37 @@ export default{
         displayCameraPos(){
             console.log(window.viewer.scene.getActiveCamera());
         },
-        returnToRoot(){
-            console.log(this.scene);
+        
+        addArrays(arr1, arr2){
+            console.log(arr1, " --- ", arr1[0] + arr2[0]);
+            //Adds elements in arr2 to arr1. arr1 better not be longer than arr2
+            for (let i = 0; i < arr1.length; i++){
+                arr1[i] += arr2[i];
+            }
+
+            console.log(arr1);
+            return arr1;
         },
+
+        addAnno(currAnno, parAnno){
+            console.log("Adding:", currAnno.title);
+            let anno = new Potree.Annotation({
+				title: currAnno.title,
+				// position: this.addArrays(currAnno.position, this.data.pos),
+				// cameraPosition: this.addArrays(currAnno.cameraPosition, this.data.pos), // relative position
+				// cameraTarget: this.addArrays(currAnno.cameraTarget, this.data.pos),
+                position: currAnno.position,
+                cameraPosition: currAnno.cameraPosition,
+                cameraTarget: currAnno.cameraTarget
+			});
+            parAnno.add(anno);
+
+            if (currAnno.children){
+                for (let i = 0; i < currAnno.children.length; i++){
+                    this.addAnno(currAnno.children[i], anno);
+                }
+            }
+        }
         
     },
 }
@@ -361,15 +422,68 @@ export default{
     @import "../../public/build/potree/potree.css";
     /* This import statement is necessary to make cesium work */
     @import "../../public/libs/Cesium/Widgets/CesiumWidget/CesiumWidget.css";
-    /* @import "../../public/libs/jquery-ui/jquery-ui.min.css"; */
-    /* @import "../../public/libs/openlayers3/ol.css"; */
-    /* @import "../../public/libs/spectrum/spectrum.css"; */
+    @import "../../public/libs/jquery-ui/jquery-ui.min.css"; 
+    @import "../../public/libs/openlayers3/ol.css";
+    @import "../../public/libs/spectrum/spectrum.css";
     @import "../../public/libs/jstree/themes/mixed/style.css";
 
+    .popup {
+        position: fixed;
+        top: 5%;
+        right: 5%;
+        width: 20%;
+        z-index: 10000;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 10px;
+        visibility: hidden;
+        font-size: 20px;
+        font-family: Garamond,Baskerville,Baskerville Old Face,Hoefler Text,Times New Roman,serif;
+        /* garmond */
+    }
+    .credits {
+        position: fixed;
+        bottom:0px;
+        left: 0px;
+        z-index: 10000;
+        width: 100%;
+        padding: 5px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .logo {
+        width: 15%;
+    }
+    .button {
+        background-color: #d37243;
+        border-radius: 10px;
+        margin: 10px;
+        text-decoration: none;
+        text-align: center;
+        display: inline-block;
+        font-size: 24px;
+        padding: 5px;
+        color: black;
+    }
+    .lesson {
+        position: fixed;
+        top: 5%;
+        right: 5%;
+        width: 20%;
+        z-index: 9000;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 10px;
+        visibility: hidden;
+        font-size: 20px;
+        font-family: Garamond,Baskerville,Baskerville Old Face,Hoefler Text,Times New Roman,serif;
+        /* garmond */
+    }
+        
     #potree_toolbar{
         position: absolute; 
         z-index: 10000; 
-        left: 100px; 
+        left: 5px; 
         top: 0px;
         background: black;
         color: white;
@@ -378,6 +492,11 @@ export default{
         border-radius: 0em 0em 0.3em 0.3em;
         display: flex;
         flex-direction: row;
+    }
+
+    .potree_menu_toggle {
+        z-index: 0;
+        display: none;
     }
 
     .potree_toolbar_label{
