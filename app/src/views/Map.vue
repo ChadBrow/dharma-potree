@@ -301,7 +301,8 @@ export default{
             //Add annotations
             let anno = new Potree.Annotation({
                 title: "Test",
-                position: [291276, 4640928, 35],
+                // position: [291276, 4640928, 35],
+                position: [291050, 4641150, 35],
                 cameraPosition: [291294, 4640953, 30],
                 cameraTarget: [291276, 4640929, 21]
             });
@@ -382,11 +383,11 @@ export default{
         });
 
         // Add annotations
-        // if (data.annos){
-        //     for (let i = 0; i < data.annos.length; i++){
-        //         this.addAnno(data.annos[i], aRoot);
-        //     }
-        // }
+        if (data.annos){
+            for (let i = 0; i < data.annos.length; i++){
+                this.addAnno(data.annos[i], aRoot);
+            }
+        }
 
         //Add event listner for mouse movement. This allows us to get pointcloud intersection with mouse
         window.viewer.renderer.domElement.addEventListener('mousedown', (event) => {
@@ -504,19 +505,24 @@ export default{
         },
 
         transformCoords(coords){
-            let len = Math.sqrt(coords[0] * coords[0] + coords[1] * coords[1] + coords[2] * coords[2]);
+            let len = Math.sqrt((coords[0] * coords[0]) + (coords[1] * coords[1]));
             let angle = Math.atan(coords[1] / coords[0]);
-            
+            angle -= this.data.rot;
+            console.log(angle);
+
+            console.log([this.data.pos[0] + len * Math.cos(angle), this.data.pos[1] + len * Math.sin(angle), coords[2] + 15.71]);//z is pretty easy 
+
         },
 
         addAnno(currAnno, parAnno){
-            console.log(currAnno);
-            console.log(parAnno);
+            this.transformCoords(currAnno.position);
+            this.transformCoords(currAnno.cameraPosition);
+            this.transformCoords(currAnno.cameraTarget);
             let anno = new Potree.Annotation({
 				title: currAnno.title,
-                position: currAnno.position,
-                cameraPosition: currAnno.cameraPosition,
-                cameraTarget: currAnno.cameraTarget
+                position: [currAnno.position[0], currAnno.position[1], currAnno.position[2]],
+                cameraPosition: [currAnno.cameraPosition[0], currAnno.cameraPosition[1], currAnno.cameraPosition[2]],
+                cameraTarget: [currAnno.cameraTarget[0], currAnno.cameraTarget[1], currAnno.cameraTarget[2]]
 			});
             parAnno.add(anno);
 
