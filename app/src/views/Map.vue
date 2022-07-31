@@ -301,34 +301,35 @@ export default{
             //Add annotations
             // let anno = new Potree.Annotation({
             //     title: "Test",
-            //     position: [291276, 4640928, 35],
+            //     position: [data.annos[0].position[0], data.annos[0].position[1], data.annos[0].position[2]],
             //     // position: [291050, 4641150, 35],
             //     cameraPosition: [291294, 4640953, 30],
             //     cameraTarget: [291276, 4640929, 21]
             // });
             // aRoot.add(anno);
-            // let addAnno = function(currAnno, parAnno){
-            //     let anno = new Potree.Annotation({
-            //         title: currAnno.title,
-            //         position: [291276, 4640928, 35],
-            //         cameraPosition: [291294, 4640953, 30],
-            //         cameraTarget: [291276, 4640929, 21],
-            //     });
+            let addAnno = function(currAnno, parAnno){
+                console.log(currAnno);
+                console.log(parAnno);
+                let anno = new Potree.Annotation({
+                    title: currAnno.title,
+                    position: [currAnno.position[0], currAnno.position[1], currAnno.position[2]],
+                    cameraPosition: [currAnno.cameraPosition[0], currAnno.cameraPosition[1], currAnno.cameraPosition[2]],
+                    cameraTarget: [currAnno.cameraTarget[0], currAnno.cameraTarget[1], currAnno.cameraTarget[2]]
+                });
+                parAnno.add(anno);
 
-            //     if (currAnno.children){
-            //         for (let i = 0; i < currAnno.children.length; i++){
-            //             addAnno(currAnno.children[i], anno);
-            //         }
-            //     }
+                if (currAnno.children){
+                    for (let i = 0; i < currAnno.children.length; i++){
+                        addAnno(currAnno.children[i], anno);
+                    }
+                }                
+            }
 
-            //     parAnno.add(anno);
-            // }
-
-            // if (data.annos){
-            //     for (let i = 0; i < data.annos.length; i++){
-            //         addAnno(data.annos[i], aRoot);
-            //     }
-            // }
+            if (data.annos){
+                for (let i = 0; i < data.annos.length; i++){
+                    addAnno(data.annos[i], aRoot);
+                }
+            }
         });//end load pointcloud
 
         // //Create lighting for meshes
@@ -383,11 +384,11 @@ export default{
         });
 
         // Add annotations
-        if (data.annos){
-            for (let i = 0; i < data.annos.length; i++){
-                this.addAnno(data.annos[i], aRoot);
-            }
-        }
+        // if (data.annos){
+        //     for (let i = 0; i < data.annos.length; i++){
+        //         this.addAnno(data.annos[i], aRoot);
+        //     }
+        // }
 
         //Add event listner for mouse movement. This allows us to get pointcloud intersection with mouse
         window.viewer.renderer.domElement.addEventListener('mousedown', (event) => {
@@ -522,17 +523,18 @@ export default{
             this.transformCoords(currAnno.cameraTarget);
             let anno = new Potree.Annotation({
 				title: currAnno.title,
-                position: [parseFloat(currAnno.position[0]), parseFloat(currAnno.position[1]), parseFloat(currAnno.position[2])],
+                position: [currAnno.position[0], currAnno.position[1], currAnno.position[2]],
                 cameraPosition: [currAnno.cameraPosition[0], currAnno.cameraPosition[1], currAnno.cameraPosition[2]],
                 cameraTarget: [currAnno.cameraTarget[0], currAnno.cameraTarget[1], currAnno.cameraTarget[2]]
 			});
-            parAnno.add(anno);
 
             if (currAnno.children){
                 for (let i = 0; i < currAnno.children.length; i++){
                     this.addAnno(currAnno.children[i], anno);
                 }
             }
+
+            parAnno.add(anno);
         }
         
     },

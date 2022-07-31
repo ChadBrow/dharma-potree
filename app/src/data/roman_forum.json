@@ -11,8 +11,8 @@
         {
             "title": "Temple of Vespasian and Titus",
             "position": [291277.25900175434, 4640928.947952896, 33.71],
-            "cameraPosition": [0, 47, 13],
-            "cameraTarget": [-18, 23, 4],
+            "cameraPosition": [291299.1447469202, 4640946.194360016, 28.71],
+            "cameraTarget": [291276.2594281513, 4640928.918753374, 19.71],
             "children": [
                 {
                     "title": "Capital",

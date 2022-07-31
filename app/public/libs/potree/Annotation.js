@@ -113,7 +113,7 @@ export class Annotation extends EventDispatcher {
 		});
 
 		this.display = false;
-		//this.display = true;
+		// this.display = true;
 
 	}
 
