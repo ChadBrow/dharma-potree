@@ -9,18 +9,61 @@
     "materialSize": 1.5,
     "annos": [
         {
+            "title": "Temple of Saturn",
+            "position": [6, 32, 18],
+            "cameraPosition": [-38, 63, 13],
+            "cameraTarget": [6, 32, 8],
+            "children": [
+                {
+                    "title": "Fallen Cornice",
+                    "position": [18, 38, -8],
+                    "cameraPosition": [23, 47, -2],
+                    "cameraTarget": [18, 38, -12]
+                },
+                {
+                    "title": "Architrave Inscription",
+                    "position": [6, 32, 15],
+                    "cameraPosition": [-2, 39, 11],
+                    "cameraTarget": [6, 32, 12]
+                }
+            ],
+            "mesh": [9.2, 30.5, -7]
+        },
+        {
             "title": "Temple of Vespasian and Titus",
-            "position": [291277.25900175434, 4640928.947952896, 33.71],
-            "cameraPosition": [291299.1447469202, 4640946.194360016, 28.71],
-            "cameraTarget": [291276.2594281513, 4640928.918753374, 19.71],
+            "position": [291277.25900175434, 4640927.472047104, 33.71],
+            "cameraPosition": [291299.1447469202, 4640910.225639984, 28.71],
+            "cameraTarget": [291276.2594281513, 4640927.501246626, 19.71],
             "children": [
                 {
                     "title": "Capital",
-                    "position": [-18, 24, 25],
-                    "cameraPosition": [-14, 30, 24],
-                    "cameraTarget": [-18, 24, 23]
+                    "position": [291275.26, 4640927.53, 28.71],
+                    "cameraPosition": [291282.56, 4640924.72, 27.71],
+                    "cameraTarget": [291275.26, 4640927.53, 26.71]
                 }
-            ]
+            ],
+            "mesh": [-17.6, 20, -10.5]
+        },
+        {
+            "title": "Arch of Septimius Severus",
+            "position": [-28, 76, 14],
+            "cameraPosition": [-6, 108, 10],
+            "cameraTarget": [-25, 76, 8],
+            "children": [
+                {
+                    "title": "Arch",
+                    "position": [-28, 76, 2],
+                    "cameraPosition": [-28, 76, -8],
+                    "cameraTarget": [-28, 76, 2]
+                },
+                {
+                    "title": "Figure",
+                    "position": [-21, 77, -5],
+                    "cameraPosition": [-16, 84, -2],
+                    "cameraTarget": [-21, 77, -7]
+                }
+            ],
+            "mesh": [-27, 76, -12]
         }
     ]
 }

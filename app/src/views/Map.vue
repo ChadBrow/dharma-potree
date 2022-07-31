@@ -227,7 +227,6 @@ export default{
             useDefaultRenderLoop: false //This setting is necessary to get cesium to work
         });
         let scene = window.viewer.scene;
-        let aRoot = scene.annotations;
 
         //Configure viewer settings
         window.viewer.setDescription("");
@@ -298,39 +297,42 @@ export default{
                 let maxWGS84 = proj4(pointcloudProjection, mapProjection, bb.max.toArray());
             }
 
-            //Add annotations
+            // Add annotations
             // let anno = new Potree.Annotation({
             //     title: "Test",
-            //     position: [data.annos[0].position[0], data.annos[0].position[1], data.annos[0].position[2]],
-            //     // position: [291050, 4641150, 35],
+            //     // position: [data.annos[0].position[0], data.annos[0].position[1], data.annos[0].position[2]],
+            //     position: [291050, 4641150, 35],
             //     cameraPosition: [291294, 4640953, 30],
             //     cameraTarget: [291276, 4640929, 21]
+            //     // cameraPosition: [291299.14, 4640946.19, 28.71],
+            //     // cameraTarget: [291276.26, 4640928.92, 19.71]
             // });
             // aRoot.add(anno);
-            let addAnno = function(currAnno, parAnno){
-                console.log(currAnno);
-                console.log(parAnno);
-                let anno = new Potree.Annotation({
-                    title: currAnno.title,
-                    position: [currAnno.position[0], currAnno.position[1], currAnno.position[2]],
-                    cameraPosition: [currAnno.cameraPosition[0], currAnno.cameraPosition[1], currAnno.cameraPosition[2]],
-                    cameraTarget: [currAnno.cameraTarget[0], currAnno.cameraTarget[1], currAnno.cameraTarget[2]]
-                });
-                parAnno.add(anno);
+            // let addAnno = function(currAnno, parAnno){
+            //     console.log(currAnno);
+            //     console.log(parAnno);
+            //     let anno = new Potree.Annotation({
+            //         title: currAnno.title,
+            //         position: [currAnno.position[0], currAnno.position[1], currAnno.position[2]],
+            //         cameraPosition: [currAnno.cameraPosition[0], currAnno.cameraPosition[1], currAnno.cameraPosition[2]],
+            //         cameraTarget: [currAnno.cameraTarget[0], currAnno.cameraTarget[1], currAnno.cameraTarget[2]]
+            //     });
+            //     parAnno.add(anno);
 
-                if (currAnno.children){
-                    for (let i = 0; i < currAnno.children.length; i++){
-                        addAnno(currAnno.children[i], anno);
-                    }
-                }                
-            }
+            //     if (currAnno.children){
+            //         for (let i = 0; i < currAnno.children.length; i++){
+            //             addAnno(currAnno.children[i], anno);
+            //         }
+            //     }                
+            // }
 
-            if (data.annos){
-                for (let i = 0; i < data.annos.length; i++){
-                    addAnno(data.annos[i], aRoot);
-                }
-            }
+            // if (data.annos){
+            //     for (let i = 0; i < data.annos.length; i++){
+            //         addAnno(data.annos[i], aRoot);
+            //     }
+            // }
         });//end load pointcloud
+        let aRoot = scene.annotations;
 
         // //Create lighting for meshes
         // const light = new THREE.AmbientLight(); // soft white light
@@ -384,11 +386,11 @@ export default{
         });
 
         // Add annotations
-        // if (data.annos){
-        //     for (let i = 0; i < data.annos.length; i++){
-        //         this.addAnno(data.annos[i], aRoot);
-        //     }
-        // }
+        if (data.annos){
+            for (let i = 0; i < data.annos.length; i++){
+                this.addAnno(data.annos[i], aRoot, 50);
+            }
+        }
 
         //Add event listner for mouse movement. This allows us to get pointcloud intersection with mouse
         window.viewer.renderer.domElement.addEventListener('mousedown', (event) => {
@@ -511,30 +513,37 @@ export default{
             let len = Math.sqrt((x * x) + (y * y));
             let angle = Math.atan(y / x);
             angle += this.data.rot;
-            angle = angle * -1
+            // angle = angle * -1
 
             console.log([291275.97 + len * Math.cos(angle), 4640928.21 + len * Math.sin(angle), coords[2] + 15.71]);//z is pretty easy 
 
         },
 
-        addAnno(currAnno, parAnno){
+        addAnno(currAnno, parAnno, threshold){
+            console.log(currAnno.title);
             this.transformCoords(currAnno.position);
             this.transformCoords(currAnno.cameraPosition);
             this.transformCoords(currAnno.cameraTarget);
+            if (currAnno.mesh){
+                console.log("Mesh");
+                this.transformCoords(currAnno.mesh);
+            }
+
             let anno = new Potree.Annotation({
 				title: currAnno.title,
                 position: [currAnno.position[0], currAnno.position[1], currAnno.position[2]],
                 cameraPosition: [currAnno.cameraPosition[0], currAnno.cameraPosition[1], currAnno.cameraPosition[2]],
-                cameraTarget: [currAnno.cameraTarget[0], currAnno.cameraTarget[1], currAnno.cameraTarget[2]]
+                cameraTarget: [currAnno.cameraTarget[0], currAnno.cameraTarget[1], currAnno.cameraTarget[2]],
+                collapseThreshold: threshold
 			});
+            parAnno.add(anno);
+            // anno.display = true;
 
             if (currAnno.children){
                 for (let i = 0; i < currAnno.children.length; i++){
-                    this.addAnno(currAnno.children[i], anno);
+                    this.addAnno(currAnno.children[i], anno, threshold * 4);
                 }
             }
-
-            parAnno.add(anno);
         }
         
     },
