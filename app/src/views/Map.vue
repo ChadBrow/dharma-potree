@@ -512,8 +512,9 @@ export default{
             let y = coords[1] - 23.31;
             let len = Math.sqrt((x * x) + (y * y));
             let angle = Math.atan(y / x);
-            angle += this.data.rot;
-            // angle = angle * -1
+            // angle *= -1;
+            // angle += this.data.rot;
+            // angle = angle * -1;
 
             console.log([291275.97 + len * Math.cos(angle), 4640928.21 + len * Math.sin(angle), coords[2] + 15.71]);//z is pretty easy 
 
