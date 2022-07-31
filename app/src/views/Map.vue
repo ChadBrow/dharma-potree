@@ -299,14 +299,14 @@ export default{
             }
 
             //Add annotations
-            let anno = new Potree.Annotation({
-                title: "Test",
-                // position: [291276, 4640928, 35],
-                position: [291050, 4641150, 35],
-                cameraPosition: [291294, 4640953, 30],
-                cameraTarget: [291276, 4640929, 21]
-            });
-            aRoot.add(anno);
+            // let anno = new Potree.Annotation({
+            //     title: "Test",
+            //     position: [291276, 4640928, 35],
+            //     // position: [291050, 4641150, 35],
+            //     cameraPosition: [291294, 4640953, 30],
+            //     cameraTarget: [291276, 4640929, 21]
+            // });
+            // aRoot.add(anno);
             // let addAnno = function(currAnno, parAnno){
             //     let anno = new Potree.Annotation({
             //         title: currAnno.title,
@@ -505,12 +505,14 @@ export default{
         },
 
         transformCoords(coords){
-            let len = Math.sqrt((coords[0] * coords[0]) + (coords[1] * coords[1]));
-            let angle = Math.atan(coords[1] / coords[0]);
-            angle -= this.data.rot;
-            console.log(angle);
+            let x = coords[0] + 17.3;
+            let y = coords[1] - 23.31;
+            let len = Math.sqrt((x * x) + (y * y));
+            let angle = Math.atan(y / x);
+            angle += this.data.rot;
+            angle = angle * -1
 
-            console.log([this.data.pos[0] + len * Math.cos(angle), this.data.pos[1] + len * Math.sin(angle), coords[2] + 15.71]);//z is pretty easy 
+            console.log([291275.97 + len * Math.cos(angle), 4640928.21 + len * Math.sin(angle), coords[2] + 15.71]);//z is pretty easy 
 
         },
 
@@ -520,7 +522,7 @@ export default{
             this.transformCoords(currAnno.cameraTarget);
             let anno = new Potree.Annotation({
 				title: currAnno.title,
-                position: [currAnno.position[0], currAnno.position[1], currAnno.position[2]],
+                position: [parseFloat(currAnno.position[0]), parseFloat(currAnno.position[1]), parseFloat(currAnno.position[2])],
                 cameraPosition: [currAnno.cameraPosition[0], currAnno.cameraPosition[1], currAnno.cameraPosition[2]],
                 cameraTarget: [currAnno.cameraTarget[0], currAnno.cameraTarget[1], currAnno.cameraTarget[2]]
 			});
