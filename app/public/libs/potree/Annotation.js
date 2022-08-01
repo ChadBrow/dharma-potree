@@ -6,6 +6,9 @@ import {Utils} from "./utils.js";
 import {EventDispatcher} from "./EventDispatcher.js";
 import $ from "../jquery/jquery-3.1.1.js"
 
+// added
+import annotationChild from "./utils/annotationChild.js";
+
 export class Annotation extends EventDispatcher {
 	constructor (args = {}) {
 		super();
@@ -40,8 +43,24 @@ export class Annotation extends EventDispatcher {
 		this._display = true;
 		this._expand = false;
 		this.collapseThreshold = [args.collapseThreshold, 100].find(e => e !== undefined);
+		/*
+			Blake notes:
 
-		this.children = [];
+			So the annotations are going to store a lot of datapoints in literal points. I think they should be classified as "children" but I do not think they are literally annotation objects
+
+			Instead I am going to create a new class to store these individual points. The file is called "/utils/annotationChild.js"
+			The new class has:
+
+			- name
+			- type (audio, video, image, text, etc)
+			- location
+			- symbol (this could be infered from type - and probably should be)
+
+
+			Also, we need to choose what symbols to use: are we just going to use red dots? Or are we going to include more descriptive symbols (something for audio, something for text, something for video, etc.)
+		*/
+
+		this.children = []; // the children are different points... right?
 		this.parent = null;
 		this.boundingBox = new THREE.Box3();
 
