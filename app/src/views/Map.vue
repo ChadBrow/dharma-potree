@@ -36,7 +36,8 @@ export default{
     data(){
         return {
             showIntersectionOnClick: false,
-            data: null
+            data: null,
+            parentAnno: null
             
         }
     },
@@ -101,6 +102,16 @@ export default{
                         </fieldset>
                     </selectgroup>
                 </div>
+            </span>
+            <span class="potree_toolbar_separator" />
+            <span>
+                <div class="potree_toolbar_label">
+                    Navigation
+                </div>
+                <button name="return_to_parent" class="ui-button" style="border-radius: 4px">
+                    Return
+                </button>
+                
             </span>
         `);
 
@@ -185,6 +196,12 @@ export default{
                     maxMarkers: 3,
                     name: 'Circle'
                 });
+            });
+        }
+
+        {
+            elToolbar.find("button[name=return_to_parent]").click( () => {
+                this.returnToParent();
             });
         }
 
@@ -308,31 +325,7 @@ export default{
             //     // cameraTarget: [291276.26, 4640928.92, 19.71]
             // });
             // aRoot.add(anno);
-            // let addAnno = function(currAnno, parAnno){
-            //     console.log(currAnno);
-            //     console.log(parAnno);
-            //     let anno = new Potree.Annotation({
-            //         title: currAnno.title,
-            //         position: [currAnno.position[0], currAnno.position[1], currAnno.position[2]],
-            //         cameraPosition: [currAnno.cameraPosition[0], currAnno.cameraPosition[1], currAnno.cameraPosition[2]],
-            //         cameraTarget: [currAnno.cameraTarget[0], currAnno.cameraTarget[1], currAnno.cameraTarget[2]]
-            //     });
-            //     parAnno.add(anno);
-
-            //     if (currAnno.children){
-            //         for (let i = 0; i < currAnno.children.length; i++){
-            //             addAnno(currAnno.children[i], anno);
-            //         }
-            //     }                
-            // }
-
-            // if (data.annos){
-            //     for (let i = 0; i < data.annos.length; i++){
-            //         addAnno(data.annos[i], aRoot);
-            //     }
-            // }
         });//end load pointcloud
-        let aRoot = scene.annotations;
 
         // //Create lighting for meshes
         // const light = new THREE.AmbientLight(); // soft white light
@@ -385,12 +378,17 @@ export default{
 			});
         });
 
-        // Add annotations
-        if (data.annos){
-            for (let i = 0; i < data.annos.length; i++){
-                this.addAnno(data.annos[i], aRoot, 50);
-            }
-        }
+        // ADD ANNOTATIONS
+        //First declare aRoot
+        let aRoot = scene.annotations;
+
+        data.annos.forEach((anno) => {
+            this.addAnno(anno, aRoot);
+        });
+        aRoot.children.forEach((anno) => {
+            anno.visible = true;
+        });
+        this.selectedAnno = aRoot;
 
         //Add event listner for mouse movement. This allows us to get pointcloud intersection with mouse
         window.viewer.renderer.domElement.addEventListener('mousedown', (event) => {
@@ -520,7 +518,7 @@ export default{
 
         },
 
-        addAnno(currAnno, parAnno, threshold){
+        addAnno(currAnno, parAnno){
             console.log(currAnno.title);
             this.transformCoords(currAnno.position);
             this.transformCoords(currAnno.cameraPosition);
@@ -535,16 +533,45 @@ export default{
                 position: [currAnno.position[0], currAnno.position[1], currAnno.position[2]],
                 cameraPosition: [currAnno.cameraPosition[0], currAnno.cameraPosition[1], currAnno.cameraPosition[2]],
                 cameraTarget: [currAnno.cameraTarget[0], currAnno.cameraTarget[1], currAnno.cameraTarget[2]],
-                collapseThreshold: threshold
+                collapseThreshold: 200
 			});
             parAnno.add(anno);
-            // anno.display = true;
+            anno.visible = false;
 
             if (currAnno.children){
                 for (let i = 0; i < currAnno.children.length; i++){
-                    this.addAnno(currAnno.children[i], anno, threshold * 4);
+                    this.addAnno(currAnno.children[i], anno);
                 }
             }
+
+            anno.addEventListener('click', () => {
+                if (anno.children){
+                    this.parentAnno = anno;
+                    anno.collapseThreshold = 10;
+                    anno.children.forEach((child) => {
+                        child.visible = true;
+                    });
+                    console.log(this.parentAnno);
+                }
+            });
+        },
+
+        returnToParent(){
+            this.parentAnno.children.forEach((child) => {
+                child.visible = false;
+            });
+            this.parentAnno.collapseThreshold = 200;
+            if (this.parentAnno.level() > 1){
+                this.parentAnno.parent.moveHere(window.viewer.scene.getActiveCamera()); //This moves the camera to give a good view of the parent
+            }
+            else{
+                viewer.scene.view.position.set(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]);
+                viewer.scene.view.lookAt(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2]);
+            }
+
+                
+
+            this.parentAnno = this.parentAnno.parent;
         }
         
     },
