@@ -211,7 +211,7 @@ export default{
             terrainShadows: Cesium.ShadowMode.DISABLED,
         });
 
-        // Set Cesium location. I don't think this does anything. It changes where the Cesium map displays in 3D space. In the examples they are all adjusted to different coordinates so the maps lined up correctly
+        // Set Cesium location. I don't think this does anything
         // let cp = new Cesium.Cartesian3(281238.4, 4632572.1, 15729.4);
         // cesiumViewer.camera.setView({
         //     destination : cp,
@@ -298,9 +298,6 @@ export default{
             }
 
             // Add annotations
-            /*
-            We need to adjust how Potree.Annotation functions - see Annotation.js
-            */
             // let anno = new Potree.Annotation({
             //     title: "Test",
             //     // position: [data.annos[0].position[0], data.annos[0].position[1], data.annos[0].position[2]],
