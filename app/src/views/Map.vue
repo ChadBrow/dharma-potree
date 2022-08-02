@@ -208,6 +208,8 @@ export default{
         //Initialize Cesium Viewer
         // window.CESIUM_BASE_URL = Potree.resourcePath + "/../libs/Cesium";
         window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
+            // sceneMode : Cesium.SceneMode.COLUMBUS_VIEW,
+            // mapProjection: new Cesium.WebMercatorProjection(Cesium.Ellipsoid.WGS84),
             useDefaultRenderLoop: false,
             animation: false,
             baseLayerPicker : false,
@@ -228,7 +230,7 @@ export default{
             terrainShadows: Cesium.ShadowMode.DISABLED,
         });
 
-        // Set Cesium location. I don't think this does anything
+        // Set Cesium start view. I don't think this does anything
         // let cp = new Cesium.Cartesian3(281238.4, 4632572.1, 15729.4);
         // cesiumViewer.camera.setView({
         //     destination : cp,
@@ -253,6 +255,7 @@ export default{
         window.viewer.loadSettingsFromURL();
         window.viewer.setBackground(null);
         window.viewer.setControls(window.viewer.earthControls);
+        // window.viewer.setControls(window.viewer.fpControls);
         window.viewer.useHQ = true;
 	
 		
@@ -271,11 +274,13 @@ export default{
 		pointLight.shadow.bias = -0.0001;
 		pointLight.shadow.mapSize.width = 1024*4;
 		pointLight.shadow.mapSize.height = 1024*4;
-		viewer.scene.scene.add(pointLight);
+		window.viewer.scene.scene.add(pointLight);
         
         //Set initial view
-        viewer.scene.view.position.set(data.view.pos[0], data.view.pos[1], data.view.pos[2]);
-		viewer.scene.view.lookAt(data.view.lookAt[0], data.view.lookAt[1], data.view.lookAt[2]);
+        // viewer.scene.view.position.set(data.view.pos[0], data.view.pos[1], data.view.pos[2]);
+		// viewer.scene.view.lookAt(data.view.lookAt[0], data.view.lookAt[1], data.view.lookAt[2]);
+        window.viewer.scene.view.position.set(43,140,80);
+		window.viewer.scene.view.lookAt(new THREE.Vector3(-13,40,0));
 
         //Load Potree GUI
         window.viewer.loadGUI(() => {
@@ -293,8 +298,8 @@ export default{
             scene.addPointCloud(pointcloud);
 
             //Place and orient pointcloud so that it lines up with cesium
-            pointcloud.position.set(data.pos[0], data.pos[1], data.pos[2]);
-		    pointcloud.rotation.set(0, 0, data.rot);
+            // pointcloud.position.set(data.pos[0], data.pos[1], data.pos[2]);
+		    // pointcloud.rotation.set(0, 0, data.rot);
 
             //Setting for material
             material.pointSizeType = Potree.PointSizeType.ATTENUATED;
@@ -440,10 +445,22 @@ export default{
                 {
                     let camera = window.viewer.scene.getActiveCamera();
 
-                    let pPos		= new THREE.Vector3(0, 0, 0).applyMatrix4(camera.matrixWorld);
-                    let pRight  = new THREE.Vector3(600, 0, 0).applyMatrix4(camera.matrixWorld);
+                    // let pPos		= new THREE.Vector3(0, 0, 0).applyMatrix4(camera.matrixWorld);
+                    // let pRight  = new THREE.Vector3(600, 0, 0).applyMatrix4(camera.matrixWorld);
                     let pUp		 = new THREE.Vector3(0, 600, 0).applyMatrix4(camera.matrixWorld);
-                    let pTarget = window.viewer.scene.view.getPivot();
+                    let pPos = new THREE.Vector3(0, 0, 0).applyMatrix4(camera.matrixWorld); //Gets camera position relative to origin
+                    let pTarget = scene.view.getPivot(); //Gets camera target relative to origin
+                    pPos.applyAxisAngle(new THREE.Vector3(0, 0, 1), data.rot); //Rotate vectors around origin
+                    pTarget.applyAxisAngle(new THREE.Vector3(0, 0, 1), data.rot);
+                    
+                    //Offset the viewer by the position of the pointcloud
+                    pPos.x += data.pos[0];
+                    pPos.y += data.pos[1];
+                    pPos.z += 20;
+                    pUp.y += data.pos[1];
+                    pTarget.x += data.pos[0];
+                    pTarget.y += data.pos[1];
+                    pTarget.z += 20;
 
                     let toCes = (pos) => {
                         let xy = [pos.x, pos.y];
@@ -462,7 +479,7 @@ export default{
                     let cUp = Cesium.Cartesian3.subtract(cUpTarget, cPos, new Cesium.Cartesian3());
 
                     cDir = Cesium.Cartesian3.normalize(cDir, new Cesium.Cartesian3());
-                    cUp = Cesium.Cartesian3.normalize(cUp, new Cesium.Cartesian3());
+                    cUp = Cesium.Cartesian3.normalize(cUpTarget, new Cesium.Cartesian3());
 
                     window.cesiumViewer.camera.setView({
                         destination : cPos,
