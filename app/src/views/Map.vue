@@ -279,8 +279,8 @@ export default{
         //Set initial view
         // viewer.scene.view.position.set(data.view.pos[0], data.view.pos[1], data.view.pos[2]);
 		// viewer.scene.view.lookAt(data.view.lookAt[0], data.view.lookAt[1], data.view.lookAt[2]);
-        window.viewer.scene.view.position.set(43,140,80);
-		window.viewer.scene.view.lookAt(new THREE.Vector3(-13,40,0));
+        window.viewer.scene.view.position.set(data.view.pos[0], data.view.pos[1], data.view.pos[2]);
+		window.viewer.scene.view.lookAt(data.view.lookAt[0], data.view.lookAt[1], data.view.lookAt[2]);
 
         //Load Potree GUI
         window.viewer.loadGUI(() => {
@@ -297,9 +297,7 @@ export default{
             //Add pointcloud to seen
             scene.addPointCloud(pointcloud);
 
-            //Place and orient pointcloud so that it lines up with cesium
-            // pointcloud.position.set(data.pos[0], data.pos[1], data.pos[2]);
-		    // pointcloud.rotation.set(0, 0, data.rot);
+            //We do not place the pointcloud. Cesium gets oriented instead
 
             //Setting for material
             material.pointSizeType = Potree.PointSizeType.ATTENUATED;
