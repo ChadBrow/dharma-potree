@@ -27,7 +27,11 @@
                     "cameraTarget": [6, 32, 12]
                 }
             ],
-            "mesh": [9.2, 30.5, -7]
+            "mesh": {
+                "name": "tos",
+                "position": [9.2, 30.5, -7],
+                "rotation": -0.69
+            }
         },
         {
             "title": "Temple of Vespasian and Titus",
@@ -42,7 +46,11 @@
                     "cameraTarget": [-18, 24, 11]
                 }
             ],
-            "mesh": [-17.6, 20, -10.5]
+            "mesh": {
+                "name": "tovat",
+                "position": [-17.6, 20, -10.5],
+                "rotation": -1.69
+            }
         },
         {
             "title": "Arch of Septimius Severus",
@@ -63,7 +71,11 @@
                     "cameraTarget": [-21, 77, -7]
                 }
             ],
-            "mesh": [-27, 76, -12]
+            "mesh": {
+                "name": "aoss",
+                "position": [-27, 76, -12],
+                "rotation": -1.69
+            }
         }
     ]
 }

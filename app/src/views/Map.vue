@@ -49,7 +49,7 @@ export default{
 
         //Declare Potree and mesh loader
         const Potree = window.Potree;
-        const loader = new PLYLoader();
+        this.loader = new PLYLoader();
 
         let resourcePath = '../resources';
 
@@ -335,63 +335,60 @@ export default{
         // scene.scene.add( light );
 
         // load mesh
-		loader.load(Potree.resourcePath + "/models/toaf.ply", (geometry) => {
-			const textureLoader = new THREE.TextureLoader();
+		// loader.load(Potree.resourcePath + "/models/toaf.ply", (geometry) => {
+		// 	const textureLoader = new THREE.TextureLoader();
 
-			const diffuseMap = textureLoader.load(Potree.resourcePath + "/models/toaf_tex.jpg");
-			diffuseMap.encoding = THREE.sRGBEncoding;
+		// 	const diffuseMap = textureLoader.load(Potree.resourcePath + "/models/toaf_tex.jpg");
+		// 	diffuseMap.encoding = THREE.sRGBEncoding;
 
-			const normalMap = textureLoader.load(Potree.resourcePath + "/models/toaf_norm.jpg");
-			normalMap.encoding = THREE.sRGBEncoding;
+		// 	const normalMap = textureLoader.load(Potree.resourcePath + "/models/toaf_norm.jpg");
+		// 	normalMap.encoding = THREE.sRGBEncoding;
 
-			geometry.computeVertexNormals();
+		// 	geometry.computeVertexNormals();
 
-			let mesh;
-			{
-				const material = new THREE.MeshStandardMaterial({
-					color: 0xffffff,
-					roughness: 0.5,
-					map: diffuseMap,
-					normalMap: normalMap,
-					normalMapType: THREE.ObjectSpaceNormalMap,
-				});
-				mesh = new THREE.Mesh(geometry, material);
-				// mesh.position.set(48.5, 238.5, -13);
-                mesh.position.set(570547.7, 5400268.1, 62.2);
-				mesh.rotation.set(0, 0, -Math.PI * .19);
-				mesh.visible = true;
+		// 	let mesh;
+		// 	{
+		// 		const material = new THREE.MeshStandardMaterial({
+		// 			color: 0xffffff,
+		// 			roughness: 0.5,
+		// 			map: diffuseMap,
+		// 			normalMap: normalMap,
+		// 			normalMapType: THREE.ObjectSpaceNormalMap,
+		// 		});
+		// 		mesh = new THREE.Mesh(geometry, material);
+		// 		// mesh.position.set(48.5, 238.5, -13);
+        //         mesh.position.set(570547.7, 5400268.1, 62.2);
+		// 		mesh.rotation.set(0, 0, -Math.PI * .19);
+		// 		mesh.visible = true;
 
-				scene.scene.add(mesh);
-			}
+		// 		scene.scene.add(mesh);
+		// 	}
 
-            //This adds the mesh to the sidebar. Since we don't use the sidebar we do not need this
-			viewer.onGUILoaded(() => {
-				// Add entries to object list in sidebar
-				let tree = $(`#jstree_scene`);
-				let parentNode = "other";
+        //     //This adds the mesh to the sidebar. Since we don't use the sidebar we do not need this
+		// 	viewer.onGUILoaded(() => {
+		// 		// Add entries to object list in sidebar
+		// 		let tree = $(`#jstree_scene`);
+		// 		let parentNode = "other";
 
-				let meshID = tree.jstree('create_node', parentNode, {
-					"text": "Temple of Antoninus and Faustina",
-					"icon": `${Potree.resourcePath}/icons/triangle.svg`,
-					"data": geometry
-				},
-					"last", false, false);
-				tree.jstree(mesh.visible ? "check_node" : "uncheck_node", meshID);
+		// 		let meshID = tree.jstree('create_node', parentNode, {
+		// 			"text": "Temple of Antoninus and Faustina",
+		// 			"icon": `${Potree.resourcePath}/icons/triangle.svg`,
+		// 			"data": geometry
+		// 		},
+		// 			"last", false, false);
+		// 		tree.jstree(mesh.visible ? "check_node" : "uncheck_node", meshID);
 
-			});
-        });
+		// 	});
+        // });
 
         // ADD ANNOTATIONS
         // //First declare aRoot
         let aRoot = scene.annotations;
 
         data.annos.forEach((anno) => {
-            this.addAnno(anno, aRoot);
+            this.addParentAnno(anno, aRoot);
         });
-        aRoot.children.forEach((anno) => {
-            anno.visible = true;
-        });
-        this.selectedAnno = aRoot;
+        this.parentAnno = aRoot;
 
         //Add event listner for mouse movement. This allows us to get pointcloud intersection with mouse
         window.viewer.renderer.domElement.addEventListener('mousedown', (event) => {
@@ -533,14 +530,61 @@ export default{
 
         },
 
-        addAnno(currAnno, parAnno){
-            console.log(currAnno.title);
-            this.transformCoords(currAnno.position);
-            this.transformCoords(currAnno.cameraPosition);
-            this.transformCoords(currAnno.cameraTarget);
+        addParentAnno(currAnno, parAnno){
             if (currAnno.mesh){
-                console.log("Mesh");
-                this.transformCoords(currAnno.mesh);
+                this.loader.load(Potree.resourcePath + "/models/" + currAnno.mesh.name + ".ply", (geometry) => {
+                    const textureLoader = new THREE.TextureLoader();
+
+                    const diffuseMap = textureLoader.load(Potree.resourcePath + "/models/" + currAnno.mesh.name + "_tex.jpg");
+                    diffuseMap.encoding = THREE.sRGBEncoding;
+
+                    const normalMap = textureLoader.load(Potree.resourcePath + "/models/" + currAnno.mesh.name + "_norm.jpg");
+                    normalMap.encoding = THREE.sRGBEncoding;
+
+                    geometry.computeVertexNormals();
+
+                    let mesh;
+                    {
+                        const material = new THREE.MeshStandardMaterial({
+                            color: 0xffffff,
+                            roughness: 0.5,
+                            map: diffuseMap,
+                            normalMap: normalMap,
+                            normalMapType: THREE.ObjectSpaceNormalMap,
+                        });
+                        mesh = new THREE.Mesh(geometry, material);
+                        mesh.position.set(currAnno.mesh.position);
+                        mesh.rotation.set(0, 0, Math.PI * currAnno.mesh.rotation);
+                        mesh.name = currAnno.mesh.name;
+                        mesh.visible = true;
+
+                        mesh.traverse(n => {
+                            if(n.isMesh) {
+                                n.castShadow = true;
+                                n.recieveShadow = true;
+                                if(n.material.map) n.material.map.anisotropy = 16;
+                            }
+                        });
+
+                        window.viewer.scene.scene.add(mesh);
+                    }
+
+                    //This adds the mesh to the sidebar. Since we don't use the sidebar we do not need this
+                    // viewer.onGUILoaded(() => {
+                    //     // Add entries to object list in sidebar
+                    //     let tree = $(`#jstree_scene`);
+                    //     let parentNode = "other";
+
+                    //     let meshID = tree.jstree('create_node', parentNode, {
+                    //         "text": "Temple of Antoninus and Faustina",
+                    //         "icon": `${Potree.resourcePath}/icons/triangle.svg`,
+                    //         "data": geometry
+                    //     },
+                    //         "last", false, false);
+                    //     tree.jstree(mesh.visible ? "check_node" : "uncheck_node", meshID);
+
+                    // });
+                });
             }
 
             let anno = new Potree.Annotation({
@@ -548,16 +592,11 @@ export default{
                 position: [currAnno.position[0], currAnno.position[1], currAnno.position[2]],
                 cameraPosition: [currAnno.cameraPosition[0], currAnno.cameraPosition[1], currAnno.cameraPosition[2]],
                 cameraTarget: [currAnno.cameraTarget[0], currAnno.cameraTarget[1], currAnno.cameraTarget[2]],
-                collapseThreshold: 200
+                collapseThreshold: 400
 			});
             parAnno.add(anno);
-            anno.visible = false;
 
-            if (currAnno.children){
-                for (let i = 0; i < currAnno.children.length; i++){
-                    this.addAnno(currAnno.children[i], anno);
-                }
-            }
+            currAnno.children.forEach((child) => {this.addChildAnno(child, anno);});
 
             anno.addEventListener('click', () => {
                 if (anno.children){
@@ -571,22 +610,48 @@ export default{
             });
         },
 
+        addChildAnno(currAnno, parAnno){
+            let anno = new Potree.Annotation({
+				title: currAnno.title,
+                position: [currAnno.position[0], currAnno.position[1], currAnno.position[2]],
+                cameraPosition: [currAnno.cameraPosition[0], currAnno.cameraPosition[1], currAnno.cameraPosition[2]],
+                cameraTarget: [currAnno.cameraTarget[0], currAnno.cameraTarget[1], currAnno.cameraTarget[2]],
+                collapseThreshold: 200
+			});
+            parAnno.add(anno);
+            anno.visible = false;
+
+            // currAnno.children.forEach((child) => {this.addChildAnno(child);});
+
+            // anno.addEventListener('click', () => {
+            //     if (anno.children){
+            //         this.parentAnno = anno;
+            //         anno.collapseThreshold = 10;
+            //         anno.children.forEach((child) => {
+            //             child.visible = true;
+            //         });
+            //         console.log(this.parentAnno);
+            //     }
+            // });
+        },
+
         returnToParent(){
-            this.parentAnno.children.forEach((child) => {
-                child.visible = false;
-            });
-            this.parentAnno.collapseThreshold = 200;
-            if (this.parentAnno.level() > 1){
-                this.parentAnno.parent.moveHere(window.viewer.scene.getActiveCamera()); //This moves the camera to give a good view of the parent
+            if (this.parentAnno.level() > 0){
+                this.parentAnno.children.forEach((child) => {
+                    child.visible = false;
+                });
+                this.parentAnno.collapseThreshold = 400;
+
+                this.parentAnno.moveHere(window.viewer.scene.getActiveCamera()); //This moves the camera to give a good view of the parent
+                this.parentAnno = this.parentAnno.parent;
             }
             else{
-                viewer.scene.view.position.set(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]);
-                viewer.scene.view.lookAt(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2]);
+                // viewer.scene.view.position.set(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]);
+                // viewer.scene.view.lookAt(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2]);
+                // console.log(Potree.Utils);
+                Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
+                                    new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion
             }
-
-                
-
-            this.parentAnno = this.parentAnno.parent;
         }
         
     },
@@ -607,10 +672,10 @@ export default{
     div.annotation {    
         opacity: 1 !important;
     }
-    /* div.annotation-titlebar {
+    div.annotation-titlebar {
         background-color: white;
         color: black;
-    } */
+    }
     .popup {
         position: fixed;
         top: 5%;
