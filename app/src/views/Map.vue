@@ -38,7 +38,9 @@ export default{
             showIntersectionOnClick: false,
             data: null,
             parentAnno: null,
-            selectedMesh: null
+            selectedMesh: null,
+            selectedLine: null,
+            selectedRecon: null
             
         }
     },
@@ -131,16 +133,22 @@ export default{
 
 
             elToolbar.find("img[name=action_recon]").click( () => {
-                viewer.scene.scene.children.forEach( rc => {
-                    if(rc.name.includes('recon') && selector == rc.name.split(" ")[0]) {
-                        if(rc.name.includes('reconline')) {
-                                console.log(rc)
-                                rc.material.color.setHex(0x4d3319);
-                            }
-                        rc.visible = !rc.visible; 
+                // viewer.scene.scene.children.forEach( rc => {
+                //     if(rc.name.includes('recon') && selector == rc.name.split(" ")[0]) {
+                //         if(rc.name.includes('reconline')) {
+                //                 console.log(rc)
+                //                 rc.material.color.setHex(0x4d3319);
+                //             }
+                //         rc.visible = !rc.visible; 
                         
-                    }
-                });
+                //     }
+                // });
+                if (this.selectedRecon){
+                    this.selectedRecon.visible = !this.selectedRecon.visible;
+                }
+                if (this.selectedLine){
+                    this.selectedLine.visible = !this.selectedLine.visible;
+                }
             });
 
             elToolbar.find("img[name=action_mesh]").click( () => {
@@ -161,9 +169,11 @@ export default{
                 //     }
 
                 // });
-                console.log(this.selectedMesh);
                 if (this.selectedMesh){
                     this.selectedMesh.visible = !this.selectedMesh.visible;
+                }
+                if (this.selectedLine){
+                    this.selectedLine.visible = !this.selectedLine.visible;
                 }
             });
         }
@@ -234,17 +244,6 @@ export default{
                 }),
             terrainShadows: Cesium.ShadowMode.DISABLED,
         });
-
-        // Set Cesium start view. I don't think this does anything
-        // let cp = new Cesium.Cartesian3(281238.4, 4632572.1, 15729.4);
-        // cesiumViewer.camera.setView({
-        //     destination : cp,
-        //     orientation: {
-        //         heading : 10, 
-        //         pitch : -Cesium.Math.PI_OVER_TWO * 0.5, 
-        //         roll : 0.0 
-        //     }
-        // });
 
         //Initialize Potree viewer and scene
         window.viewer = new Potree.Viewer(document.getElementById("potree_render_area"), {
@@ -321,18 +320,6 @@ export default{
                 let minWGS84 = proj4(pointcloudProjection, mapProjection, bb.min.toArray());
                 let maxWGS84 = proj4(pointcloudProjection, mapProjection, bb.max.toArray());
             }
-
-            // Add annotations
-            // let anno = new Potree.Annotation({
-            //     title: "Test",
-            //     // position: [data.annos[0].position[0], data.annos[0].position[1], data.annos[0].position[2]],
-            //     position: [291050, 4641150, 35],
-            //     cameraPosition: [291294, 4640953, 30],
-            //     cameraTarget: [291276, 4640929, 21]
-            //     // cameraPosition: [291299.14, 4640946.19, 28.71],
-            //     // cameraTarget: [291276.26, 4640928.92, 19.71]
-            // });
-            // aRoot.add(anno);
         });//end load pointcloud
 
         // //Create lighting for meshes
@@ -489,6 +476,7 @@ export default{
         },
 
         addParentAnno(currAnno, parAnno){
+            //Add mesh if annotation has that
             let mesh = null;
             if (currAnno.mesh){
                 this.loader.load(Potree.resourcePath + "/models/" + currAnno.mesh.name + ".ply", (geometry) => {
@@ -526,22 +514,41 @@ export default{
 
                         window.viewer.scene.scene.add(mesh);
                     }
+                });
+            }
 
-                    //This adds the mesh to the sidebar. Since we don't use the sidebar we do not need this
-                    viewer.onGUILoaded(() => {
-                        // Add entries to object list in sidebar
-                        let tree = $(`#jstree_scene`);
-                        let parentNode = "other";
+            //Add recon if annotation has that
+            let line = null;
+            let recon = null;
+            if (currAnno.recon){
+                this.loader.load(Potree.resourcePath + "/models/recon/" + currAnno.recon.name + ".ply", (geometry) => {
 
-                        let meshID = tree.jstree('create_node', parentNode, {
-                            "text": currAnno.mesh.name,
-                            "icon": `${Potree.resourcePath}/icons/triangle.svg`,
-                            "data": geometry
-                        },
-                            "last", false, false);
-                        tree.jstree(mesh.visible ? "check_node" : "uncheck_node", meshID);
+                    // Creating and Adding lines
+                    const edges = new THREE.EdgesGeometry( geometry );
+                    line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x362311 } ) );
 
-                    });
+                    line.position.set(currAnno.recon.position[0], currAnno.recon.position[1], currAnno.recon.position[2]);
+                    line.rotation.set(0, 0, Math.PI * currAnno.recon.rotation) // 
+                    line.name = currAnno.recon.name + " reconline"
+                    line.visible = false;
+                    viewer.scene.scene.add( line );
+
+
+                    // Creating Mesh
+                    {
+                        const material = new THREE.MeshStandardMaterial({
+                            color: 0x6e6863,
+                            roughness: 0.5,
+                        });
+
+                        recon = new THREE.Mesh(geometry, material);
+                        recon.position.set(currAnno.recon.position[0], currAnno.recon.position[1], currAnno.recon.position[2]);
+                        recon.rotation.set(0, 0, Math.PI * currAnno.recon.rotation) //
+                        recon.visible = false;
+                        recon.name = currAnno.recon.name + " recon";
+
+                        viewer.scene.scene.add(recon);
+                    }
                 });
             }
 
@@ -566,6 +573,8 @@ export default{
                     console.log(this.parentAnno);
                 }
                 this.selectedMesh = mesh;
+                this.selectedLine = line;
+                this.selectedRecon = recon;
             });
         },
 
@@ -579,19 +588,6 @@ export default{
 			});
             parAnno.add(anno);
             anno.visible = false;
-
-            // currAnno.children.forEach((child) => {this.addChildAnno(child);});
-
-            // anno.addEventListener('click', () => {
-            //     if (anno.children){
-            //         this.parentAnno = anno;
-            //         anno.collapseThreshold = 10;
-            //         anno.children.forEach((child) => {
-            //             child.visible = true;
-            //         });
-            //         console.log(this.parentAnno);
-            //     }
-            // });
         },
 
         returnToParent(){
@@ -601,13 +597,12 @@ export default{
                 });
                 this.parentAnno.collapseThreshold = 400;
 
+                this.selectedMesh = null; //This could cause problems if we have nested meshes, but I think that is unlikely to happen
+
                 this.parentAnno.moveHere(window.viewer.scene.getActiveCamera()); //This moves the camera to give a good view of the parent
                 this.parentAnno = this.parentAnno.parent;
             }
             else{
-                // viewer.scene.view.position.set(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]);
-                // viewer.scene.view.lookAt(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2]);
-                // console.log(Potree.Utils);
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
                                     new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion
             }
