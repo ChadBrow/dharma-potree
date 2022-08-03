@@ -37,7 +37,8 @@ export default{
         return {
             showIntersectionOnClick: false,
             data: null,
-            parentAnno: null
+            parentAnno: null,
+            selectedMesh: null
             
         }
     },
@@ -143,23 +144,27 @@ export default{
             });
 
             elToolbar.find("img[name=action_mesh]").click( () => {
-                console.log("mesh");
-                viewer.scene.scene.children.forEach( ms => {
-                    console.log(ms.name.split(' ')[0]);
-                    if (ms.name &&  ms.name.split(' ')[0] == selector) {
-                        console.log(ms.name.split())
-                        console.log(ms.name.split().length)
+                // console.log("mesh");
+                // viewer.scene.scene.children.forEach( ms => {
+                //     console.log(ms.name.split(' ')[0]);
+                //     if (ms.name &&  ms.name.split(' ')[0] == selector) {
+                //         console.log(ms.name.split())
+                //         console.log(ms.name.split().length)
                         
-                        if (ms.name.includes('reconline') || ms.name.split(' ').length == 1) {
-                            ms.visible = !ms.visible;
-                            if(ms.name.includes('reconline')) {
-                                console.log(ms)
-                                ms.material.color.setHex(0xecd9c6);
-                            }
-                        }
-                    }
+                //         if (ms.name.includes('reconline') || ms.name.split(' ').length == 1) {
+                //             ms.visible = !ms.visible;
+                //             if(ms.name.includes('reconline')) {
+                //                 console.log(ms)
+                //                 ms.material.color.setHex(0xecd9c6);
+                //             }
+                //         }
+                //     }
 
-                });
+                // });
+                console.log(this.selectedMesh);
+                if (this.selectedMesh){
+                    this.selectedMesh.visible = !this.selectedMesh.visible;
+                }
             });
         }
 
@@ -334,53 +339,6 @@ export default{
         // const light = new THREE.AmbientLight(); // soft white light
         // scene.scene.add( light );
 
-        // load mesh
-		// loader.load(Potree.resourcePath + "/models/toaf.ply", (geometry) => {
-		// 	const textureLoader = new THREE.TextureLoader();
-
-		// 	const diffuseMap = textureLoader.load(Potree.resourcePath + "/models/toaf_tex.jpg");
-		// 	diffuseMap.encoding = THREE.sRGBEncoding;
-
-		// 	const normalMap = textureLoader.load(Potree.resourcePath + "/models/toaf_norm.jpg");
-		// 	normalMap.encoding = THREE.sRGBEncoding;
-
-		// 	geometry.computeVertexNormals();
-
-		// 	let mesh;
-		// 	{
-		// 		const material = new THREE.MeshStandardMaterial({
-		// 			color: 0xffffff,
-		// 			roughness: 0.5,
-		// 			map: diffuseMap,
-		// 			normalMap: normalMap,
-		// 			normalMapType: THREE.ObjectSpaceNormalMap,
-		// 		});
-		// 		mesh = new THREE.Mesh(geometry, material);
-		// 		// mesh.position.set(48.5, 238.5, -13);
-        //         mesh.position.set(570547.7, 5400268.1, 62.2);
-		// 		mesh.rotation.set(0, 0, -Math.PI * .19);
-		// 		mesh.visible = true;
-
-		// 		scene.scene.add(mesh);
-		// 	}
-
-        //     //This adds the mesh to the sidebar. Since we don't use the sidebar we do not need this
-		// 	viewer.onGUILoaded(() => {
-		// 		// Add entries to object list in sidebar
-		// 		let tree = $(`#jstree_scene`);
-		// 		let parentNode = "other";
-
-		// 		let meshID = tree.jstree('create_node', parentNode, {
-		// 			"text": "Temple of Antoninus and Faustina",
-		// 			"icon": `${Potree.resourcePath}/icons/triangle.svg`,
-		// 			"data": geometry
-		// 		},
-		// 			"last", false, false);
-		// 		tree.jstree(mesh.visible ? "check_node" : "uncheck_node", meshID);
-
-		// 	});
-        // });
-
         // ADD ANNOTATIONS
         // //First declare aRoot
         let aRoot = scene.annotations;
@@ -531,6 +489,7 @@ export default{
         },
 
         addParentAnno(currAnno, parAnno){
+            let mesh = null;
             if (currAnno.mesh){
                 this.loader.load(Potree.resourcePath + "/models/" + currAnno.mesh.name + ".ply", (geometry) => {
                     const textureLoader = new THREE.TextureLoader();
@@ -543,7 +502,6 @@ export default{
 
                     geometry.computeVertexNormals();
 
-                    let mesh;
                     {
                         const material = new THREE.MeshStandardMaterial({
                             color: 0xffffff,
@@ -553,10 +511,10 @@ export default{
                             normalMapType: THREE.ObjectSpaceNormalMap,
                         });
                         mesh = new THREE.Mesh(geometry, material);
-                        mesh.position.set(currAnno.mesh.position);
+                        mesh.position.set(currAnno.mesh.position[0], currAnno.mesh.position[1], currAnno.mesh.position[2]);
                         mesh.rotation.set(0, 0, Math.PI * currAnno.mesh.rotation);
                         mesh.name = currAnno.mesh.name;
-                        mesh.visible = true;
+                        mesh.visible = false;
 
                         mesh.traverse(n => {
                             if(n.isMesh) {
@@ -570,20 +528,20 @@ export default{
                     }
 
                     //This adds the mesh to the sidebar. Since we don't use the sidebar we do not need this
-                    // viewer.onGUILoaded(() => {
-                    //     // Add entries to object list in sidebar
-                    //     let tree = $(`#jstree_scene`);
-                    //     let parentNode = "other";
+                    viewer.onGUILoaded(() => {
+                        // Add entries to object list in sidebar
+                        let tree = $(`#jstree_scene`);
+                        let parentNode = "other";
 
-                    //     let meshID = tree.jstree('create_node', parentNode, {
-                    //         "text": "Temple of Antoninus and Faustina",
-                    //         "icon": `${Potree.resourcePath}/icons/triangle.svg`,
-                    //         "data": geometry
-                    //     },
-                    //         "last", false, false);
-                    //     tree.jstree(mesh.visible ? "check_node" : "uncheck_node", meshID);
+                        let meshID = tree.jstree('create_node', parentNode, {
+                            "text": currAnno.mesh.name,
+                            "icon": `${Potree.resourcePath}/icons/triangle.svg`,
+                            "data": geometry
+                        },
+                            "last", false, false);
+                        tree.jstree(mesh.visible ? "check_node" : "uncheck_node", meshID);
 
-                    // });
+                    });
                 });
             }
 
@@ -607,6 +565,7 @@ export default{
                     });
                     console.log(this.parentAnno);
                 }
+                this.selectedMesh = mesh;
             });
         },
 
