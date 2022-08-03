@@ -383,15 +383,15 @@ export default{
 
         // ADD ANNOTATIONS
         // //First declare aRoot
-        // let aRoot = scene.annotations;
+        let aRoot = scene.annotations;
 
-        // data.annos.forEach((anno) => {
-        //     this.addAnno(anno, aRoot);
-        // });
-        // aRoot.children.forEach((anno) => {
-        //     anno.visible = true;
-        // });
-        // this.selectedAnno = aRoot;
+        data.annos.forEach((anno) => {
+            this.addAnno(anno, aRoot);
+        });
+        aRoot.children.forEach((anno) => {
+            anno.visible = true;
+        });
+        this.selectedAnno = aRoot;
 
         //Add event listner for mouse movement. This allows us to get pointcloud intersection with mouse
         window.viewer.renderer.domElement.addEventListener('mousedown', (event) => {
