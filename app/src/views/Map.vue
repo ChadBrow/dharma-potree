@@ -147,6 +147,7 @@ export default{
                     this.selectedRecon.visible = !this.selectedRecon.visible;
                 }
                 if (this.selectedLine){
+                    this.selectedLine.material.color.setHex(0x4d3319);
                     this.selectedLine.visible = !this.selectedLine.visible;
                 }
             });
@@ -173,6 +174,7 @@ export default{
                     this.selectedMesh.visible = !this.selectedMesh.visible;
                 }
                 if (this.selectedLine){
+                    this.selectedLine.material.color.setHex(0xecd9c6);
                     this.selectedLine.visible = !this.selectedLine.visible;
                 }
             });
@@ -525,7 +527,7 @@ export default{
 
                     // Creating and Adding lines
                     const edges = new THREE.EdgesGeometry( geometry );
-                    line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x362311 } ) );
+                    line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xecd9c6 } ) );
 
                     line.position.set(currAnno.recon.position[0], currAnno.recon.position[1], currAnno.recon.position[2]);
                     line.rotation.set(0, 0, Math.PI * currAnno.recon.rotation) // 
@@ -534,10 +536,10 @@ export default{
                     viewer.scene.scene.add( line );
 
 
-                    // Creating Mesh
+                    // Creating Recon mesh
                     {
                         const material = new THREE.MeshStandardMaterial({
-                            color: 0x6e6863,
+                            color: 0x4d3319,
                             roughness: 0.5,
                         });
 
@@ -570,7 +572,6 @@ export default{
                     anno.children.forEach((child) => {
                         child.visible = true;
                     });
-                    console.log(this.parentAnno);
                 }
                 this.selectedMesh = mesh;
                 this.selectedLine = line;
