@@ -2,28 +2,62 @@
     <div id="potree_container" style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px; ">
         <div id="potree_render_area">
             <div id="potree_toolbar">
+                <v-toolbar rounded style="outline: 2px solid #d87444">
+                    <v-container>
+                        <v-row class="height: 20%" full-width justify="center">
+                            <div>Models</div>
+                        </v-row>
+                        <v-row class="height: 80%">
+                            <v-col justify="center" md="4">
+                                <v-btn v-on:click="togglePointcloud()" icon title="Toggle Pointcloud">
+                                    <v-icon>mdi-image-filter-hdr</v-icon>
+                                </v-btn>
+                            </v-col>
+                            <v-col justify="center" md="4">
+                                <v-btn v-on:click="toggleMesh()" icon title="Toggle Mesh">
+                                    <v-icon>mdi-home-variant</v-icon>
+                                </v-btn>
+                            </v-col>
+                            <v-col justify="center" md="4">
+                                <v-btn v-on:click="toggleRecon()" icon title="Toggle Reconstruction">
+                                    <v-icon>mdi-cube-outline</v-icon>
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                    <v-divider color="#d87444"/>
+                    <v-container>
+                        <v-row class="height: 20%" full-width justify="center">
+                            <div>Navigation</div>
+                        </v-row>
+                        <v-row class="height: 80%" justify="center">
+                            <v-col justify="center">
+                                <v-btn v-on:click="toggleMesh()" icon title="Return">
+                                    <v-icon>mdi-keyboard-return</v-icon>
+                                </v-btn>
+                            </v-col>
+                            <v-col justify="center">
+                                <v-btn v-on:click="toggleRecon()" icon title="Return to Start">
+                                    <v-icon>mdi-cube-outline</v-icon>
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                    <!-- <v-btn icon>
+                        <v-icon>mdi-magnify</v-icon>
+                    </v-btn>
+
+                    <v-btn icon>
+                        <v-icon>mdi-heart</v-icon>
+                    </v-btn>
+
+                    <v-btn icon>
+                        <v-icon>mdi-dots-vertical</v-icon>
+                    </v-btn> -->
+                </v-toolbar>
 			</div>
             <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green;"/>
-            <!-- <v-card shaped id="potree_toolbar">
-                <v-card-subtitle style="padding: 4px;">Viewer Settings</v-card-subtitle>
-                <v-container style="padding-top: 0px;">
-                    <v-switch v-model="showIntersectionOnClick" :label="`Show Pointcloud`"/>
-                    <v-switch v-model="showPointcloud" :label="`Show Intrsection on Click`"/>
-                    <v-btn v-on:click="displayCameraPos()"> Display Camera Position</v-btn>
-                </v-container>
-            </v-card> -->
         </div>
-        <!-- <div class="credits">
-			<div class="logo">
-				<a href="https://dharma3d.org/" target="_blank">
-					<img src="../../public/resources/images/DHARMA_logo_long.png" style="width: 100%;"/>
-				</a>
-			</div>
-			
-			<div style="background-color: rgba(255, 255, 255, 0.5); padding: 3px;" class="logo">
-				<img src="../../public/resources/logo_small.png">
-			</div>
-		</div> -->
     </div>
 </template>
 
@@ -57,170 +91,170 @@ export default{
         let resourcePath = '../resources';
 
         //Make Toolbar 
-        const elToolbar = $("#potree_toolbar");
-        elToolbar.html(`
-            <span>
-                <div class="potree_toolbar_label">
-                    View
-                </div>
-                <div>
-                    <img title="toggle mesh" name="action_mesh" src="${resourcePath}/icons/triangle.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
-                    <img title="toggle reconstructions" name="action_recon" src="${resourcePath}/icons/navigation_cube.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
-                    <img title="toggle pointcloud" name="action_point" src="${resourcePath}/icons/rgb.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
-                </div>
-            </span>
-            <span class="potree_toolbar_separator" />
-            <span>
-                <div class="potree_toolbar_label">
-                    Measure
-                </div>
-                <div>
-                    <img title="press esc to clear all measurements" name="action_measure_point" src="${resourcePath}/icons/point.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
-                    <img title="press esc to clear all measurements" name="action_measure_distance" src="${resourcePath}/icons/distance.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
-                </div>
-            </span>
-            <span class="potree_toolbar_separator" />
-            <span>
-                <div class="potree_toolbar_label">
-                    Quality
-                </div>
-                <div>
-                    <selectgroup id="quality_options"
-                        <fieldset style="border:none; margin: 0px; padding: 0px;">
-                            <legend></legend>
-                            <span style="display:flex">
-                                <span style="flex-grow: 1; display: inherit">	
-                                    <label for="quality_options_low" class="ui-button ui-state-default" style="width: 100%; padding: 0.4em 0.1em; margin: 0px; border-radius: 4px 0px 0px 4px; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial;">Low</label>
-                                    <input type="radio" name="background_options" id="quality_options_low" value="low" style="display: none">
-                                </span>
-                                <span style="flex-grow: 1; display: inherit">
-                                    <label for="quality_options_med" class="ui-button ui-state-default ui-state-active" style="width: 100%; padding: 0.4em 0.1em; margin: 0px; border-radius: 0px; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial;">Medium</label>
-                                    <input type="radio" name="background_options" id="quality_options_med" value="med" style="display: none">
-                                </span>
-                                <span style="flex-grow: 1; display: inherit">
-                                    <label for="quality_options_high" class="ui-button ui-state-default " style="width: 100%; padding: 0.4em 0.1em; margin: 0px; border-radius: 0px 4px 4px 0px; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial;">High</label>
-                                    <input type="radio" name="background_options" id="quality_options_high" value="high" style="display: none">
-                                </span>
-                            </span>
-                        </fieldset>
-                    </selectgroup>
-                </div>
-            </span>
-            <span class="potree_toolbar_separator" />
-            <span>
-                <div class="potree_toolbar_label">
-                    Navigation
-                </div>
-                <button name="return_to_parent" class="ui-button" style="border-radius: 4px">
-                    Return
-                </button>
+        // const elToolbar = $("#potree_toolbar");
+        // elToolbar.html(`
+        //     <span>
+        //         <div class="potree_toolbar_label">
+        //             View
+        //         </div>
+        //         <div>
+        //             <img title="toggle mesh" name="action_mesh" src="${resourcePath}/icons/triangle.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
+        //             <img title="toggle reconstructions" name="action_recon" src="${resourcePath}/icons/navigation_cube.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
+        //             <img title="toggle pointcloud" name="action_point" src="${resourcePath}/icons/rgb.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
+        //         </div>
+        //     </span>
+        //     <span class="potree_toolbar_separator" />
+        //     <span>
+        //         <div class="potree_toolbar_label">
+        //             Measure
+        //         </div>
+        //         <div>
+        //             <img title="press esc to clear all measurements" name="action_measure_point" src="${resourcePath}/icons/point.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
+        //             <img title="press esc to clear all measurements" name="action_measure_distance" src="${resourcePath}/icons/distance.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
+        //         </div>
+        //     </span>
+        //     <span class="potree_toolbar_separator" />
+        //     <span>
+        //         <div class="potree_toolbar_label">
+        //             Quality
+        //         </div>
+        //         <div>
+        //             <selectgroup id="quality_options"
+        //                 <fieldset style="border:none; margin: 0px; padding: 0px;">
+        //                     <legend></legend>
+        //                     <span style="display:flex">
+        //                         <span style="flex-grow: 1; display: inherit">	
+        //                             <label for="quality_options_low" class="ui-button ui-state-default" style="width: 100%; padding: 0.4em 0.1em; margin: 0px; border-radius: 4px 0px 0px 4px; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial;">Low</label>
+        //                             <input type="radio" name="background_options" id="quality_options_low" value="low" style="display: none">
+        //                         </span>
+        //                         <span style="flex-grow: 1; display: inherit">
+        //                             <label for="quality_options_med" class="ui-button ui-state-default ui-state-active" style="width: 100%; padding: 0.4em 0.1em; margin: 0px; border-radius: 0px; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial;">Medium</label>
+        //                             <input type="radio" name="background_options" id="quality_options_med" value="med" style="display: none">
+        //                         </span>
+        //                         <span style="flex-grow: 1; display: inherit">
+        //                             <label for="quality_options_high" class="ui-button ui-state-default " style="width: 100%; padding: 0.4em 0.1em; margin: 0px; border-radius: 0px 4px 4px 0px; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial;">High</label>
+        //                             <input type="radio" name="background_options" id="quality_options_high" value="high" style="display: none">
+        //                         </span>
+        //                     </span>
+        //                 </fieldset>
+        //             </selectgroup>
+        //         </div>
+        //     </span>
+        //     <span class="potree_toolbar_separator" />
+        //     <span>
+        //         <div class="potree_toolbar_label">
+        //             Navigation
+        //         </div>
+        //         <button name="return_to_parent" class="ui-button" style="border-radius: 4px">
+        //             Return
+        //         </button>
 
-            </span>
-        `);
+        //     </span>
+        // `);
 
-        {   // QUALITY TOGGLES  ---- TODO
-            document.getElementById("quality_options_high").addEventListener("click", (el) => {
-                elToolbar.find("label[for=quality_options_med]").removeClass("ui-state-active");
-                elToolbar.find("label[for=quality_options_high]").addClass("ui-state-active");
-                viewer.setPointBudget(10_000_000);
-            });
-        }
+        // {   // QUALITY TOGGLES  ---- TODO
+        //     document.getElementById("quality_options_high").addEventListener("click", (el) => {
+        //         elToolbar.find("label[for=quality_options_med]").removeClass("ui-state-active");
+        //         elToolbar.find("label[for=quality_options_high]").addClass("ui-state-active");
+        //         viewer.setPointBudget(10_000_000);
+        //     });
+        // }
 
-        {   // POINTCLOUD MESH AND RECON TOGGLES
-            elToolbar.find("img[name=action_point]").click( () => {
-                viewer.scene.pointclouds.forEach( pc => pc.visible = !pc.visible);
-            });
+        // {   // POINTCLOUD MESH AND RECON TOGGLES
+        //     elToolbar.find("img[name=action_point]").click( () => {
+        //         viewer.scene.pointclouds.forEach( pc => pc.visible = !pc.visible);
+        //     });
 
 
-            elToolbar.find("img[name=action_recon]").click( () => {
-                // viewer.scene.scene.children.forEach( rc => {
-                //     if(rc.name.includes('recon') && selector == rc.name.split(" ")[0]) {
-                //         if(rc.name.includes('reconline')) {
-                //                 console.log(rc)
-                //                 rc.material.color.setHex(0x4d3319);
-                //             }
-                //         rc.visible = !rc.visible; 
+        //     elToolbar.find("img[name=action_recon]").click( () => {
+        //         // viewer.scene.scene.children.forEach( rc => {
+        //         //     if(rc.name.includes('recon') && selector == rc.name.split(" ")[0]) {
+        //         //         if(rc.name.includes('reconline')) {
+        //         //                 console.log(rc)
+        //         //                 rc.material.color.setHex(0x4d3319);
+        //         //             }
+        //         //         rc.visible = !rc.visible; 
                         
-                //     }
-                // });
-                if (this.selectedRecon){
-                    this.selectedRecon.visible = !this.selectedRecon.visible;
-                }
-                if (this.selectedLine){
-                    this.selectedLine.material.color.setHex(0x4d3319);
-                    this.selectedLine.visible = !this.selectedLine.visible;
-                }
-            });
+        //         //     }
+        //         // });
+        //         if (this.selectedRecon){
+        //             this.selectedRecon.visible = !this.selectedRecon.visible;
+        //         }
+        //         if (this.selectedLine){
+        //             this.selectedLine.material.color.setHex(0x4d3319);
+        //             this.selectedLine.visible = !this.selectedLine.visible;
+        //         }
+        //     });
 
-            elToolbar.find("img[name=action_mesh]").click( () => {
-                // console.log("mesh");
-                // viewer.scene.scene.children.forEach( ms => {
-                //     console.log(ms.name.split(' ')[0]);
-                //     if (ms.name &&  ms.name.split(' ')[0] == selector) {
-                //         console.log(ms.name.split())
-                //         console.log(ms.name.split().length)
+        //     elToolbar.find("img[name=action_mesh]").click( () => {
+        //         // console.log("mesh");
+        //         // viewer.scene.scene.children.forEach( ms => {
+        //         //     console.log(ms.name.split(' ')[0]);
+        //         //     if (ms.name &&  ms.name.split(' ')[0] == selector) {
+        //         //         console.log(ms.name.split())
+        //         //         console.log(ms.name.split().length)
                         
-                //         if (ms.name.includes('reconline') || ms.name.split(' ').length == 1) {
-                //             ms.visible = !ms.visible;
-                //             if(ms.name.includes('reconline')) {
-                //                 console.log(ms)
-                //                 ms.material.color.setHex(0xecd9c6);
-                //             }
-                //         }
-                //     }
+        //         //         if (ms.name.includes('reconline') || ms.name.split(' ').length == 1) {
+        //         //             ms.visible = !ms.visible;
+        //         //             if(ms.name.includes('reconline')) {
+        //         //                 console.log(ms)
+        //         //                 ms.material.color.setHex(0xecd9c6);
+        //         //             }
+        //         //         }
+        //         //     }
 
-                // });
-                if (this.selectedMesh){
-                    this.selectedMesh.visible = !this.selectedMesh.visible;
-                }
-                if (this.selectedLine){
-                    this.selectedLine.material.color.setHex(0xecd9c6);
-                    this.selectedLine.visible = !this.selectedLine.visible;
-                }
-            });
-        }
+        //         // });
+        //         if (this.selectedMesh){
+        //             this.selectedMesh.visible = !this.selectedMesh.visible;
+        //         }
+        //         if (this.selectedLine){
+        //             this.selectedLine.material.color.setHex(0xecd9c6);
+        //             this.selectedLine.visible = !this.selectedLine.visible;
+        //         }
+        //     });
+        // }
 
-        { // MEASUREMENT TOOLS
-            elToolbar.find("img[name=action_measure_point]").click( () => {
-                const measurement = viewer.measuringTool.startInsertion({
-                    showDistances: false,
-                    showAngles: false,
-                    showCoordinates: true,
-                    showArea: false,
-                    closed: true,
-                    maxMarkers: 1,
-                    name: 'Point'
-                });
-            });
+        // { // MEASUREMENT TOOLS
+        //     elToolbar.find("img[name=action_measure_point]").click( () => {
+        //         const measurement = viewer.measuringTool.startInsertion({
+        //             showDistances: false,
+        //             showAngles: false,
+        //             showCoordinates: true,
+        //             showArea: false,
+        //             closed: true,
+        //             maxMarkers: 1,
+        //             name: 'Point'
+        //         });
+        //     });
 
-            elToolbar.find("img[name=action_measure_distance]").click( () => {
-                const measurement = viewer.measuringTool.startInsertion({
-                    showDistances: true,
-                    showArea: false,
-                    closed: false,
-                    name: 'Distance'
-                });
-            });
+        //     elToolbar.find("img[name=action_measure_distance]").click( () => {
+        //         const measurement = viewer.measuringTool.startInsertion({
+        //             showDistances: true,
+        //             showArea: false,
+        //             closed: false,
+        //             name: 'Distance'
+        //         });
+        //     });
 
-            elToolbar.find("img[name=action_measure_circle]").click( () => {
-                const measurement = viewer.measuringTool.startInsertion({
-                    showDistances: false,
-                    showHeight: false,
-                    showArea: false,
-                    showCircle: true,
-                    showEdges: false,
-                    closed: false,
-                    maxMarkers: 3,
-                    name: 'Circle'
-                });
-            });
-        }
+        //     elToolbar.find("img[name=action_measure_circle]").click( () => {
+        //         const measurement = viewer.measuringTool.startInsertion({
+        //             showDistances: false,
+        //             showHeight: false,
+        //             showArea: false,
+        //             showCircle: true,
+        //             showEdges: false,
+        //             closed: false,
+        //             maxMarkers: 3,
+        //             name: 'Circle'
+        //         });
+        //     });
+        // }
 
-        {
-            elToolbar.find("button[name=return_to_parent]").click( () => {
-                this.returnToParent();
-            });
-        }
+        // {
+        //     elToolbar.find("button[name=return_to_parent]").click( () => {
+        //         this.returnToParent();
+        //     });
+        // }
 
         //Initialize Cesium Viewer
         // window.CESIUM_BASE_URL = Potree.resourcePath + "/../libs/Cesium";
@@ -607,7 +641,29 @@ export default{
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
                                     new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion
             }
-        }
+        },
+
+        togglePointcloud(){
+            window.viewer.scene.pointclouds.forEach( pc => pc.visible = !pc.visible);
+        },
+        toggleMesh(){
+            if (this.selectedMesh){
+                this.selectedMesh.visible = !this.selectedMesh.visible;
+            }
+            if (this.selectedLine){
+                this.selectedLine.material.color.setHex(0xecd9c6);
+                this.selectedLine.visible = !this.selectedLine.visible;
+            }
+        },
+        toggleRecon(){
+            if (this.selectedRecon){
+                this.selectedRecon.visible = !this.selectedRecon.visible;
+            }
+            if (this.selectedLine){
+                this.selectedLine.material.color.setHex(0x4d3319);
+                this.selectedLine.visible = !this.selectedLine.visible;
+            }
+        },
         
     },
 }
@@ -689,13 +745,9 @@ export default{
         z-index: 10000; 
         left: 5px; 
         top: 0px;
-        background: black;
-        color: white;
-        padding: 0.3em 0.8em;
-        font-family: "system-ui";
-        border-radius: 0em 0em 0.3em 0.3em;
+        border-radius: 0.4em 0.4em 0.4em 0.4em;
         display: flex;
-        flex-direction: row;
+        /* flex-direction: row; */
     }
 
     .potree_menu_toggle {
