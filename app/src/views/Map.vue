@@ -2,7 +2,7 @@
     <div id="potree_container" style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px; ">
         <div id="potree_render_area">
             <div id="potree_toolbar">
-                <v-toolbar rounded style="outline: 2px solid #d87444">
+                <v-app-bar rounded class="toolbar">
                     <span>
                         <div class="potree_toolbar_label">Models</div>
                         <v-btn v-on:click="togglePointcloud()" icon small title="Toggle Pointcloud">
@@ -46,10 +46,32 @@
                             <v-icon>mdi-chevron-left</v-icon>
                         </v-btn>
                     </span>
-                </v-toolbar>
+                </v-app-bar>
 			</div>
             <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green;"/>
         </div>
+        <v-card class="popup">
+            <v-app-bar rounded class="toolbar" style="margin-bottom: 2px">
+                <v-card-title>Test</v-card-title>
+                <v-spacer/>
+                <v-btn>Exit</v-btn>
+            </v-app-bar>
+            <v-img src="../../public/resources/images/rome/tosArch.jpg"/>
+            <v-card-text style="color: black;">
+                {{pointcloudQuality}}
+            </v-card-text>
+        </v-card>
+        <div class="credits">
+			<div class="logo">
+				<a href="https://www.google.com/url?q=https://dharma3d.org/&amp;source=gmail-imap&amp;ust=1646262702000000&amp;usg=AOvVaw3mD5yiM9b7u91M1gzyNrJa" target="_blank">
+					<img src="../../public/resources/images/DHARMA_logo_long.png" style="width: 100%;">
+				</a>
+			</div>
+			
+			<div style="background-color: rgba(255, 255, 255, 0.5); padding: 3px;" class="logo">
+				<img src="../../public/resources/logo_small.png" style="max-width: 60%; max-height: 60%;">
+			</div>
+		</div>
     </div>
 </template>
 
@@ -68,7 +90,8 @@ export default{
             parentAnno: null,
             selectedMesh: null,
             selectedLine: null,
-            selectedRecon: null
+            selectedRecon: null,
+            
             
         }
     },
@@ -529,7 +552,7 @@ export default{
         background-color: white;
         color: black;
     }
-    .popup {
+    /* .popup {
         position: fixed;
         top: 5%;
         right: 5%;
@@ -541,8 +564,7 @@ export default{
         visibility: hidden;
         font-size: 20px;
         font-family: Garamond,Baskerville,Baskerville Old Face,Hoefler Text,Times New Roman,serif;
-        /* garmond */
-    }
+    } */
     .credits {
         position: fixed;
         bottom:0px;
@@ -555,17 +577,6 @@ export default{
     }
     .logo {
         width: 15%;
-    }
-    .button {
-        background-color: #d37243;
-        border-radius: 10px;
-        margin: 10px;
-        text-decoration: none;
-        text-align: center;
-        display: inline-block;
-        font-size: 24px;
-        padding: 5px;
-        color: black;
     }
     .lesson {
         position: fixed;
@@ -592,11 +603,6 @@ export default{
         /* flex-direction: row; */
     }
 
-    .potree_menu_toggle {
-        z-index: 0;
-        display: none;
-    }
-
     .potree_toolbar_label{
         text-align: center;
         font-size: smaller;
@@ -607,5 +613,18 @@ export default{
         background: #d87444;
         align-self: center;
         margin: 5px 10px;
+    }
+
+    .popup {
+        position: fixed;
+        top: 5%;
+        right: 5%;
+        width: 30%;
+        z-index: 10000;
+        outline: 2px solid #d87444;
+    }
+
+    .toolbar {
+        outline: 2px solid #d87444;
     }
 </style>
