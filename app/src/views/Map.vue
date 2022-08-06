@@ -3,57 +3,49 @@
         <div id="potree_render_area">
             <div id="potree_toolbar">
                 <v-toolbar rounded style="outline: 2px solid #d87444">
-                    <v-container>
-                        <v-row class="height: 20%" full-width justify="center">
-                            <div>Models</div>
-                        </v-row>
-                        <v-row class="height: 80%">
-                            <v-col justify="center" md="4">
-                                <v-btn v-on:click="togglePointcloud()" icon title="Toggle Pointcloud">
-                                    <v-icon>mdi-image-filter-hdr</v-icon>
-                                </v-btn>
-                            </v-col>
-                            <v-col justify="center" md="4">
-                                <v-btn v-on:click="toggleMesh()" icon title="Toggle Mesh">
-                                    <v-icon>mdi-home-variant</v-icon>
-                                </v-btn>
-                            </v-col>
-                            <v-col justify="center" md="4">
-                                <v-btn v-on:click="toggleRecon()" icon title="Toggle Reconstruction">
-                                    <v-icon>mdi-cube-outline</v-icon>
-                                </v-btn>
-                            </v-col>
-                        </v-row>
-                    </v-container>
-                    <v-divider color="#d87444"/>
-                    <v-container>
-                        <v-row class="height: 20%" full-width justify="center">
-                            <div>Navigation</div>
-                        </v-row>
-                        <v-row class="height: 80%" justify="center">
-                            <v-col justify="center">
-                                <v-btn v-on:click="toggleMesh()" icon title="Return">
-                                    <v-icon>mdi-keyboard-return</v-icon>
-                                </v-btn>
-                            </v-col>
-                            <v-col justify="center">
-                                <v-btn v-on:click="toggleRecon()" icon title="Return to Start">
-                                    <v-icon>mdi-cube-outline</v-icon>
-                                </v-btn>
-                            </v-col>
-                        </v-row>
-                    </v-container>
-                    <!-- <v-btn icon>
-                        <v-icon>mdi-magnify</v-icon>
+                    <span>
+                        <div class="potree_toolbar_label">Models</div>
+                        <v-btn v-on:click="togglePointcloud()" icon small title="Toggle Pointcloud">
+                            <v-icon>mdi-image-filter-hdr</v-icon>
+                        </v-btn>
+                        <v-btn v-on:click="toggleMesh()" icon small title="Toggle Mesh">
+                            <v-icon>mdi-home-variant</v-icon>
+                        </v-btn>
+                        <v-btn v-on:click="toggleRecon()" icon small title="Toggle Reconstruction">
+                            <v-icon>mdi-cube-outline</v-icon>
+                        </v-btn>
+                    </span>
+                    <v-divider vertical class="potree_toolbar_separator"/>
+                    <span>
+                        <div class="potree_toolbar_label">Navigation</div>
+                        <v-btn v-on:click="returnToParent()" small>Return</v-btn>
+                        <v-btn v-on:click="returnToStart()" small>Return to Start</v-btn>
+                    </span>
+                    <v-divider vertical class="potree_toolbar_separator"/>
+                    <v-btn icon title="Expand Toolbar" v-on:click="toolbarExpanded = true" v-if="!toolbarExpanded">
+                        <v-icon>mdi-chevron-right</v-icon>
                     </v-btn>
-
-                    <v-btn icon>
-                        <v-icon>mdi-heart</v-icon>
-                    </v-btn>
-
-                    <v-btn icon>
-                        <v-icon>mdi-dots-vertical</v-icon>
-                    </v-btn> -->
+                    <span v-if="toolbarExpanded">
+                        <div class="potree_toolbar_label">Measurements</div>
+                        <v-btn icon small title="Locate Point" v-on:click="locatePoint()">
+                            <v-img src="../../public/resources/icons/point.svg"/>
+                        </v-btn>
+                        <v-btn icon small title="Measure Distance" v-on:click="measureDistance()">
+                            <v-img src="../../public/resources/icons/distance.svg"/>
+                        </v-btn>
+                        <v-btn small v-on:click="clearMeasurements()">Clear</v-btn>
+                    </span>
+                    <!-- <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
+                    <span v-if="toolbarExpanded">
+                        <div class="potree_toolbar_label">Pointcloud Quality</div>
+                        <v-select outlined solo v-model="pointcloudQuality" :items="possibleQualities"/>
+                    </span> -->
+                    <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
+                    <span v-if="toolbarExpanded">
+                        <v-btn icon title="Shrink Toolbar" v-on:click="toolbarExpanded = false">
+                            <v-icon>mdi-chevron-left</v-icon>
+                        </v-btn>
+                    </span>
                 </v-toolbar>
 			</div>
             <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green;"/>
@@ -69,7 +61,9 @@ import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
 export default{
     data(){
         return {
-            showIntersectionOnClick: false,
+            toolbarExpanded: false,
+            pointcloudQuality: "Medium",
+            possibleQualities: ["Low", "Medium", "High"],
             data: null,
             parentAnno: null,
             selectedMesh: null,
@@ -88,179 +82,8 @@ export default{
         const Potree = window.Potree;
         this.loader = new PLYLoader();
 
-        let resourcePath = '../resources';
-
-        //Make Toolbar 
-        // const elToolbar = $("#potree_toolbar");
-        // elToolbar.html(`
-        //     <span>
-        //         <div class="potree_toolbar_label">
-        //             View
-        //         </div>
-        //         <div>
-        //             <img title="toggle mesh" name="action_mesh" src="${resourcePath}/icons/triangle.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
-        //             <img title="toggle reconstructions" name="action_recon" src="${resourcePath}/icons/navigation_cube.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
-        //             <img title="toggle pointcloud" name="action_point" src="${resourcePath}/icons/rgb.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
-        //         </div>
-        //     </span>
-        //     <span class="potree_toolbar_separator" />
-        //     <span>
-        //         <div class="potree_toolbar_label">
-        //             Measure
-        //         </div>
-        //         <div>
-        //             <img title="press esc to clear all measurements" name="action_measure_point" src="${resourcePath}/icons/point.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
-        //             <img title="press esc to clear all measurements" name="action_measure_distance" src="${resourcePath}/icons/distance.svg" class="annotation-action-icon" style="width: 2em; height: auto;"/>
-        //         </div>
-        //     </span>
-        //     <span class="potree_toolbar_separator" />
-        //     <span>
-        //         <div class="potree_toolbar_label">
-        //             Quality
-        //         </div>
-        //         <div>
-        //             <selectgroup id="quality_options"
-        //                 <fieldset style="border:none; margin: 0px; padding: 0px;">
-        //                     <legend></legend>
-        //                     <span style="display:flex">
-        //                         <span style="flex-grow: 1; display: inherit">	
-        //                             <label for="quality_options_low" class="ui-button ui-state-default" style="width: 100%; padding: 0.4em 0.1em; margin: 0px; border-radius: 4px 0px 0px 4px; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial;">Low</label>
-        //                             <input type="radio" name="background_options" id="quality_options_low" value="low" style="display: none">
-        //                         </span>
-        //                         <span style="flex-grow: 1; display: inherit">
-        //                             <label for="quality_options_med" class="ui-button ui-state-default ui-state-active" style="width: 100%; padding: 0.4em 0.1em; margin: 0px; border-radius: 0px; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial;">Medium</label>
-        //                             <input type="radio" name="background_options" id="quality_options_med" value="med" style="display: none">
-        //                         </span>
-        //                         <span style="flex-grow: 1; display: inherit">
-        //                             <label for="quality_options_high" class="ui-button ui-state-default " style="width: 100%; padding: 0.4em 0.1em; margin: 0px; border-radius: 0px 4px 4px 0px; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial;">High</label>
-        //                             <input type="radio" name="background_options" id="quality_options_high" value="high" style="display: none">
-        //                         </span>
-        //                     </span>
-        //                 </fieldset>
-        //             </selectgroup>
-        //         </div>
-        //     </span>
-        //     <span class="potree_toolbar_separator" />
-        //     <span>
-        //         <div class="potree_toolbar_label">
-        //             Navigation
-        //         </div>
-        //         <button name="return_to_parent" class="ui-button" style="border-radius: 4px">
-        //             Return
-        //         </button>
-
-        //     </span>
-        // `);
-
-        // {   // QUALITY TOGGLES  ---- TODO
-        //     document.getElementById("quality_options_high").addEventListener("click", (el) => {
-        //         elToolbar.find("label[for=quality_options_med]").removeClass("ui-state-active");
-        //         elToolbar.find("label[for=quality_options_high]").addClass("ui-state-active");
-        //         viewer.setPointBudget(10_000_000);
-        //     });
-        // }
-
-        // {   // POINTCLOUD MESH AND RECON TOGGLES
-        //     elToolbar.find("img[name=action_point]").click( () => {
-        //         viewer.scene.pointclouds.forEach( pc => pc.visible = !pc.visible);
-        //     });
-
-
-        //     elToolbar.find("img[name=action_recon]").click( () => {
-        //         // viewer.scene.scene.children.forEach( rc => {
-        //         //     if(rc.name.includes('recon') && selector == rc.name.split(" ")[0]) {
-        //         //         if(rc.name.includes('reconline')) {
-        //         //                 console.log(rc)
-        //         //                 rc.material.color.setHex(0x4d3319);
-        //         //             }
-        //         //         rc.visible = !rc.visible; 
-                        
-        //         //     }
-        //         // });
-        //         if (this.selectedRecon){
-        //             this.selectedRecon.visible = !this.selectedRecon.visible;
-        //         }
-        //         if (this.selectedLine){
-        //             this.selectedLine.material.color.setHex(0x4d3319);
-        //             this.selectedLine.visible = !this.selectedLine.visible;
-        //         }
-        //     });
-
-        //     elToolbar.find("img[name=action_mesh]").click( () => {
-        //         // console.log("mesh");
-        //         // viewer.scene.scene.children.forEach( ms => {
-        //         //     console.log(ms.name.split(' ')[0]);
-        //         //     if (ms.name &&  ms.name.split(' ')[0] == selector) {
-        //         //         console.log(ms.name.split())
-        //         //         console.log(ms.name.split().length)
-                        
-        //         //         if (ms.name.includes('reconline') || ms.name.split(' ').length == 1) {
-        //         //             ms.visible = !ms.visible;
-        //         //             if(ms.name.includes('reconline')) {
-        //         //                 console.log(ms)
-        //         //                 ms.material.color.setHex(0xecd9c6);
-        //         //             }
-        //         //         }
-        //         //     }
-
-        //         // });
-        //         if (this.selectedMesh){
-        //             this.selectedMesh.visible = !this.selectedMesh.visible;
-        //         }
-        //         if (this.selectedLine){
-        //             this.selectedLine.material.color.setHex(0xecd9c6);
-        //             this.selectedLine.visible = !this.selectedLine.visible;
-        //         }
-        //     });
-        // }
-
-        // { // MEASUREMENT TOOLS
-        //     elToolbar.find("img[name=action_measure_point]").click( () => {
-        //         const measurement = viewer.measuringTool.startInsertion({
-        //             showDistances: false,
-        //             showAngles: false,
-        //             showCoordinates: true,
-        //             showArea: false,
-        //             closed: true,
-        //             maxMarkers: 1,
-        //             name: 'Point'
-        //         });
-        //     });
-
-        //     elToolbar.find("img[name=action_measure_distance]").click( () => {
-        //         const measurement = viewer.measuringTool.startInsertion({
-        //             showDistances: true,
-        //             showArea: false,
-        //             closed: false,
-        //             name: 'Distance'
-        //         });
-        //     });
-
-        //     elToolbar.find("img[name=action_measure_circle]").click( () => {
-        //         const measurement = viewer.measuringTool.startInsertion({
-        //             showDistances: false,
-        //             showHeight: false,
-        //             showArea: false,
-        //             showCircle: true,
-        //             showEdges: false,
-        //             closed: false,
-        //             maxMarkers: 3,
-        //             name: 'Circle'
-        //         });
-        //     });
-        // }
-
-        // {
-        //     elToolbar.find("button[name=return_to_parent]").click( () => {
-        //         this.returnToParent();
-        //     });
-        // }
-
         //Initialize Cesium Viewer
-        // window.CESIUM_BASE_URL = Potree.resourcePath + "/../libs/Cesium";
         window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
-            // sceneMode : Cesium.SceneMode.COLUMBUS_VIEW,
-            // mapProjection: new Cesium.WebMercatorProjection(Cesium.Ellipsoid.WGS84),
             useDefaultRenderLoop: false,
             animation: false,
             baseLayerPicker : false,
@@ -291,12 +114,19 @@ export default{
         window.viewer.setDescription("");
         window.viewer.setEDLEnabled(true);
         window.viewer.setFOV(60);
-        window.viewer.setPointBudget(3_000_000);
         window.viewer.loadSettingsFromURL();
         window.viewer.setBackground(null);
         window.viewer.setControls(window.viewer.earthControls);
         // window.viewer.setControls(window.viewer.fpControls);
         window.viewer.useHQ = true;
+
+        //Set pointcloud budget based off selected quality
+        if (this.pointcloudQuality == "Low")
+            window.viewer.setPointBudget(1_000_000);
+        else if(this.pointcloudQuality == "Medium")
+            window.viewer.setPointBudget(3_000_000);
+        else
+            window.viewer.setPointBudget(5_000_000);
 	
 		
 		// Lights
@@ -370,38 +200,6 @@ export default{
             this.addParentAnno(anno, aRoot);
         });
         this.parentAnno = aRoot;
-
-        //Add event listner for mouse movement. This allows us to get pointcloud intersection with mouse
-        window.viewer.renderer.domElement.addEventListener('mousedown', (event) => {
-            if (this.showIntersectionOnClick){
-                let mouseLoc = window.viewer.inputHandler.mouse;
-                let camera = scene.getActiveCamera();
-                console.log(Potree.Utils);
-
-                let hit = Potree.Utils.getMousePointCloudIntersection(mouseLoc, camera, viewer, scene.pointclouds);
-                console.log(hit);
-            }
-        });
-
-        //Add event listener for cesium coords
-        let handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-        handler.setInputAction((event) => {
-            if (this.showIntersectionOnClick){
-                let ray = window.cesiumViewer.camera.getPickRay(event.position);
-                let cartesian = window.cesiumViewer.scene.globe.pick(ray, window.cesiumViewer.scene);
-                let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-                let lng = Cesium.Math.toDegrees(cartographic.longitude); // longitude
-                let lat = Cesium.Math.toDegrees(cartographic.latitude); // latitude
-                let alt = cartographic.height; // height
-                let coordinate = {
-                    longitude: Number(lng.toFixed(6)),
-                    latitude: Number(lat.toFixed(6)),
-                    altitude: Number(alt.toFixed(2))
-                };
-                console.log(cartesian);
-                console.log(coordinate);
-            }
-        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
         function loop(timestamp){
             window.requestAnimationFrame(loop);
@@ -625,6 +423,7 @@ export default{
             anno.visible = false;
         },
 
+        //NAVIGATION
         returnToParent(){
             if (this.parentAnno.level() > 0){
                 this.parentAnno.children.forEach((child) => {
@@ -642,7 +441,26 @@ export default{
                                     new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion
             }
         },
+        returnToStart(){
+            if (this.parentAnno.level() > 0){
+                this.parentAnno.children.forEach((child) => {
+                    child.visible = false;
+                });
+                this.parentAnno.collapseThreshold = 400;
 
+                this.selectedMesh = null; //This could cause problems if we have nested meshes, but I think that is unlikely to happen
+
+                Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
+                                    new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion
+                this.parentAnno = this.parentAnno.parent;
+            }
+            else{
+                Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
+                                    new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion
+            }
+        },
+
+        //MODELS
         togglePointcloud(){
             window.viewer.scene.pointclouds.forEach( pc => pc.visible = !pc.visible);
         },
@@ -664,6 +482,30 @@ export default{
                 this.selectedLine.visible = !this.selectedLine.visible;
             }
         },
+
+        //MEASUREMENTS
+        locatePoint(){
+            const measurement = viewer.measuringTool.startInsertion({
+                showDistances: false,
+                showAngles: false,
+                showCoordinates: true,
+                showArea: false,
+                closed: true,
+                maxMarkers: 1,
+                name: 'Point'
+            });
+        },
+        measureDistance(){
+            const measurement = viewer.measuringTool.startInsertion({
+                showDistances: true,
+                showArea: false,
+                closed: false,
+                name: 'Distance'
+            });
+        },
+        clearMeasurements(){
+            window.viewer.scene.removeAllMeasurements();
+        }
         
     },
 }
@@ -762,9 +604,8 @@ export default{
     }
 
     .potree_toolbar_separator{
-        background: white;
-        padding: 0px;
+        background: #d87444;
+        align-self: center;
         margin: 5px 10px;
-        width: 1px;
     }
 </style>
