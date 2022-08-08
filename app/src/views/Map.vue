@@ -464,7 +464,19 @@ export default{
                 });
                 this.parentAnno.collapseThreshold = 400;
 
-                this.selectedMesh = null; //This could cause problems if we have nested meshes, but I think that is unlikely to happen
+                //This could cause problems if we have nested meshes, but I think that is unlikely to happen
+                if (this.selectedMesh){
+                    this.selectedMesh.visible = false;
+                    this.selectedMesh = null; 
+                }
+                if (this.selectedLine){
+                    this.selectedLine.visible = false;
+                    this.selectedLine = null;
+                }
+                if (this.selectedRecon){
+                    this.selectedRecon.visible = false;
+                    this.selectedRecon = null;
+                }
 
                 this.parentAnno.moveHere(window.viewer.scene.getActiveCamera()); //This moves the camera to give a good view of the parent
                 this.parentAnno = this.parentAnno.parent;
@@ -482,6 +494,8 @@ export default{
                 this.parentAnno.collapseThreshold = 400;
 
                 this.selectedMesh = null; //This could cause problems if we have nested meshes, but I think that is unlikely to happen
+                this.selectedLine = null;
+                this.selectedRecon = null;
 
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
                                     new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion
