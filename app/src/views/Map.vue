@@ -439,13 +439,19 @@ export default{
         },
 
         addChildAnno(currAnno, parAnno){
+            let annoTitle = $(`
+                        <img src="${Potree.resourcePath}/icons/point.svg"/>`)
+
             let anno = new Potree.Annotation({
-				title: currAnno.title,
+				title: annoTitle,
                 position: [currAnno.position[0], currAnno.position[1], currAnno.position[2]],
                 cameraPosition: [currAnno.cameraPosition[0], currAnno.cameraPosition[1], currAnno.cameraPosition[2]],
                 cameraTarget: [currAnno.cameraTarget[0], currAnno.cameraTarget[1], currAnno.cameraTarget[2]],
                 collapseThreshold: 200
 			});
+
+            anno.domElement[0].firstElementChild.className = "annotation-child-titlebar";
+            console.log(anno);
             parAnno.add(anno);
             anno.visible = false;
         },
@@ -556,19 +562,10 @@ export default{
         background-color: white;
         color: black;
     }
-    /* .popup {
-        position: fixed;
-        top: 5%;
-        right: 5%;
-        width: 20%;
-        z-index: 10000;
-        background-color: rgba(255, 255, 255, 0.8);
-        padding: 10px;
-        border-radius: 10px;
-        visibility: hidden;
-        font-size: 20px;
-        font-family: Garamond,Baskerville,Baskerville Old Face,Hoefler Text,Times New Roman,serif;
+    /* div.annotation-child-titlebar{
+        
     } */
+    
     .credits {
         position: fixed;
         bottom:0px;
@@ -582,7 +579,7 @@ export default{
     .logo {
         width: 15%;
     }
-    .lesson {
+    /* .lesson {
         position: fixed;
         top: 5%;
         right: 5%;
@@ -594,8 +591,7 @@ export default{
         visibility: hidden;
         font-size: 20px;
         font-family: Garamond,Baskerville,Baskerville Old Face,Hoefler Text,Times New Roman,serif;
-        /* garmond */
-    }
+    } */
         
     #potree_toolbar{
         position: absolute; 
@@ -604,7 +600,6 @@ export default{
         top: 0px;
         border-radius: 0.4em 0.4em 0.4em 0.4em;
         display: flex;
-        /* flex-direction: row; */
     }
 
     .potree_toolbar_label{
