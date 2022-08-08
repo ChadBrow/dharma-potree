@@ -50,13 +50,15 @@
 			</div>
             <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green;"/>
         </div>
-        <v-card class="popup">
+        <v-card class="popup" v-if="showPopup">
             <v-app-bar rounded class="toolbar" style="margin-bottom: 2px">
                 <v-card-title>Test</v-card-title>
                 <v-spacer/>
-                <v-btn>Exit</v-btn>
+                <v-btn icon v-on:click="showPopup = false">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
             </v-app-bar>
-            <v-img src="../../public/resources/images/rome/tosArch.jpg"/>
+            <v-img v-if="popupImage" src="../../public/resources/images/rome/tosArch.jpg"/>
             <v-card-text style="color: black;">
                 {{pointcloudQuality}}
             </v-card-text>
@@ -91,7 +93,9 @@ export default{
             selectedMesh: null,
             selectedLine: null,
             selectedRecon: null,
-            
+            popupImage: null,
+            popupText: null,
+            showPopup: false
             
         }
     },
