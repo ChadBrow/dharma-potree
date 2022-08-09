@@ -5,8 +5,11 @@
                 <v-app-bar rounded class="toolbar">
                     <span>
                         <div class="potree_toolbar_label">Models</div>
-                        <v-btn v-on:click="togglePointcloud()" icon small title="Toggle Pointcloud">
+                        <v-btn v-on:click="togglePointcloud()" :color="pointcloudShown ? '#d87444' : ''" icon small title="Toggle Pointcloud">
                             <v-icon>mdi-image-filter-hdr</v-icon>
+                        </v-btn>
+                        <v-btn v-on:click="toggleCesium()" :color="cesiumShown ? '#d87444' : ''" icon small title="Toggle Map">
+                            <v-icon>mdi-earth</v-icon>
                         </v-btn>
                         <v-btn v-on:click="toggleMesh()" icon small title="Toggle Mesh">
                             <v-icon>mdi-home-variant</v-icon>
@@ -18,12 +21,12 @@
                     <v-divider vertical class="potree_toolbar_separator"/>
                     <span>
                         <div class="potree_toolbar_label">Navigation</div>
-                        <v-btn v-on:click="returnToParent()" small>Return</v-btn>
-                        <v-btn v-on:click="returnToStart()" small>Return to Start</v-btn>
+                        <v-btn v-on:click="returnToParent()" small outlined color="#d87444">Return</v-btn>
+                        <v-btn v-on:click="returnToStart()" small outlined color="#d87444">Reset</v-btn>
                     </span>
                     <v-divider vertical class="potree_toolbar_separator"/>
                     <v-btn icon title="Expand Toolbar" v-on:click="toolbarExpanded = true" v-if="!toolbarExpanded">
-                        <v-icon>mdi-chevron-right</v-icon>
+                        <v-icon color="#d87444">mdi-chevron-right</v-icon>
                     </v-btn>
                     <span v-if="toolbarExpanded">
                         <div class="potree_toolbar_label">Measurements</div>
@@ -33,17 +36,17 @@
                         <v-btn icon small title="Measure Distance" v-on:click="measureDistance()">
                             <v-img src="../../public/resources/icons/distance.svg"/>
                         </v-btn>
-                        <v-btn small v-on:click="clearMeasurements()">Clear</v-btn>
+                        <v-btn v-on:click="clearMeasurements()" small outlined color="#d87444">Clear</v-btn>
                     </span>
                     <!-- <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
                     <span v-if="toolbarExpanded">
                         <div class="potree_toolbar_label">Pointcloud Quality</div>
-                        <v-select outlined solo v-model="pointcloudQuality" :items="possibleQualities"/>
+                        <v-select v-model="pointcloudQuality" :items="possibleQualities" outlined solo/>
                     </span> -->
                     <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
                     <span v-if="toolbarExpanded">
                         <v-btn icon title="Shrink Toolbar" v-on:click="toolbarExpanded = false">
-                            <v-icon>mdi-chevron-left</v-icon>
+                            <v-icon color="#d87444">mdi-chevron-left</v-icon>
                         </v-btn>
                     </span>
                 </v-app-bar>
@@ -90,6 +93,8 @@ export default{
             possibleQualities: ["Low", "Medium", "High"],
             data: null,
             parentAnno: null,
+            pointcloudShown: true,
+            cesiumShown: true,
             selectedMesh: null,
             selectedLine: null,
             selectedRecon: null,
@@ -216,8 +221,8 @@ export default{
         });//end load pointcloud
 
         // //Create lighting for meshes
-        // const light = new THREE.AmbientLight(); // soft white light
-        // scene.scene.add( light );
+        const light = new THREE.AmbientLight(); // soft white light
+        scene.scene.add( light );
 
         // ADD ANNOTATIONS
         // //First declare aRoot
@@ -451,7 +456,6 @@ export default{
 			});
 
             anno.domElement[0].firstElementChild.className = "annotation-child-titlebar";
-            console.log(anno);
             parAnno.add(anno);
             anno.visible = false;
         },
@@ -509,7 +513,12 @@ export default{
 
         //MODELS
         togglePointcloud(){
+            this.pointcloudShown = !this.pointcloudShown;
             window.viewer.scene.pointclouds.forEach( pc => pc.visible = !pc.visible);
+        },
+        toggleCesium(){
+            this.cesiumShown = !this.cesiumShown;
+            console.log(window.cesiumViewer.camera);
         },
         toggleMesh(){
             if (this.selectedMesh){
