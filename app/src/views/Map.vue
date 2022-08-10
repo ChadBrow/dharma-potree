@@ -5,16 +5,16 @@
                 <v-app-bar rounded class="toolbar">
                     <span>
                         <div class="potree_toolbar_label">Models</div>
-                        <v-btn v-on:click="togglePointcloud()" :color="pointcloudShown ? '#d87444' : ''" icon small title="Toggle Pointcloud">
+                        <v-btn v-on:click="togglePointcloud()" :color="showPointcloud ? '#d87444' : ''" icon small title="Toggle Pointcloud">
                             <v-icon>mdi-image-filter-hdr</v-icon>
                         </v-btn>
-                        <v-btn v-on:click="toggleCesium()" :color="cesiumShown ? '#d87444' : ''" icon small title="Toggle Map">
+                        <v-btn v-on:click="toggleCesium()" :color="showCesium ? '#d87444' : ''" icon small title="Toggle Map">
                             <v-icon>mdi-earth</v-icon>
                         </v-btn>
-                        <v-btn v-on:click="toggleMesh()" icon small title="Toggle Mesh">
+                        <v-btn v-on:click="toggleMesh()" :color="showMesh ? '#d87444' : ''" icon small title="Toggle Mesh">
                             <v-icon>mdi-home-variant</v-icon>
                         </v-btn>
-                        <v-btn v-on:click="toggleRecon()" icon small title="Toggle Reconstruction">
+                        <v-btn v-on:click="toggleRecon()" :color="showRecon ? '#d87444' : ''" icon small title="Toggle Reconstruction">
                             <v-icon>mdi-cube-outline</v-icon>
                         </v-btn>
                     </span>
@@ -93,14 +93,16 @@ export default{
             possibleQualities: ["Low", "Medium", "High"],
             data: null,
             parentAnno: null,
-            pointcloudShown: true,
-            cesiumShown: true,
             selectedMesh: null,
             selectedLine: null,
             selectedRecon: null,
             popupImage: null,
             popupText: null,
-            showPopup: false
+            showPopup: false,
+            showPointcloud: true,
+            showCesium: true,
+            showMesh: false,
+            showRecon: false
             
         }
     },
@@ -470,6 +472,7 @@ export default{
 
                 //This could cause problems if we have nested meshes, but I think that is unlikely to happen
                 if (this.selectedMesh){
+                    this.showMesh = false;
                     this.selectedMesh.visible = false;
                     this.selectedMesh = null; 
                 }
@@ -478,6 +481,7 @@ export default{
                     this.selectedLine = null;
                 }
                 if (this.selectedRecon){
+                    this.showRecon = false;
                     this.selectedRecon.visible = false;
                     this.selectedRecon = null;
                 }
@@ -497,9 +501,20 @@ export default{
                 });
                 this.parentAnno.collapseThreshold = 400;
 
-                this.selectedMesh = null; //This could cause problems if we have nested meshes, but I think that is unlikely to happen
-                this.selectedLine = null;
-                this.selectedRecon = null;
+                if (this.selectedMesh){
+                    this.showMesh = false;
+                    this.selectedMesh.visible = false;
+                    this.selectedMesh = null; 
+                }
+                if (this.selectedLine){
+                    this.selectedLine.visible = false;
+                    this.selectedLine = null;
+                }
+                if (this.selectedRecon){
+                    this.showRecon = false;
+                    this.selectedRecon.visible = false;
+                    this.selectedRecon = null;
+                }
 
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
                                     new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion
@@ -513,15 +528,16 @@ export default{
 
         //MODELS
         togglePointcloud(){
-            this.pointcloudShown = !this.pointcloudShown;
+            this.showPointcloud = !this.showPointcloud;
             window.viewer.scene.pointclouds.forEach( pc => pc.visible = !pc.visible);
         },
         toggleCesium(){
-            this.cesiumShown = !this.cesiumShown;
+            this.showCesium = !this.showCesium;
             console.log(window.cesiumViewer.camera);
         },
         toggleMesh(){
             if (this.selectedMesh){
+                this.showMesh = !this.showMesh;
                 this.selectedMesh.visible = !this.selectedMesh.visible;
             }
             if (this.selectedLine){
@@ -531,6 +547,7 @@ export default{
         },
         toggleRecon(){
             if (this.selectedRecon){
+                this.showRecon = !this.showRecon;
                 this.selectedRecon.visible = !this.selectedRecon.visible;
             }
             if (this.selectedLine){
