@@ -405,7 +405,7 @@ export default{
                     // Creating Recon mesh
                     {
                         const material = new THREE.MeshStandardMaterial({
-                            color: 0x4d3319,
+                            color: 0x6e6863,
                             roughness: 0.5,
                         });
 
@@ -447,7 +447,7 @@ export default{
 
         addChildAnno(currAnno, parAnno){
             let annoTitle = $(`
-                        <img src="${Potree.resourcePath}/icons/point.svg"/>`)
+                        <img src="${Potree.resourcePath}/icons/child_annotation.png"/>`)
 
             let anno = new Potree.Annotation({
 				title: annoTitle,
