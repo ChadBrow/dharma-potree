@@ -84,7 +84,15 @@
 //import libraries
 import * as THREE from 'three';
 import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
+/*
 
+TODO:
+
+make the dots smaller
+make the return button return to the right spot
+add the dropdown menu
+
+*/
 export default{
     data(){
         return {
@@ -519,6 +527,16 @@ export default{
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
                                     new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion
                 this.parentAnno = this.parentAnno.parent; //This needs to set parentAnno to aRoot TODO
+                /*
+                    use a while loop to progress back until the current annotation has a parentAnno=null
+
+                    sudocode:
+
+                    while (this.parentAnno != null) {
+                        this = this.parentAnno;
+                    }
+
+                */
             }
             else{
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
