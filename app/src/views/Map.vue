@@ -193,7 +193,7 @@ export default{
         });
 
         // Load pointcloud
-        Potree.loadPointCloud("http://10.0.0.229:8080/metadata.json", "lion", function(e){
+        Potree.loadPointCloud("http://127.0.0.1:8080/metadata.json", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
@@ -518,7 +518,7 @@ export default{
 
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
                                     new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion
-                this.parentAnno = this.parentAnno.parent;
+                this.parentAnno = this.parentAnno.parent; //This needs to set parentAnno to aRoot TODO
             }
             else{
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
