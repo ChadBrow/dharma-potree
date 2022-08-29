@@ -25,6 +25,20 @@
                         <v-btn v-on:click="returnToStart()" small outlined color="#d87444">Reset</v-btn>
                     </span>
                     <v-divider vertical class="potree_toolbar_separator"/>
+                    <span>
+                        <div class="potree_toolbar_label">Test</div>
+                        <AppDropdown>
+                            <template slot="toggler">
+                                <button>Toggle</button>
+                            </template>
+                            <AppDropdownContent>
+                                <AppDropdownItem>Action 1</AppDropdownItem>
+                                <AppDropdownItem>Action 2</AppDropdownItem>
+                                <AppDropdownItem>Action 3</AppDropdownItem>
+                            </AppDropdownContent>
+                        </AppDropdown>
+                    </span>
+                    <v-divider vertical class="potree_toolbar_separator"/>
                     <v-btn icon title="Expand Toolbar" v-on:click="toolbarExpanded = true" v-if="!toolbarExpanded">
                         <v-icon color="#d87444">mdi-chevron-right</v-icon>
                     </v-btn>
@@ -81,6 +95,10 @@
 </template>
 
 <script>   
+//Import components
+import AppDropdown from '../components/AppDropdown.vue'
+import AppDropdownContent from '../components/AppDropdownContent.vue'
+import AppDropdownItem from '../components/AppDropdownItem.vue'
 //import libraries
 import * as THREE from 'three';
 import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
@@ -88,12 +106,18 @@ import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
 
 TODO:
 
-make the dots smaller
-make the return button return to the right spot
 add the dropdown menu
 
 */
 export default{
+    name: 'Map',
+
+    components: {
+        AppDropdown,
+        AppDropdownContent,
+        AppDropdownItem
+    },
+
     data(){
         return {
             toolbarExpanded: false,
@@ -455,7 +479,7 @@ export default{
 
         addChildAnno(currAnno, parAnno){
             let annoTitle = $(`
-                        <img src="${Potree.resourcePath}/icons/child_annotation.png"/>`)
+                        <img src="${Potree.resourcePath}/icons/child_annotation.png" style="height: 20px">`)
 
             let anno = new Potree.Annotation({
 				title: annoTitle,
