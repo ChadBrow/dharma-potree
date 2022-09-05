@@ -4,7 +4,7 @@
             <div id="potree_toolbar">
                 <v-app-bar rounded class="toolbar">
                     <span>
-                        <div class="potree_toolbar_label">Models</div>
+                        <div class="potree_toolbar_label">Views</div>
                         <v-btn v-on:click="togglePointcloud()" :color="showPointcloud ? '#d87444' : ''" icon small title="Toggle Pointcloud">
                             <v-icon>mdi-image-filter-hdr</v-icon>
                         </v-btn>
@@ -106,7 +106,21 @@ import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
 
 TODO:
 
-add the dropdown menu
+Finish toolbar
+    -Change button names
+    -Finish dropdown
+    -Add monument selector
+    -Fix Cesium Toggle
+    -Fix Measurement Icons
+    -Fix Mesh and Recon Icons
+refine child anno dot (different dots for different types)
+Fix going to different parent anno
+Add popups
+    -text popup for parent anno
+    -text and image popup for child annos (maybe even videos and articles)
+
+Look into databases
+Let user add data (long term goal)
 
 */
 export default{
