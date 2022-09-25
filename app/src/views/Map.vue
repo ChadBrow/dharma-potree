@@ -116,7 +116,6 @@ TODO FOR NEXT WEEK:
 Finish toolbar
     -Change button names
     -Add monument selector
-    -Fix Cesium Toggle (this will be hard)
     -Fix Measurement Icons
     -Fix Mesh and Recon Icons
 refine child anno dot (different dots for different types)
@@ -592,9 +591,9 @@ export default{
         toggleCesium(){
             this.showCesium = !this.showCesium;
             console.log(window.cesiumViewer.scene);
-            window.cesiumViewer.scene.imageryLayers._layers.forEach(layer => {
-                layer.show = !layer.show;
-            });
+            window.cesiumViewer.scene._globe.show = !window.cesiumViewer.scene._globe.show;
+            window.cesiumViewer.scene.skyBox.show = !window.cesiumViewer.scene.skyBox.show;
+            window.cesiumViewer.scene.skyAtmosphere.show = !window.cesiumViewer.scene.skyAtmosphere.show;
         },
         toggleMesh(){
             if (this.selectedMesh){
