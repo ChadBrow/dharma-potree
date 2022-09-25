@@ -104,22 +104,24 @@ import * as THREE from 'three';
 import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
 /*
 
-TODO:
-
+TODO FOR NEXT WEEK:
 Finish toolbar
     -Change button names
     -Finish dropdown
     -Add monument selector
-    -Fix Cesium Toggle
+    -Fix Cesium Toggle (this will be hard)
     -Fix Measurement Icons
     -Fix Mesh and Recon Icons
-refine child anno dot (different dots for different types)
+  refine child anno dot (different dots for different types)
 Fix going to different parent anno
+
+TODO BY FALL BREAK:
 Add popups
     -text popup for parent anno
     -text and image popup for child annos (maybe even videos and articles)
+    -make video
+    -Look into databases
 
-Look into databases
 Let user add data (long term goal)
 
 */
