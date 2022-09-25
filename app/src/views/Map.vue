@@ -26,17 +26,25 @@
                     </span>
                     <v-divider vertical class="potree_toolbar_separator"/>
                     <span>
-                        <div class="potree_toolbar_label">Test</div>
-                        <AppDropdown>
-                            <template slot="toggler">
-                                <button>Toggle</button>
-                            </template>
-                            <AppDropdownContent>
-                                <AppDropdownItem>Action 1</AppDropdownItem>
-                                <AppDropdownItem>Action 2</AppDropdownItem>
-                                <AppDropdownItem>Action 3</AppDropdownItem>
-                            </AppDropdownContent>
-                        </AppDropdown>
+                        <div class="potree_toolbar_label">Pointcloud Quality</div>
+                        <v-btn
+                            class="square-right" 
+                            v-on:click="updateQuality(0)" 
+                            small outlined color="#d87444" v-bind:disabled="pointcloudQuality==0">
+                            Low
+                        </v-btn>
+                        <v-btn 
+                            class="square" 
+                            v-on:click="updateQuality(1)" 
+                            small outlined color="#d87444" v-bind:disabled="pointcloudQuality==1">
+                            Medium
+                        </v-btn>
+                        <v-btn 
+                            class="square-left" 
+                            v-on:click="updateQuality(2)" 
+                            small outlined color="#d87444" v-bind:disabled="pointcloudQuality==2">
+                            High
+                        </v-btn>
                     </span>
                     <v-divider vertical class="potree_toolbar_separator"/>
                     <v-btn icon title="Expand Toolbar" v-on:click="toolbarExpanded = true" v-if="!toolbarExpanded">
@@ -107,12 +115,11 @@ import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
 TODO FOR NEXT WEEK:
 Finish toolbar
     -Change button names
-    -Finish dropdown
     -Add monument selector
     -Fix Cesium Toggle (this will be hard)
     -Fix Measurement Icons
     -Fix Mesh and Recon Icons
-  refine child anno dot (different dots for different types)
+refine child anno dot (different dots for different types)
 Fix going to different parent anno
 
 TODO BY FALL BREAK:
@@ -137,8 +144,7 @@ export default{
     data(){
         return {
             toolbarExpanded: false,
-            pointcloudQuality: "Medium",
-            possibleQualities: ["Low", "Medium", "High"],
+            pointcloudQuality: 1,
             data: null,
             parentAnno: null,
             selectedMesh: null,
@@ -202,14 +208,8 @@ export default{
         // window.viewer.setControls(window.viewer.fpControls);
         window.viewer.useHQ = true;
 
-        //Set pointcloud budget based off selected quality
-        if (this.pointcloudQuality == "Low")
-            window.viewer.setPointBudget(1_000_000);
-        else if(this.pointcloudQuality == "Medium")
-            window.viewer.setPointBudget(3_000_000);
-        else
-            window.viewer.setPointBudget(5_000_000);
-	
+        //Initialize pointcloud budget
+        window.viewer.setPointBudget(3_000_000);
 		
 		// Lights
 		let directionalLight, pointLight, ambientLight, hemiLight;
@@ -591,7 +591,10 @@ export default{
         },
         toggleCesium(){
             this.showCesium = !this.showCesium;
-            console.log(window.cesiumViewer.camera);
+            console.log(window.cesiumViewer.scene);
+            window.cesiumViewer.scene.imageryLayers._layers.forEach(layer => {
+                layer.show = !layer.show;
+            });
         },
         toggleMesh(){
             if (this.selectedMesh){
@@ -636,6 +639,22 @@ export default{
         },
         clearMeasurements(){
             window.viewer.scene.removeAllMeasurements();
+        },
+
+        //UPDATE POINTCLOUD QUALITY
+        updateQuality(qual){
+            if (qual == 0){
+                window.viewer.setPointBudget(1_000_000);
+                this.pointcloudQuality = 0;
+            }
+            else if (qual == 1){
+                window.viewer.setPointBudget(3_000_000);
+                this.pointcloudQuality = 1;
+            }
+            else if (qual == 2){
+                window.viewer.setPointBudget(5_000_000);
+                this.pointcloudQuality = 2;
+            }
         }
         
     },
@@ -723,5 +742,17 @@ export default{
 
     .toolbar {
         outline: 2px solid #d87444;
+    }
+
+    .square {
+        border-radius: 0px;
+    }
+    .square-right {
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+    .square-left {
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
     }
 </style>
