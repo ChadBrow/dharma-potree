@@ -1,7 +1,8 @@
 <template>
     <div id="potree_container" style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px; ">
         <div id="potree_render_area">
-            <div id="potree_toolbar">
+            <v-container id="potree_toolbar" wrap>
+                <v-row style="width: max-content;">
                 <v-app-bar rounded class="toolbar">
                     <span>
                         <div class="potree_toolbar_label">Views</div>
@@ -72,7 +73,13 @@
                         </v-btn>
                     </span>
                 </v-app-bar>
-			</div>
+                </v-row>
+                <v-row>
+                    <v-app-bar rounded>
+                        <v-select :items="monuments"/>
+                    </v-app-bar>
+                </v-row>
+			</v-container>
             <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green;"/>
         </div>
         <v-card class="popup" v-if="showPopup">
@@ -119,15 +126,16 @@ Finish toolbar
     -Fix Measurement Icons
     -Fix Mesh and Recon Icons
 refine child anno dot (different dots for different types)
-Fix going to different parent anno
 
 TODO BY FALL BREAK:
 Add popups
     -text popup for parent anno
     -text and image popup for child annos (maybe even videos and articles)
-    -make video
-    -Look into databases
+make video
+different view modes
 
+
+Look into databases
 Let user add data (long term goal)
 
 */
@@ -145,6 +153,7 @@ export default{
             toolbarExpanded: false,
             pointcloudQuality: 1,
             data: null,
+            monuments: [],
             parentAnno: null,
             selectedMesh: null,
             selectedLine: null,
@@ -475,10 +484,36 @@ export default{
                 collapseThreshold: 400
 			});
             parAnno.add(anno);
+            this.monuments.push(anno);
 
             currAnno.children.forEach((child) => {this.addChildAnno(child, anno);});
 
             anno.addEventListener('click', () => {
+                console.log(this.parentAnno)
+                console.log(this.parentAnno.level())
+                //hide currently selected anno if one is selected
+                if (this.parentAnno.level() > 0){
+                    this.parentAnno.children.forEach((child) => {
+                        child.visible = false;
+                    });
+                    this.parentAnno.collapseThreshold = 400;
+
+                    if (this.selectedMesh){
+                        this.showMesh = false;
+                        this.selectedMesh.visible = false;
+                        this.selectedMesh = null; 
+                    }
+                    if (this.selectedLine){
+                        this.selectedLine.visible = false;
+                        this.selectedLine = null;
+                    }
+                    if (this.selectedRecon){
+                        this.showRecon = false;
+                        this.selectedRecon.visible = false;
+                        this.selectedRecon = null;
+                    }
+                }
+
                 if (anno.children){
                     this.parentAnno = anno;
                     anno.collapseThreshold = 10;
@@ -716,6 +751,9 @@ export default{
         top: 0px;
         border-radius: 0.4em 0.4em 0.4em 0.4em;
         display: flex;
+        /* width: 4px; */
+        max-width: min-content;
+        height: fit-content;
     }
 
     .potree_toolbar_label{
