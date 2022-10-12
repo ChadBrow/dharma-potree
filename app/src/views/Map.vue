@@ -75,7 +75,7 @@
 			</div>
             <div id="monument_selector">
                 <v-app-bar rounded dense>
-                    <v-select dense :items="monuments.names"/>
+                    <v-select dense :items="monuments" item-text="name" v-model="selectedMonument" v-on:change="monumentSelected()" />
                 </v-app-bar>
             </div>
             <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green;"/>
@@ -151,7 +151,8 @@ export default{
             toolbarExpanded: false,
             pointcloudQuality: 1,
             data: null,
-            monuments: {selected: 0, names: ["No Monument Selected"], annos: [null]},
+            selectedMonument: {name: "No Monument Selected", effect: self.returnToStart},
+            monuments: [{name: "No Monument Selected", effect: self.returnToStart}],
             parentAnno: null,
             selectedMesh: null,
             selectedLine: null,
@@ -482,10 +483,6 @@ export default{
                 collapseThreshold: 400
 			});
             parAnno.add(anno);
-            //Add this monument to this list of all monuments. This is used by the monument selector
-            this.monuments.names.push(currAnno.title);
-            this.monuments.annos.push(anno);
-
             currAnno.children.forEach((child) => {this.addChildAnno(child, anno);});
 
             anno.addEventListener('click', () => {
@@ -525,6 +522,10 @@ export default{
                 this.selectedLine = line;
                 this.selectedRecon = recon;
             });
+
+            //Add this monument to this list of all monuments. This is used by the monument selector
+            console.log(anno)
+            this.monuments.push({name: currAnno.title, event: anno.click})
         },
 
         addChildAnno(currAnno, parAnno){
@@ -689,6 +690,11 @@ export default{
                 window.viewer.setPointBudget(5_000_000);
                 this.pointcloudQuality = 2;
             }
+        },
+
+        //Monument selector function(s)
+        monumentSelected(){
+            console.log(this.selectedMonument)
         }
         
     },
