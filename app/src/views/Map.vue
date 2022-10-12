@@ -1,8 +1,7 @@
 <template>
     <div id="potree_container" style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px; ">
         <div id="potree_render_area">
-            <v-container id="potree_toolbar" wrap>
-                <v-row style="width: max-content;">
+            <div id="potree_toolbar">
                 <v-app-bar rounded class="toolbar">
                     <span>
                         <div class="potree_toolbar_label">Views</div>
@@ -73,13 +72,12 @@
                         </v-btn>
                     </span>
                 </v-app-bar>
-                </v-row>
-                <v-row>
-                    <v-app-bar rounded>
-                        <v-select :items="monuments"/>
-                    </v-app-bar>
-                </v-row>
-			</v-container>
+			</div>
+            <div id="monument_selector">
+                <v-app-bar rounded dense>
+                    <v-select dense :items="monuments.names"/>
+                </v-app-bar>
+            </div>
             <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green;"/>
         </div>
         <v-card class="popup" v-if="showPopup">
@@ -153,7 +151,7 @@ export default{
             toolbarExpanded: false,
             pointcloudQuality: 1,
             data: null,
-            monuments: [],
+            monuments: {selected: 0, names: ["No Monument Selected"], annos: [null]},
             parentAnno: null,
             selectedMesh: null,
             selectedLine: null,
@@ -484,7 +482,9 @@ export default{
                 collapseThreshold: 400
 			});
             parAnno.add(anno);
-            this.monuments.push(anno);
+            //Add this monument to this list of all monuments. This is used by the monument selector
+            this.monuments.names.push(currAnno.title);
+            this.monuments.annos.push(anno);
 
             currAnno.children.forEach((child) => {this.addChildAnno(child, anno);});
 
@@ -749,11 +749,15 @@ export default{
         z-index: 10000; 
         left: 5px; 
         top: 0px;
-        border-radius: 0.4em 0.4em 0.4em 0.4em;
         display: flex;
-        /* width: 4px; */
-        max-width: min-content;
-        height: fit-content;
+    }
+
+    #monument_selector{
+        position: absolute; 
+        z-index: 10001; 
+        left: 10px; 
+        top: 70px;
+        display: flex;
     }
 
     .potree_toolbar_label{
