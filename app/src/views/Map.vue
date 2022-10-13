@@ -75,7 +75,9 @@
 			</div>
             <div id="monument_selector">
                 <v-app-bar rounded dense>
-                    <v-select dense :items="monuments" item-text="name" v-model="selectedMonument" v-on:change="monumentSelected()" />
+                    <v-select 
+                    dense :items="monuments" item-text="name" item-value="" return-object 
+                    v-model="selectedMonument" v-on:change="monumentSelected()" />
                 </v-app-bar>
             </div>
             <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green;"/>
@@ -148,11 +150,12 @@ export default{
 
     data(){
         return {
-            toolbarExpanded: false,
+            toolbarExpanded: false, 
             pointcloudQuality: 1,
             data: null,
-            selectedMonument: {name: "No Monument Selected", effect: self.returnToStart},
-            monuments: [{name: "No Monument Selected", effect: self.returnToStart}],
+            selectedMonument: {name: "No Monument Selected", event: self.returnToStar},
+            monuments: [{name: "No Monument Selected", event: self.returnToStart}], 
+            //value is a tuple. The first value is zero if value is passing a function and 1 if it is passing an annotation object
             parentAnno: null,
             selectedMesh: null,
             selectedLine: null,
@@ -524,8 +527,7 @@ export default{
             });
 
             //Add this monument to this list of all monuments. This is used by the monument selector
-            console.log(anno)
-            this.monuments.push({name: currAnno.title, event: anno.click})
+            this.monuments.push({name: currAnno.title, annotation: anno})
         },
 
         addChildAnno(currAnno, parAnno){
@@ -694,7 +696,8 @@ export default{
 
         //Monument selector function(s)
         monumentSelected(){
-            console.log(this.selectedMonument)
+            console.log(this.selectedMonument);
+            this.selectedMonument.annotation.elTitlebar._listeners.click[0]();
         }
         
     },
