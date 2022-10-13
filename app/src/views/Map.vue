@@ -5,16 +5,16 @@
                 <v-app-bar rounded class="toolbar">
                     <span>
                         <div class="potree_toolbar_label">Views</div>
-                        <v-btn v-on:click="togglePointcloud()" :color="showPointcloud ? '#d87444' : ''" icon small title="Toggle Pointcloud">
+                        <v-btn v-on:click="togglePointcloud()" :color="showPointcloud ? '#d87444' : ''" icon small title="Toggle Point Cloud Data">
                             <v-icon>mdi-image-filter-hdr</v-icon>
                         </v-btn>
-                        <v-btn v-on:click="toggleCesium()" :color="showCesium ? '#d87444' : ''" icon small title="Toggle Map">
+                        <v-btn v-on:click="toggleCesium()" :color="showCesium ? '#d87444' : ''" icon small title="Toggle Base Map">
                             <v-icon>mdi-earth</v-icon>
                         </v-btn>
-                        <v-btn v-on:click="toggleMesh()" :color="showMesh ? '#d87444' : ''" icon small title="Toggle Mesh">
+                        <v-btn v-on:click="toggleMesh()" :color="showMesh ? '#d87444' : ''" icon small title="Toggle Wire Frame Model">
                             <v-icon>mdi-home-variant</v-icon>
                         </v-btn>
-                        <v-btn v-on:click="toggleRecon()" :color="showRecon ? '#d87444' : ''" icon small title="Toggle Reconstruction">
+                        <v-btn v-on:click="toggleRecon()" :color="showRecon ? '#d87444' : ''" icon small title="Toggle Reconstruction Model">
                             <v-icon>mdi-cube-outline</v-icon>
                         </v-btn>
                     </span>
@@ -122,10 +122,17 @@ import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
 TODO FOR NEXT WEEK:
 Finish toolbar
     -Change button names
+        -Point Cloud is two words
+        -Return -> Back, or Undo, or something similar
     -Add monument selector
-    -Fix Measurement Icons
     -Fix Mesh and Recon Icons
+        -swap mesh and reconstruction
+    -When toggle cesium make background light grey
+    -For pointcloud quality, make it so that the selected one is not grey
+    -When user it at start, return and reset buttons should be greyed out
 refine child anno dot (different dots for different types)
+    -make them bigger as you zoom in
+        -make it by theshholds
 
 TODO BY FALL BREAK:
 Add popups
@@ -137,6 +144,7 @@ different view modes
 
 Look into databases
 Let user add data (long term goal)
+    -Let them add labels
 
 */
 export default{
@@ -153,8 +161,8 @@ export default{
             toolbarExpanded: false, 
             pointcloudQuality: 1,
             data: null,
-            selectedMonument: {name: "No Monument Selected", event: self.returnToStar},
-            monuments: [{name: "No Monument Selected", event: self.returnToStart}], 
+            selectedMonument: {name: "No Monument Selected", event: this.returnToStar},
+            monuments: [{name: "No Monument Selected", event: this.returnToStart}], 
             //value is a tuple. The first value is zero if value is passing a function and 1 if it is passing an annotation object
             parentAnno: null,
             selectedMesh: null,
@@ -488,9 +496,9 @@ export default{
             parAnno.add(anno);
             currAnno.children.forEach((child) => {this.addChildAnno(child, anno);});
 
-            anno.addEventListener('click', () => {
-                console.log(this.parentAnno)
-                console.log(this.parentAnno.level())
+            //Add a function that executes the on click effect. This function will be used later by the selector
+            anno.clicked = () => {
+                console.log(window.viewer.scene.getActiveCamera());
                 //hide currently selected anno if one is selected
                 if (this.parentAnno.level() > 0){
                     this.parentAnno.children.forEach((child) => {
@@ -524,6 +532,11 @@ export default{
                 this.selectedMesh = mesh;
                 this.selectedLine = line;
                 this.selectedRecon = recon;
+            };
+
+            anno.addEventListener('click', () => {
+                this.selectedMonument = {name: currAnno.title, annotation: anno}
+                anno.clicked();
             });
 
             //Add this monument to this list of all monuments. This is used by the monument selector
@@ -576,8 +589,11 @@ export default{
             }
             else{
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
-                                    new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion
+                                    new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); 
+                                    //This moves the camera back to the start in a smooth fashion
             }
+            //Reset the selected monument
+            this.selectedMonument = {name: "No Monument Selected", event: this.returnToStar};
         },
         returnToStart(){
             if (this.parentAnno.level() > 0){
@@ -604,21 +620,14 @@ export default{
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
                                     new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion
                 this.parentAnno = this.parentAnno.parent; //This needs to set parentAnno to aRoot TODO
-                /*
-                    use a while loop to progress back until the current annotation has a parentAnno=null
-
-                    sudocode:
-
-                    while (this.parentAnno != null) {
-                        this = this.parentAnno;
-                    }
-
-                */
             }
             else{
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
                                     new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion
             }
+
+            //Reset the selected monument
+            this.selectedMonument = {name: "No Monument Selected", event: this.returnToStar};
         },
 
         //MODELS
@@ -696,8 +705,13 @@ export default{
 
         //Monument selector function(s)
         monumentSelected(){
-            console.log(this.selectedMonument);
-            this.selectedMonument.annotation.elTitlebar._listeners.click[0]();
+            if (this.selectedMonument.annotation){
+                this.selectedMonument.annotation.moveHere(window.viewer.scene.getActiveCamera());
+                this.selectedMonument.annotation.clicked();
+            }
+            else{
+                this.selectedMonument.event();
+            }
         }
         
     },
