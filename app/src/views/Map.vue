@@ -385,30 +385,6 @@ export default{
         displayCameraPos(){
             console.log(window.viewer.scene.getActiveCamera());
         },
-        
-        addArrays(arr1, arr2){
-            console.log(arr1, " --- ", arr1[0] + arr2[0]);
-            //Adds elements in arr2 to arr1. arr1 better not be longer than arr2
-            for (let i = 0; i < arr1.length; i++){
-                arr1[i] += arr2[i];
-            }
-
-            console.log(arr1);
-            return arr1;
-        },
-
-        transformCoords(coords){
-            let x = coords[0] + 17.3;
-            let y = coords[1] - 23.31;
-            let len = Math.sqrt((x * x) + (y * y));
-            let angle = Math.atan(y / x);
-            // angle *= -1;
-            // angle += this.data.rot;
-            // angle = angle * -1;
-
-            console.log([291275.97 + len * Math.cos(angle), 4640928.21 + len * Math.sin(angle), coords[2] + 15.71]);//z is pretty easy 
-
-        },
 
         addParentAnno(currAnno, parAnno){
             //Add mesh if annotation has that
@@ -499,7 +475,6 @@ export default{
 
             //Add a function that executes the on click effect. This function will be used later by the selector
             anno.clicked = () => {
-                console.log(window.viewer.scene.getActiveCamera());
                 //hide currently selected anno if one is selected
                 if (this.parentAnno.level() > 0){
                     this.parentAnno.children.forEach((child) => {
