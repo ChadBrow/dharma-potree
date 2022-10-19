@@ -74,8 +74,8 @@
                 </v-app-bar>
 			</div>
             <div id="monument_selector">
-                <v-app-bar rounded dense>
-                    <v-select 
+                <v-app-bar rounded dense class="toolbar">
+                    <v-select color="#d87444"
                     dense :items="monuments" item-text="name" item-value="" return-object 
                     v-model="selectedMonument" v-on:change="monumentSelected()" />
                 </v-app-bar>
