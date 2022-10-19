@@ -127,6 +127,7 @@ Finish toolbar
     -Add monument selector
     -Fix Mesh and Recon Icons
         -swap mesh and reconstruction
+        -When you are in global view, you can toggle them all together
     -When toggle cesium make background light grey
     -For pointcloud quality, make it so that the selected one is not grey
     -When user it at start, return and reset buttons should be greyed out
