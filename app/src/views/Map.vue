@@ -60,11 +60,11 @@
                         </v-btn>
                         <v-btn v-on:click="clearMeasurements()" small outlined color="#d87444">Clear</v-btn>
                     </span>
-                    <!-- <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
+                    <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
                     <span v-if="toolbarExpanded">
-                        <div class="potree_toolbar_label">Pointcloud Quality</div>
-                        <v-select v-model="pointcloudQuality" :items="possibleQualities" outlined solo/>
-                    </span> -->
+                        <div class="potree_toolbar_label">Debug</div>
+                        <v-btn small outlined color="#d87444" v-on:click="displayCameraPos()">Print Camera Position</v-btn>
+                    </span>
                     <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
                     <span v-if="toolbarExpanded">
                         <v-btn icon title="Shrink Toolbar" v-on:click="toolbarExpanded = false">
@@ -521,7 +521,7 @@ export default{
 
         addChildAnno(currAnno, parAnno){
             let annoTitle = $(`
-                        <img src="${Potree.resourcePath}/icons/child_annotation_image.png" style="height: 20px">`)
+                        <img src="${Potree.resourcePath}/icons/child_annotation_image2.png" style="height: 30px">`)
 
             let anno = new Potree.Annotation({
 				title: annoTitle,
