@@ -83,16 +83,16 @@
             <div id="cesiumContainer" style="position: absolute; width: 100%; height: 100%; background-color:green;"/>
         </div>
         <v-card class="popup" v-if="showPopup">
-            <v-app-bar rounded class="toolbar" style="margin-bottom: 2px">
-                <v-card-title>Test</v-card-title>
+            <v-app-bar rounded color="#d87444" class="toolbar" style="margin-bottom: 2px">
+                <v-card-title>{{popupTitle}}</v-card-title>
                 <v-spacer/>
                 <v-btn icon v-on:click="showPopup = false">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
             </v-app-bar>
-            <v-img v-if="popupImage" src="../../public/resources/images/rome/tosArch.jpg"/>
-            <v-card-text style="color: black;">
-                {{pointcloudQuality}}
+            <v-img v-if="popupImage" v-bind:src="require('../../public/resources/images/' + this.popupImage)"/>
+            <v-card-text v-if="popupText" style="color: black;">
+                {{popupText}}
             </v-card-text>
         </v-card>
         <div class="credits">
@@ -162,6 +162,7 @@ export default{
             selectedMesh: null,
             selectedLine: null,
             selectedRecon: null,
+            popupTitle: null,
             popupImage: null,
             popupText: null,
             showPopup: false,
@@ -501,6 +502,12 @@ export default{
                 this.selectedMesh = mesh;
                 this.selectedLine = line;
                 this.selectedRecon = recon;
+
+                //Display popup
+                this.popupText = currAnno.text;
+                this.popupImage = currAnno.image;
+                this.popupTitle = currAnno.title;
+                this.showPopup = true;
             };
 
             anno.addEventListener('click', () => {
@@ -524,6 +531,13 @@ export default{
                 collapseThreshold: 200
 			});
 
+            anno.addEventListener('click', () => {
+                this.popupText = currAnno.text;
+                this.popupImage = currAnno.image;
+                this.popupTitle = currAnno.title;
+                this.showPopup = true;
+            });
+
             anno.domElement[0].firstElementChild.className = "annotation-child-titlebar";
             parAnno.add(anno);
             anno.visible = false;
@@ -531,6 +545,9 @@ export default{
 
         //NAVIGATION
         returnToParent(){
+            //Close popup if it is open
+            this.showPopup = false;
+
             if (this.parentAnno.level() > 0){
                 this.parentAnno.children.forEach((child) => {
                     child.visible = false;
@@ -565,6 +582,9 @@ export default{
             this.selectedMonument = {name: "No Monument Selected", event: this.returnToStar};
         },
         returnToStart(){
+            //Close popup if it is open
+            this.showPopup = false;
+
             if (this.parentAnno.level() > 0){
                 this.parentAnno.children.forEach((child) => {
                     child.visible = false;
