@@ -5,23 +5,23 @@
                 <v-app-bar rounded class="toolbar">
                     <span>
                         <div class="potree_toolbar_label">Views</div>
-                        <v-btn v-on:click="togglePointcloud()" :color="showPointcloud ? '#d87444' : ''" icon small title="Toggle Point Cloud Data">
+                        <v-btn v-on:click="togglePointcloud()" :color="!showPointcloud ? '#d87444' : ''" icon small title="Toggle Point Cloud Data">
                             <v-icon>mdi-image-filter-hdr</v-icon>
                         </v-btn>
-                        <v-btn v-on:click="toggleCesium()" :color="showCesium ? '#d87444' : ''" icon small title="Toggle Base Map">
+                        <v-btn v-on:click="toggleCesium()" :color="!showCesium ? '#d87444' : ''" icon small title="Toggle Base Map">
                             <v-icon>mdi-earth</v-icon>
                         </v-btn>
-                        <v-btn v-on:click="toggleMesh()" :color="showMesh ? '#d87444' : ''" icon small title="Toggle Wire Frame Model">
-                            <v-icon>mdi-home-variant</v-icon>
-                        </v-btn>
-                        <v-btn v-on:click="toggleRecon()" :color="showRecon ? '#d87444' : ''" icon small title="Toggle Reconstruction Model">
+                        <v-btn v-on:click="toggleMesh()" :color="!showMesh ? '#d87444' : ''" icon small title="Toggle Wire Frame Model">
                             <v-icon>mdi-cube-outline</v-icon>
+                        </v-btn>
+                        <v-btn v-on:click="toggleRecon()" :color="!showRecon ? '#d87444' : ''" icon small title="Toggle Reconstruction Model">
+                            <v-icon>mdi-home-variant</v-icon>
                         </v-btn>
                     </span>
                     <v-divider vertical class="potree_toolbar_separator"/>
                     <span>
                         <div class="potree_toolbar_label">Navigation</div>
-                        <v-btn v-on:click="returnToParent()" small outlined color="#d87444">Return</v-btn>
+                        <v-btn v-on:click="returnToParent()" small outlined color="#d87444">Back</v-btn>
                         <v-btn v-on:click="returnToStart()" small outlined color="#d87444">Reset</v-btn>
                     </span>
                     <v-divider vertical class="potree_toolbar_separator"/>
@@ -121,21 +121,14 @@ import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
 
 TODO FOR NEXT WEEK:
 Finish toolbar
-    -Change button names
-        -Point Cloud is two words
-        -Return -> Back, or Undo, or something similar
-    -Add monument selector
-    -Fix Mesh and Recon Icons
-        -swap mesh and reconstruction
-        -When you are in global view, you can toggle them all together
     -When toggle cesium make background light grey
-    -For pointcloud quality, make it so that the selected one is not grey
     -When user it at start, return and reset buttons should be greyed out
 refine child anno dot (different dots for different types)
     -make them bigger as you zoom in
         -make it by theshholds
 
-TODO BY FALL BREAK:
+When you are in global view, you can toggle them all together
+
 Add popups
     -text popup for parent anno
     -text and image popup for child annos (maybe even videos and articles)
