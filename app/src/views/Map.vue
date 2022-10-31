@@ -119,7 +119,7 @@ import * as THREE from 'three';
 import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
 /*
 
-TODO FOR NEXT WEEK:
+TODO LIST:
 Finish toolbar
     -When toggle cesium make background light grey
     -When user it at start, return and reset buttons should be greyed out
@@ -127,11 +127,7 @@ refine child anno dot (different dots for different types)
     -make them bigger as you zoom in
         -make it by theshholds
 
-When you are in global view, you can toggle them all together
-
-Add popups
-    -text popup for parent anno
-    -text and image popup for child annos (maybe even videos and articles)
+Make user able to reopen popup
 make video
 different view modes
 
@@ -157,11 +153,7 @@ export default{
             data: null,
             selectedMonument: {name: "No Monument Selected", event: this.returnToStar},
             monuments: [{name: "No Monument Selected", event: this.returnToStart}], 
-            //value is a tuple. The first value is zero if value is passing a function and 1 if it is passing an annotation object
             parentAnno: null,
-            selectedMesh: null,
-            selectedLine: null,
-            selectedRecon: null,
             popupTitle: null,
             popupImage: null,
             popupText: null,
