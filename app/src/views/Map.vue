@@ -382,6 +382,15 @@ export default{
         },
 
         addParentAnno(currAnno, parAnno){
+            //Create annotation object
+            let anno = new Potree.Annotation({
+				title: currAnno.title,
+                position: [currAnno.position[0], currAnno.position[1], currAnno.position[2]],
+                cameraPosition: [currAnno.cameraPosition[0], currAnno.cameraPosition[1], currAnno.cameraPosition[2]],
+                cameraTarget: [currAnno.cameraTarget[0], currAnno.cameraTarget[1], currAnno.cameraTarget[2]],
+                collapseThreshold: 400
+			});
+
             //Add mesh if annotation has that
             let mesh = null;
             if (currAnno.mesh){
@@ -419,6 +428,7 @@ export default{
                         });
 
                         window.viewer.scene.scene.add(mesh);
+                        anno.meshModel = mesh;
                     }
                 });
             }
@@ -438,6 +448,7 @@ export default{
                     line.name = currAnno.recon.name + " reconline"
                     line.visible = false;
                     viewer.scene.scene.add( line );
+                    anno.lineModel = line;
 
 
                     // Creating Recon mesh
@@ -454,24 +465,13 @@ export default{
                         recon.name = currAnno.recon.name + " recon";
 
                         viewer.scene.scene.add(recon);
+                        anno.reconModel = recon;
                     }
                 });
             }
 
-            let anno = new Potree.Annotation({
-				title: currAnno.title,
-                position: [currAnno.position[0], currAnno.position[1], currAnno.position[2]],
-                cameraPosition: [currAnno.cameraPosition[0], currAnno.cameraPosition[1], currAnno.cameraPosition[2]],
-                cameraTarget: [currAnno.cameraTarget[0], currAnno.cameraTarget[1], currAnno.cameraTarget[2]],
-                collapseThreshold: 400
-			});
             parAnno.add(anno);
             currAnno.children.forEach((child) => {this.addChildAnno(child, anno);});
-            
-            //Add the meshes and recons to this anno
-            anno.meshModel = mesh;
-            anno.reconModel = recon;
-            anno.lineModel = line;
 
             //Add a function that executes the on click effect. This function will be used later by the selector
             anno.clicked = () => {
@@ -483,17 +483,15 @@ export default{
                     this.parentAnno.collapseThreshold = 400;
                 }
 
-                if (anno.children){
-                    this.hideModels(this.parentAnno);
+                this.hideModels(this.parentAnno);
 
-                    this.parentAnno = anno;
-                    this.updateModels
+                this.parentAnno = anno;
+                this.updateModels()
 
-                    anno.collapseThreshold = 10;
-                    anno.children.forEach((child) => {
-                        child.visible = true;
-                    });
-                }
+                anno.collapseThreshold = 10;
+                anno.children.forEach((child) => {
+                    child.visible = true;
+                });
 
                 //Display popup
                 this.popupText = currAnno.text;
