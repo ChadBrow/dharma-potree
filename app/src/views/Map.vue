@@ -295,6 +295,7 @@ export default{
             this.addParentAnno(anno, aRoot);
         });
         this.parentAnno = aRoot;
+        console.log(this.parentAnno);
 
         function loop(timestamp){
             window.requestAnimationFrame(loop);
@@ -466,6 +467,11 @@ export default{
 			});
             parAnno.add(anno);
             currAnno.children.forEach((child) => {this.addChildAnno(child, anno);});
+            
+            //Add the meshes and recons to this anno
+            anno.meshModel = mesh;
+            anno.reconModel = recon;
+            anno.lineModel = line;
 
             //Add a function that executes the on click effect. This function will be used later by the selector
             anno.clicked = () => {
@@ -475,33 +481,19 @@ export default{
                         child.visible = false;
                     });
                     this.parentAnno.collapseThreshold = 400;
-
-                    if (this.selectedMesh){
-                        this.showMesh = false;
-                        this.selectedMesh.visible = false;
-                        this.selectedMesh = null; 
-                    }
-                    if (this.selectedLine){
-                        this.selectedLine.visible = false;
-                        this.selectedLine = null;
-                    }
-                    if (this.selectedRecon){
-                        this.showRecon = false;
-                        this.selectedRecon.visible = false;
-                        this.selectedRecon = null;
-                    }
                 }
 
                 if (anno.children){
+                    this.hideModels(this.parentAnno);
+
                     this.parentAnno = anno;
+                    this.updateModels
+
                     anno.collapseThreshold = 10;
                     anno.children.forEach((child) => {
                         child.visible = true;
                     });
                 }
-                this.selectedMesh = mesh;
-                this.selectedLine = line;
-                this.selectedRecon = recon;
 
                 //Display popup
                 this.popupText = currAnno.text;
@@ -554,24 +546,14 @@ export default{
                 });
                 this.parentAnno.collapseThreshold = 400;
 
-                //This could cause problems if we have nested meshes, but I think that is unlikely to happen
-                if (this.selectedMesh){
-                    this.showMesh = false;
-                    this.selectedMesh.visible = false;
-                    this.selectedMesh = null; 
-                }
-                if (this.selectedLine){
-                    this.selectedLine.visible = false;
-                    this.selectedLine = null;
-                }
-                if (this.selectedRecon){
-                    this.showRecon = false;
-                    this.selectedRecon.visible = false;
-                    this.selectedRecon = null;
-                }
+                //Hide all the old parent's models
+                this.parentAnno.meshModel.visible = false;
+                this.parentAnno.reconModel.visible = false;
+                this.parentAnno.lineModel.visible = false;
 
                 this.parentAnno.moveHere(window.viewer.scene.getActiveCamera()); //This moves the camera to give a good view of the parent
                 this.parentAnno = this.parentAnno.parent;
+                this.updateModels() //update new parent's models
             }
             else{
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
@@ -591,24 +573,15 @@ export default{
                 });
                 this.parentAnno.collapseThreshold = 400;
 
-                if (this.selectedMesh){
-                    this.showMesh = false;
-                    this.selectedMesh.visible = false;
-                    this.selectedMesh = null; 
-                }
-                if (this.selectedLine){
-                    this.selectedLine.visible = false;
-                    this.selectedLine = null;
-                }
-                if (this.selectedRecon){
-                    this.showRecon = false;
-                    this.selectedRecon.visible = false;
-                    this.selectedRecon = null;
-                }
+                //Hide all the old parent's models
+                this.parentAnno.meshModel.visible = false;
+                this.parentAnno.reconModel.visible = false;
+                this.parentAnno.lineModel.visible = false;
 
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
-                                    new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion
+                                    new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion  
                 this.parentAnno = this.parentAnno.parent; //This needs to set parentAnno to aRoot TODO
+                this.updateModels() //update new parent's models
             }
             else{
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
@@ -632,23 +605,39 @@ export default{
             window.cesiumViewer.scene.skyAtmosphere.show = !window.cesiumViewer.scene.skyAtmosphere.show;
         },
         toggleMesh(){
-            if (this.selectedMesh){
-                this.showMesh = !this.showMesh;
-                this.selectedMesh.visible = !this.selectedMesh.visible;
-            }
-            if (this.selectedLine){
-                this.selectedLine.material.color.setHex(0xecd9c6);
-                this.selectedLine.visible = !this.selectedLine.visible;
-            }
+            this.showMesh = !this.showMesh;
+            this.updateModels();
         },
         toggleRecon(){
-            if (this.selectedRecon){
-                this.showRecon = !this.showRecon;
-                this.selectedRecon.visible = !this.selectedRecon.visible;
+            this.showRecon = !this.showRecon;
+            this.updateModels();
+        },
+        updateModels(){
+            if (this.parentAnno.level() > 0){
+                this.parentAnno.meshModel.visible = this.showMesh;
+                this.parentAnno.reconModel.visible = this.showRecon;
+                this.parentAnno.lineModel.visible = (this.showMesh || this.showRecon);
             }
-            if (this.selectedLine){
-                this.selectedLine.material.color.setHex(0x4d3319);
-                this.selectedLine.visible = !this.selectedLine.visible;
+            else{
+                this.parentAnno.children.forEach( child => {
+                    child.meshModel.visible = this.showMesh;
+                    child.reconModel.visible = this.showRecon;
+                    child.lineModel.visible = (this.showMesh || this.showRecon);
+                });
+            }
+        },
+        hideModels(anno){
+            if (anno.level() > 0){
+                anno.meshModel.visible = false;
+                anno.reconModel.visible = false;
+                anno.lineModel.visible = false;
+            }
+            else{
+                anno.children.forEach( child => {
+                    child.meshModel.visible = false;
+                    child.reconModel.visible = false;
+                    child.lineModel.visible = false;
+                });
             }
         },
 
