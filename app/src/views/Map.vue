@@ -121,20 +121,26 @@ import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
 
 TODO LIST:
 Finish toolbar
-    -When toggle cesium make background light grey
+    -When toggle cesium make background light grey ****
     -When user it at start, return and reset buttons should be greyed out
 refine child anno dot (different dots for different types)
     -make them bigger as you zoom in
         -make it by theshholds
 
-Make user able to reopen popup
+Make user able to reopen popup ****
 make video
 different view modes
 
 
-Look into databases
+Look into databases / hosting site
+    -https://www.heroku.com/
+        -brendan.ohandley@grafana.com
+    -AWS
 Let user add data (long term goal)
     -Let them add labels
+
+For Lorence
+    -https://nanovic.nd.edu
 
 */
 export default{
