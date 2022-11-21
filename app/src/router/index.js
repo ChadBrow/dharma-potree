@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Map from '../views/Map.vue'
+import VaticanMap from '../views/VaticanMap.vue'
 
 Vue.use(VueRouter)
 
@@ -20,6 +21,12 @@ const routes = [
     path: '/map',
     name: 'map',
     component: Map,
+    props: true
+  },
+  {
+    path: '/vatican',
+    name: 'vatican',
+    component: VaticanMap,
     props: true
   },
   {
