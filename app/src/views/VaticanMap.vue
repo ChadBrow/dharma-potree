@@ -116,7 +116,7 @@ import AppDropdownContent from '../components/AppDropdownContent.vue'
 import AppDropdownItem from '../components/AppDropdownItem.vue'
 //import libraries
 import * as THREE from 'three';
-import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
+import { OBJLoader } from "../../public/libs/three.js/loaders/OBJLoader.js";
 /*
 
 TODO LIST:
@@ -179,7 +179,7 @@ export default{
 
         //Declare Potree and mesh loader
         const Potree = window.Potree;
-        this.loader = new PLYLoader();
+        this.loader = new OBJLoader();
 
         //Initialize Cesium Viewer
         window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
@@ -215,8 +215,8 @@ export default{
         window.viewer.setFOV(60);
         window.viewer.loadSettingsFromURL();
         window.viewer.setBackground(null);
-        window.viewer.setControls(window.viewer.earthControls);
-        // window.viewer.setControls(window.viewer.fpControls);
+        // window.viewer.setControls(window.viewer.earthControls);
+        window.viewer.setControls(window.viewer.fpControls);
         window.viewer.useHQ = true;
 
         //Initialize pointcloud budget
@@ -289,11 +289,59 @@ export default{
         // //First declare aRoot
         let aRoot = scene.annotations;
 
-        data.annos.forEach((anno) => {
-            this.addParentAnno(anno, aRoot);
-        });
+        // data.annos.forEach((anno) => {
+        //     this.addParentAnno(anno, aRoot);
+        // });
         this.parentAnno = aRoot;
-        console.log(this.parentAnno);
+        // console.log(this.parentAnno);
+
+        this.loader.load(Potree.resourcePath + "/models/1114Phase2AddSingleMesh.obj", (mesh) => {
+            // const textureLoader = new THREE.TextureLoader();
+
+            // const diffuseMap = textureLoader.load(Potree.resourcePath + "/models/" + currAnno.mesh.name + "_tex.jpg");
+            // diffuseMap.encoding = THREE.sRGBEncoding;
+
+            // const normalMap = textureLoader.load(Potree.resourcePath + "/models/" + currAnno.mesh.name + "_norm.jpg");
+            // normalMap.encoding = THREE.sRGBEncoding;
+
+            console.log(mesh);
+            // geometry.computeVertexNormals();
+
+            // {
+            //     const material = new THREE.MeshStandardMaterial({
+            //         color: 0xffffff,
+            //         roughness: 0.5,
+            //         map: diffuseMap,
+            //         normalMap: normalMap,
+            //         normalMapType: THREE.ObjectSpaceNormalMap,
+            //     });
+            //     mesh = new THREE.Mesh(geometry, material);
+            //     mesh.position.set(0, 0, 0);
+            //     mesh.rotation.set(0, 0, 0);
+            //     mesh.name = "Test";
+            //     mesh.visible = true;
+
+            //     mesh.traverse(n => {
+            //         if(n.isMesh) {
+            //             n.castShadow = true;
+            //             n.recieveShadow = true;
+            //             if(n.material.map) n.material.map.anisotropy = 16;
+            //         }
+            //     });
+
+            //     window.viewer.scene.scene.add(mesh);
+            // }
+            const material = new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                roughness: 0.5,
+                shininess: 0.1,
+            });
+            mesh.material = material
+            mesh.position.set(0, -400, 30);
+            mesh.rotation.set(Math.PI * 0.5, Math.PI * 0.15, 0);
+            mesh.scale.set(0.2, 0.2, 0.2);
+            window.viewer.scene.scene.add(mesh);
+        });
 
         function loop(timestamp){
             window.requestAnimationFrame(loop);
