@@ -15,7 +15,7 @@ const routes = [
   // },
   {
     path: '/',
-    redirect: '/vatican'
+    redirect: '/map'
   },
   {
     path: '/map',
