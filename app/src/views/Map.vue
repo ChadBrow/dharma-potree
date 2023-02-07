@@ -509,7 +509,7 @@ export default{
 
         addChildAnno(currAnno, parAnno){
             let annoTitle = $(`
-                        <img src="${Potree.resourcePath}/icons/child_annotation_image2.png" style="height: 30px">`)
+                        <img src="${Potree.resourcePath}/icons/child_annotation.png" style="height: 30px">`)
 
             let anno = new Potree.Annotation({
 				title: annoTitle,
