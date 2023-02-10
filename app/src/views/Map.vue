@@ -117,6 +117,7 @@ import AppDropdownItem from '../components/AppDropdownItem.vue'
 //import libraries
 import * as THREE from 'three';
 import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
+import { OBJLoader } from '../../public/libs/three.js/loaders/OBJLoader';
 /*
 
 TODO LIST:
@@ -179,7 +180,8 @@ export default{
 
         //Declare Potree and mesh loader
         const Potree = window.Potree;
-        this.loader = new PLYLoader();
+        this.plyLoader = new PLYLoader();
+        this.objLoader = new OBJLoader();
 
         //Initialize Cesium Viewer
         window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
@@ -392,7 +394,7 @@ export default{
             //Add mesh if annotation has that
             let mesh = null;
             if (currAnno.mesh){
-                this.loader.load(Potree.resourcePath + "/models/" + currAnno.mesh.name + ".ply", (geometry) => {
+                this.plyLoader.load(Potree.resourcePath + "/models/" + currAnno.mesh.name + ".ply", (geometry) => {
                     const textureLoader = new THREE.TextureLoader();
 
                     const diffuseMap = textureLoader.load(Potree.resourcePath + "/models/" + currAnno.mesh.name + "_tex.jpg");
@@ -435,8 +437,48 @@ export default{
             let line = null;
             let recon = null;
             if (currAnno.recon){
-                this.loader.load(Potree.resourcePath + "/models/recon/" + currAnno.recon.name + ".ply", (geometry) => {
+                this.plyLoader.load(Potree.resourcePath + "/models/recon/" + currAnno.recon.name + ".ply", (geometry) => {
 
+                    // Creating and Adding lines
+                    const edges = new THREE.EdgesGeometry( geometry );
+                    line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xecd9c6 } ) );
+
+                    line.position.set(currAnno.recon.position[0], currAnno.recon.position[1], currAnno.recon.position[2]);
+                    line.rotation.set(0, 0, Math.PI * currAnno.recon.rotation) // 
+                    line.name = currAnno.recon.name + " reconline"
+                    line.visible = false;
+                    viewer.scene.scene.add( line );
+                    anno.lineModel = line;
+
+
+                    // Creating Recon mesh
+                    {
+                        const material = new THREE.MeshStandardMaterial({
+                            color: 0x6e6863,
+                            roughness: 0.5,
+                        });
+
+                        recon = new THREE.Mesh(geometry, material);
+                        recon.position.set(currAnno.recon.position[0], currAnno.recon.position[1], currAnno.recon.position[2]);
+                        recon.rotation.set(0, 0, Math.PI * currAnno.recon.rotation) //
+                        recon.visible = false;
+                        recon.name = currAnno.recon.name + " recon";
+
+                        viewer.scene.scene.add(recon);
+                        anno.reconModel = recon;
+                    }
+                });
+            }
+            else if (currAnno.obj){//add obj if they have that instead
+                this.objLoader.load(Potree.resourcePath + "/models/obj/" + currAnno.obj.name + ".obj", (geometry) => {
+                    // mesh.position.set(currAnno.obj.position[0], currAnno.obj.position[1], currAnno.obj.position[2]);
+                    // mesh.rotation.set(0, 0, Math.PI * currAnno.obj.rotation);
+                    // mesh.name = currAnno.obj.name;
+                    // mesh.visible = false;
+
+                    // console.log(mesh);
+                    // window.viewer.scene.scene.add(mesh);
+                    // anno.meshModel = mesh;
                     // Creating and Adding lines
                     const edges = new THREE.EdgesGeometry( geometry );
                     line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xecd9c6 } ) );
@@ -610,29 +652,29 @@ export default{
         },
         updateModels(){
             if (this.parentAnno.level() > 0){
-                this.parentAnno.meshModel.visible = this.showMesh;
-                this.parentAnno.reconModel.visible = this.showRecon;
-                this.parentAnno.lineModel.visible = (this.showMesh || this.showRecon);
+                if (this.parentAnno.meshModel) this.parentAnno.meshModel.visible = this.showMesh;
+                if (this.parentAnno.reconModel) this.parentAnno.reconModel.visible = this.showRecon;
+                if (this.parentAnno.lineModel) this.parentAnno.lineModel.visible = (this.showMesh || this.showRecon);
             }
             else{
                 this.parentAnno.children.forEach( child => {
-                    child.meshModel.visible = this.showMesh;
-                    child.reconModel.visible = this.showRecon;
-                    child.lineModel.visible = (this.showMesh || this.showRecon);
+                    if (child.meshModel) child.meshModel.visible = this.showMesh;
+                    if (child.reconModel) child.reconModel.visible = this.showRecon;
+                    if (child.lineModel) child.lineModel.visible = (this.showMesh || this.showRecon);
                 });
             }
         },
         hideModels(anno){
             if (anno.level() > 0){
-                anno.meshModel.visible = false;
-                anno.reconModel.visible = false;
-                anno.lineModel.visible = false;
+                if (anno.meshModel) anno.meshModel.visible = false;
+                if (anno.reconModel) anno.reconModel.visible = false;
+                if (anno.lineModel) anno.lineModel.visible = false;
             }
             else{
                 anno.children.forEach( child => {
-                    child.meshModel.visible = false;
-                    child.reconModel.visible = false;
-                    child.lineModel.visible = false;
+                    if (child.meshModel) child.meshModel.visible = false;
+                    if (child.reconModel) child.reconModel.visible = false;
+                    if (child.lineModel) child.lineModel.visible = false;
                 });
             }
         },

@@ -98,6 +98,21 @@
                 "position": [-27, 76, -12],
                 "rotation": -1.69
             }
+        },
+        {
+            "title": "Arch of Augustus",
+            "position": [0, 0, 0],
+            "cameraPosition": [1, 1, 1],
+            "cameraTarget": [0, 0, 0],
+            "text": "Placeholder. PLEASSSSSSE remember to replace this",
+            "children": [
+
+            ],
+            "obj": {
+                "name": "Arch_of_Augustus",
+                "position": [0, 0, 0],
+                "rotation": 0
+            }
         }
     ]
 }
