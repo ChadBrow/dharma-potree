@@ -117,7 +117,7 @@ import AppDropdownItem from '../components/AppDropdownItem.vue'
 //import libraries
 import * as THREE from 'three';
 import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
-import { OBJLoader2 } from '../../public/libs/three.js/loaders/OBJLoader2.js';
+import { OBJLoader } from '../../public/libs/three.js/loaders/OBJLoader.js';
 /*
 
 TODO LIST:
@@ -181,7 +181,7 @@ export default{
         //Declare Potree and mesh loader
         const Potree = window.Potree;
         this.plyLoader = new PLYLoader();
-        this.objLoader = new OBJLoader2();
+        this.objLoader = new OBJLoader();
 
         //Initialize Cesium Viewer
         window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
@@ -295,7 +295,6 @@ export default{
             this.addParentAnno(anno, aRoot);
         });
         this.parentAnno = aRoot;
-        console.log(this.parentAnno);
 
         function loop(timestamp){
             window.requestAnimationFrame(loop);
@@ -470,44 +469,18 @@ export default{
                 });
             }
             else if (currAnno.obj){//add obj if they have that instead
-                this.objLoader.load(Potree.resourcePath + "/models/obj/" + currAnno.obj.name + ".obj", (mesh) => {
-                    mesh.position.set(currAnno.obj.position[0], currAnno.obj.position[1], currAnno.obj.position[2]);
-                    mesh.rotation.set(0, 0, Math.PI * currAnno.obj.rotation);
-                    mesh.name = currAnno.obj.name;
-                    mesh.visible = false;
+                this.objLoader.load( 'nimrud-surface.obj', function ( recon ) {
+                    recon.position.set(currAnno.obj.position[0], currAnno.obj.position[1], currAnno.obj.position[2]);
+                    recon.rotation.set(0, 0, Math.PI * currAnno.obj.rotation) //
+                    recon.visible = false;
+                    recon.name = currAnno.recon.name + " recon";
 
-                    console.log(mesh);
-                    window.viewer.scene.scene.add(mesh);
-                    anno.reconModel = mesh;
-                    // Creating and Adding lines
-                    // const edges = new THREE.EdgesGeometry( geometry );
-                    // line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xecd9c6 } ) );
+                    console.log("Hello");
+                    console.log(recon);
 
-                    // line.position.set(currAnno.recon.position[0], currAnno.recon.position[1], currAnno.recon.position[2]);
-                    // line.rotation.set(0, 0, Math.PI * currAnno.recon.rotation) // 
-                    // line.name = currAnno.recon.name + " reconline"
-                    // line.visible = false;
-                    // viewer.scene.scene.add( line );
-                    // anno.lineModel = line;
-
-
-                    // // Creating Recon mesh
-                    // {
-                    //     const material = new THREE.MeshStandardMaterial({
-                    //         color: 0x6e6863,
-                    //         roughness: 0.5,
-                    //     });
-
-                    //     recon = new THREE.Mesh(geometry, material);
-                    //     recon.position.set(currAnno.recon.position[0], currAnno.recon.position[1], currAnno.recon.position[2]);
-                    //     recon.rotation.set(0, 0, Math.PI * currAnno.recon.rotation) //
-                    //     recon.visible = false;
-                    //     recon.name = currAnno.recon.name + " recon";
-
-                    //     viewer.scene.scene.add(recon);
-                    //     anno.reconModel = recon;
-                    // }
-                });
+                    viewer.scene.scene.add(recon);
+                    anno.reconModel = recon;
+                } );
             }
 
             parAnno.add(anno);
@@ -637,7 +610,6 @@ export default{
         },
         toggleCesium(){
             this.showCesium = !this.showCesium;
-            console.log(window.cesiumViewer.scene);
             window.cesiumViewer.scene._globe.show = !window.cesiumViewer.scene._globe.show;
             window.cesiumViewer.scene.skyBox.show = !window.cesiumViewer.scene.skyBox.show;
             window.cesiumViewer.scene.skyAtmosphere.show = !window.cesiumViewer.scene.skyAtmosphere.show;
