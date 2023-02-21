@@ -117,7 +117,7 @@ import AppDropdownItem from '../components/AppDropdownItem.vue'
 //import libraries
 import * as THREE from 'three';
 import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
-import { OBJLoader } from '../../public/libs/three.js/loaders/OBJLoader.js';
+import { OBJLoader2 } from '../../public/libs/three.js/loaders/OBJLoader2.js';
 /*
 
 TODO LIST:
@@ -181,7 +181,7 @@ export default{
         //Declare Potree and mesh loader
         const Potree = window.Potree;
         this.plyLoader = new PLYLoader();
-        this.objLoader = new OBJLoader();
+        this.objLoader = new OBJLoader2();
 
         //Initialize Cesium Viewer
         window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
@@ -469,13 +469,21 @@ export default{
                 });
             }
             else if (currAnno.obj){//add obj if they have that instead
-                this.objLoader.load( 'nimrud-surface.obj', function ( recon ) {
+                this.objLoader.load(Potree.resourcePath + "/models/obj/" + currAnno.obj.name + ".obj" , ( recon ) => {
                     recon.position.set(currAnno.obj.position[0], currAnno.obj.position[1], currAnno.obj.position[2]);
                     recon.rotation.set(0, 0, Math.PI * currAnno.obj.rotation) //
-                    recon.visible = false;
-                    recon.name = currAnno.recon.name + " recon";
+                    recon.visible = true;
+                    recon.name = currAnno.obj.name + " recon";
 
-                    console.log("Hello");
+                    const material = new THREE.MeshStandardMaterial({
+                        color: 0x6e6863,
+                        roughness: 0.5,
+                    });
+
+                    recon.children.forEach((reconChild) => {
+                        reconChild.material = material;
+                    });
+
                     console.log(recon);
 
                     viewer.scene.scene.add(recon);
