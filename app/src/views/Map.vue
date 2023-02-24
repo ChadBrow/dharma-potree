@@ -133,15 +133,10 @@ make video
 different view modes
 
 
-Look into databases / hosting site
-    -https://www.heroku.com/
-        -brendan.ohandley@grafana.com
-    -AWS
-Let user add data (long term goal)
-    -Let them add labels
+//arch of augustus
+main arch goes over point: 78, 183, -14
+pillar top right of arch goes at point: 81, 181, -12
 
-For Lorence
-    -https://nanovic.nd.edu
 
 */
 export default{

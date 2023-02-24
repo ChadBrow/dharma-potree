@@ -110,8 +110,9 @@
             ],
             "obj": {
                 "name": "Arch_of_Augustus",
-                "position": [0, 0, 100],
-                "rotation": 0
+                "position": [78, 183, -14],
+                "rotation": 0,
+                "scale": 10
             }
         }
     ]
