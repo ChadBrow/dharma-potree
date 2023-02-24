@@ -136,6 +136,8 @@ different view modes
 //arch of augustus
 main arch goes over point: 78, 183, -14
 pillar top right of arch goes at point: 81, 181, -12
+// for rot -0.5 scale 20
+//    "position": [-955, 602.3, -13.8]
 
 
 */
@@ -465,13 +467,14 @@ export default{
             }
             else if (currAnno.obj){//add obj if they have that instead
                 this.objLoader.load(Potree.resourcePath + "/models/obj/" + currAnno.obj.name + ".obj" , ( recon ) => {
+                    recon.rotation.set(Math.PI * currAnno.obj.rotation[0], Math.PI * currAnno.obj.rotation[1], Math.PI * currAnno.obj.rotation[2]) //
+                    recon.scale.multiplyScalar(currAnno.obj.scale);
                     recon.position.set(currAnno.obj.position[0], currAnno.obj.position[1], currAnno.obj.position[2]);
-                    recon.rotation.set(0, 0, Math.PI * currAnno.obj.rotation) //
                     recon.visible = true;
                     recon.name = currAnno.obj.name + " recon";
 
                     const material = new THREE.MeshStandardMaterial({
-                        color: 0x6e6863,
+                        color: 0xFF0000,
                         roughness: 0.5,
                     });
 
