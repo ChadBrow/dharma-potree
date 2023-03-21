@@ -1,0 +1,135 @@
+
+{
+    "view": {
+        "pos": [43,140,80],
+        "lookAt": [-13,40,0]
+    },
+    "pos": [291260, 4640905, 0],
+    "rot": -1.6,
+    "materialSize": 1.5,
+    "annos": [
+        {
+            "title": "Temple of Saturn",
+            "position": [6, 32, 18],
+            "cameraPosition": [-38, 63, 13],
+            "cameraTarget": [6, 32, 8],
+            "text": "One of the oldest temples in the Forum is that of Saturn. Saturn and Cybele were central to the hierarchy of gods and goddess of Roman religion. Cybele is a significant figure in the Greek tradition and could be seen as an important tradition to the Roman history. History presents Saturn and Cybele as siblings, as partners and as mother and child relations in various times of the mythological writings. At the side of temple of Saturn is a fallen part of the cornice deal of the temple. The temple housed the public treasury and the orders of the senate. The temple of Saturn may have borne the name of its then ruler T. Larcius.",
+            "children": [
+                {
+                    "title": "Fallen Cornice",
+                    "position": [18, 38, -8],
+                    "cameraPosition": [23, 47, -2],
+                    "cameraTarget": [18, 38, -12],
+                    "image": "rome/tosCornice.jpg"
+                },
+                {
+                    "title": "Architrave Inscription",
+                    "position": [6, 32, 15],
+                    "cameraPosition": [-2, 39, 11],
+                    "cameraTarget": [6, 32, 12],
+                    "image": "rome/tosArch.jpg"
+                }
+            ],
+            "mesh": {
+                "name": "tos",
+                "position": [9.2, 30.5, -7],
+                "rotation": -0.69
+            },
+            "recon": {
+                "name": "tos",
+                "position": [9.2, 30.5, -7],
+                "rotation": -0.69
+            }
+        },
+        {
+            "title": "Temple of Vespasian and Titus",
+            "position": [-18, 22, 18],
+            "cameraPosition": [0, 47, 13],
+            "cameraTarget": [-18, 23, 4],
+            "text": "The Temple of Vespasian is placed on a significant site along the western end of the Roman Forum at the beginning of the ascent of the the Clivus Capitolinus. Described as “one of the highest achievements of Imperial Rome,” the Temple of Vespasian and Titus along the southwest side of the Roman Forum represents a level of grace and refinement that arguably exceeded any other period of ancient Roman architecture. The construction of the temple near the end of the first century CE represents a time when the Roman Empire was at its limit, paralleled by the belief in the divine nature of the emperors as shown by posthumous deification. The eventual onset of Christianity and decline of Imperial Rome into the Middle Ages saw the abandonment and slow dismantling of the temple to its present state of only three columns. Despite a renewed interest in the characteristics of the temple during the Renaissance, it was not until the 19th century that the excavation of the temple allowed for its restoration and preservation. Although modern archaeology has allowed for a widely accepted reconstruction of the Temple as it would have looked at the height of the Roman Empire, many details concerning the design of the temple remain unknown and can only be reconstructed with educated hypotheses.",
+            
+            "children": [
+                {
+                    "title": "Capital",
+                    "position": [-18, 24, 13],
+                    "cameraPosition": [-14, 30, 12],
+                    "cameraTarget": [-18, 24, 11],
+                    "image": "rome/tovat.jpg"
+                }
+            ],
+            "mesh": {
+                "name": "tovat",
+                "position": [-17.6, 20, -10.5],
+                "rotation": -1.69
+            },
+            "recon": {
+                "name": "tovat",
+                "position": [-17.6, 20, -10.5],
+                "rotation": -1.69
+            }
+        },
+        {
+            "title": "Arch of Septimius Severus",
+            "position": [-28, 76, 14],
+            "cameraPosition": [-6, 108, 10],
+            "cameraTarget": [-25, 76, 8],
+            "text": "Les of the honorific arches built in the Forum, it was erected to celebrate emperor Septimius Severus' victories in the Eastern provinces Its dedication is inscribed along the two panels above the arch. The via sacra runs through the central arch leading up to the Capitoline; a set of stairs gave passage through the lateral arches. Rich figural reliefs decorate the facades: barbarian prisoners escorted by Roman soldiers; Mars, on the keystone facing the Capitoline; winged victories holding trophies in the central archway. Above the side arches episodes of the emperor's two military campaigns. Historic sources tell us that at the top of the monument were statues of Septimius Severus and his two sons, Caracalla and Geta on a four-hourse chariot led by soldiers.",
+            "children": [
+                {
+                    "title": "Arch",
+                    "position": [-28, 76, 2],
+                    "cameraPosition": [-28, 76, -8],
+                    "cameraTarget": [-28, 76, 2]
+                },
+                {
+                    "title": "Figure",
+                    "position": [-21, 77, -5],
+                    "cameraPosition": [-16, 84, -2],
+                    "cameraTarget": [-21, 77, -7]
+                }
+            ],
+            "mesh": {
+                "name": "aoss",
+                "position": [-27, 76, -12],
+                "rotation": -1.69
+            },
+            "recon": {
+                "name": "aoss",
+                "position": [-27, 76, -12],
+                "rotation": -1.69
+            }
+        },
+        {
+            "title": "Arch of Augustus",
+            "position": [78, 183, -14],
+            "cameraPosition": [1, 1, 1],
+            "cameraTarget": [0, 0, 0],
+            "text": "Placeholder. PLEASSSSSSE remember to replace this",
+            "children": [
+
+            ],
+            "recon": {
+                "name": "Arch_of_Augustus",
+                "position": [-979, 537, -13.8],
+                "rotation": -0.48,
+                "scale": 20
+            }
+        },
+        {
+            "title": "Basilica",
+            "position": [68, 163, -14],
+            "cameraPosition": [1, 1, 1],
+            "cameraTarget": [0, 0, 0],
+            "text": "Placeholder. PLEASSSSSSE remember to replace this",
+            "children": [
+
+            ],
+            "obj": {
+                "name": "Basilica_Julia",
+                "position": [-979, 537, -13.8],
+                "rotation": [0.5, -0.48, 0],
+                "scale": 20
+            }
+        }
+    ]
+}

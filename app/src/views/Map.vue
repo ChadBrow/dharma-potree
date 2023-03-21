@@ -429,7 +429,7 @@ export default{
                         });
                         mesh = new THREE.Mesh(geometry, material);
                         mesh.position.set(currAnno.mesh.position[0], currAnno.mesh.position[1], currAnno.mesh.position[2]);
-                        mesh.rotation.set(0, 0, Math.PI * currAnno.mesh.rotation);
+                        mesh.rotation.set(Math.PI * currAnno.mesh.rotation[0], Math.PI * currAnno.mesh.rotation[1], Math.PI * currAnno.mesh.rotation[2]);
                         mesh.name = currAnno.mesh.name;
                         mesh.visible = false;
 
@@ -458,9 +458,9 @@ export default{
                     line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xecd9c6 } ) );
 
                     line.position.set(currAnno.recon.position[0], currAnno.recon.position[1], currAnno.recon.position[2]);
-                    line.rotation.set(0, 0, Math.PI * currAnno.recon.rotation) // 
+                    line.rotation.set(Math.PI * currAnno.recon.rotation[0], Math.PI * currAnno.recon.rotation[1], Math.PI * currAnno.recon.rotation[2]) // 
                     line.name = currAnno.recon.name + " reconline"
-                    line.visible = false;
+                    line.visible = true;
                     viewer.scene.scene.add( line );
                     anno.lineModel = line;
 
@@ -474,8 +474,8 @@ export default{
 
                         recon = new THREE.Mesh(geometry, material);
                         recon.position.set(currAnno.recon.position[0], currAnno.recon.position[1], currAnno.recon.position[2]);
-                        recon.rotation.set(0, 0, Math.PI * currAnno.recon.rotation) //
-                        recon.visible = false;
+                        recon.rotation.set(Math.PI * currAnno.recon.rotation[0], Math.PI * currAnno.recon.rotation[1], Math.PI * currAnno.recon.rotation[2]) //
+                        recon.visible = true;
                         recon.name = currAnno.recon.name + " recon";
 
                         viewer.scene.scene.add(recon);
