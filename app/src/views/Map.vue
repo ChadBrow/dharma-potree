@@ -175,10 +175,28 @@ export default{
         let data = require("../data/roman_forum.json");
         this.data = data;
 
-        //Declare Potree and mesh loader
+        //Declare threejs loaders and manager
+        let threeJSManager = new THREE.LoadingManager();
+        threeJSManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+            console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+        };
+
+        threeJSManager.onLoad = function ( ) {
+            console.log( 'Loading complete!');
+        };
+
+
+        threeJSManager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+            console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+        };
+
+        threeJSManager.onError = function ( url ) {
+            console.log( 'There was an error loading ' + url );
+        };
+
         const Potree = window.Potree;
-        this.plyLoader = new PLYLoader();
-        this.objLoader = new OBJLoader2();
+        this.plyLoader = new PLYLoader(threeJSManager);
+        this.objLoader = new OBJLoader2(threeJSManager);
 
         //Initialize Cesium Viewer
         window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
