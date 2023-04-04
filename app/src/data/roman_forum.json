@@ -110,9 +110,9 @@
             ],
             "recon": {
                 "name": "Arch_of_Augustus",
-                "position": [81.75, 181.74, -1.57],
-                "rotation":  [0, 0, -1.69],
-                "scale": 40
+                "position": [78.7, 183, -8.98],
+                "rotation":  [0.635, -0.47, -1.89],
+                "scale": [10, 10, 10]
             }
         }
     ]

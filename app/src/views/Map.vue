@@ -459,6 +459,9 @@ export default{
 
                     line.position.set(currAnno.recon.position[0], currAnno.recon.position[1], currAnno.recon.position[2]);
                     line.rotation.set(Math.PI * currAnno.recon.rotation[0], Math.PI * currAnno.recon.rotation[1], Math.PI * currAnno.recon.rotation[2]) // 
+                    if (currAnno.recon.scale){
+                        line.scale.set(currAnno.recon.scale[0], currAnno.recon.scale[1], currAnno.recon.scale[2]);
+                    }
                     line.name = currAnno.recon.name + " reconline"
                     line.visible = true;
                     viewer.scene.scene.add( line );
@@ -469,12 +472,16 @@ export default{
                     {
                         const material = new THREE.MeshStandardMaterial({
                             color: 0x6e6863,
+                            // color: 0xFF0000,
                             roughness: 0.5,
                         });
 
                         recon = new THREE.Mesh(geometry, material);
                         recon.position.set(currAnno.recon.position[0], currAnno.recon.position[1], currAnno.recon.position[2]);
                         recon.rotation.set(Math.PI * currAnno.recon.rotation[0], Math.PI * currAnno.recon.rotation[1], Math.PI * currAnno.recon.rotation[2]) //
+                        if (currAnno.recon.scale){
+                            recon.scale.set(currAnno.recon.scale[0], currAnno.recon.scale[1], currAnno.recon.scale[2]);
+                        }
                         recon.visible = true;
                         recon.name = currAnno.recon.name + " recon";
 
