@@ -63,6 +63,7 @@
                     <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
                     <span v-if="toolbarExpanded">
                         <div class="potree_toolbar_label">Debug</div>
+                        <v-btn small outlined color="#d87444" v-on:click="displayAxes()">Display Axes</v-btn>
                         <v-btn small outlined color="#d87444" v-on:click="displayCameraPos()">Print Camera Position</v-btn>
                     </span>
                     <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
@@ -704,6 +705,27 @@ export default{
         },
         clearMeasurements(){
             window.viewer.scene.removeAllMeasurements();
+        },
+
+        //DISPLAY AXIS
+        // buildAxis( src, dst, colorHex, dashed ) {
+        //     var geom = new THREE.Geometry(),
+        //         mat; 
+        //     if(dashed) {
+        //         mat = new THREE.LineDashedMaterial({ linewidth: 3, color: colorHex, dashSize: 0.5, gapSize: 0.5 });
+        //     } else {
+        //         mat = new THREE.LineBasicMaterial({ linewidth: 3, color: colorHex });
+        //     }
+        //     geom.vertices.push( src.clone() );
+        //     geom.vertices.push( dst.clone() );
+        //     geom.computeLineDistances(); // This one is SUPER important, otherwise dashed lines will appear as simple plain lines
+        //     var axis = new THREE.Line( geom, mat, THREE.LinePieces );
+        //     return axis;
+        // },
+
+        displayAxes(){
+            var axesHelper = new THREE.AxesHelper( 5 );
+            window.viewer.scene.scene.add( axesHelper );
         },
 
         //UPDATE POINTCLOUD QUALITY

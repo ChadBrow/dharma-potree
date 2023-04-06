@@ -114,6 +114,22 @@
                 "rotation":  [0.635, -0.47, -1.89],
                 "scale": [10, 10, 10]
             }
+        },
+        {
+            "title": "Basilica of Julia",
+            "position": [68, 163, -14],
+            "cameraPosition": [1, 1, 1],
+            "cameraTarget": [0, 0, 0],
+            "text": "Placeholder. PLEASSSSSSE remember to replace this",
+            "children": [
+
+            ],
+            "recon": {
+                "name": "Basilica_Julia",
+                "position": [60.6, 91.5, 0],
+                "rotation": [0.617, -0.53, -1.89],
+                "scale": [10, 10, 10]
+            }
         }
     ]
 }
