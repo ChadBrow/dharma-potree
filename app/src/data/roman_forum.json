@@ -59,13 +59,14 @@
             ],
             "mesh": {
                 "name": "tovat",
-                "position": [-17.6, 20, -10.5],
+                "position": [-16.6, 15, -10.5],
                 "rotation": [0, 0, -1.69]
             },
             "recon": {
-                "name": "tovat",
-                "position": [-17.6, 20, -10.5],
-                "rotation": [0, 0, -1.69]
+                "name": "Temple_of_Vespatian",
+                "position": [-19.4, 7.2, 6.1],
+                "rotation":  [0, 0, -1.89],
+                "scale": [16, 16, 16]
             }
         },
         {
