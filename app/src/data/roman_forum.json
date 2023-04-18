@@ -63,7 +63,7 @@
                 "rotation": [0, 0, -1.69]
             },
             "recon": {
-                "name": "Temple_of_Vespatian3",
+                "name": "Temple_of_Vespatian",
                 "position": [-17.9, 7.4, 6.1],
                 "rotation":  [0, 0, -1.86],
                 "scale": [16, 16, 16]
@@ -111,9 +111,9 @@
             ],
             "recon": {
                 "name": "Arch_of_Augustus",
-                "position": [78.7, 183, -8.98],
-                "rotation":  [0.635, -0.47, -1.89],
-                "scale": [10, 10, 10]
+                "position": [79.2, 185.4, -6.4],
+                "rotation":  [0, 0, -1.86],
+                "scale": [16, 16, 16]
             }
         },
         {
@@ -127,9 +127,9 @@
             ],
             "recon": {
                 "name": "Basilica_Julia",
-                "position": [60.6, 91.5, 0],
-                "rotation": [0.617, -0.53, -1.89],
-                "scale": [10, 10, 10]
+                "position": [60.6, 91.5, 8],
+                "rotation": [0, 0, -1.86],
+                "scale": [16, 16, 16]
             }
         }
     ]
