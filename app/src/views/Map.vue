@@ -47,7 +47,8 @@
                         </v-btn>
                     </span>
                     <v-divider vertical class="potree_toolbar_separator"/>
-                    <v-btn icon title="Expand Toolbar" v-on:click="toolbarExpanded = true" v-if="!toolbarExpanded">
+                    <!-- Start Debug Stuff -->
+                    <!-- <v-btn icon title="Expand Toolbar" v-on:click="toolbarExpanded = true" v-if="!toolbarExpanded">
                         <v-icon color="#d87444">mdi-chevron-right</v-icon>
                     </v-btn>
                     <span v-if="toolbarExpanded">
@@ -71,7 +72,8 @@
                         <v-btn icon title="Shrink Toolbar" v-on:click="toolbarExpanded = false">
                             <v-icon color="#d87444">mdi-chevron-left</v-icon>
                         </v-btn>
-                    </span>
+                    </span> -->
+                    <!-- End Debug Stuff -->
                 </v-app-bar>
 			</div>
             <div id="monument_selector">
