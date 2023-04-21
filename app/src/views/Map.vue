@@ -466,7 +466,7 @@ export default{
                         line.scale.set(currAnno.recon.scale[0], currAnno.recon.scale[1], currAnno.recon.scale[2]);
                     }
                     line.name = currAnno.recon.name + " reconline"
-                    line.visible = true;
+                    line.visible = false;
                     viewer.scene.scene.add( line );
                     anno.lineModel = line;
 
@@ -485,7 +485,7 @@ export default{
                         if (currAnno.recon.scale){
                             recon.scale.set(currAnno.recon.scale[0], currAnno.recon.scale[1], currAnno.recon.scale[2]);
                         }
-                        recon.visible = true;
+                        recon.visible = false;
                         recon.name = currAnno.recon.name + " recon";
 
                         viewer.scene.scene.add(recon);
