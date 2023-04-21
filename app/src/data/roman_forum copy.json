@@ -33,12 +33,12 @@
             "mesh": {
                 "name": "tos",
                 "position": [9.2, 30.5, -7],
-                "rotation": -0.69
+                "rotation": [0, 0, -0.69]
             },
             "recon": {
                 "name": "tos",
                 "position": [9.2, 30.5, -7],
-                "rotation": -0.69
+                "rotation": [0, 0, -0.69]
             }
         },
         {
@@ -59,13 +59,14 @@
             ],
             "mesh": {
                 "name": "tovat",
-                "position": [-17.6, 20, -10.5],
-                "rotation": -1.69
+                "position": [-16.6, 15, -10.5],
+                "rotation": [0, 0, -1.69]
             },
             "recon": {
-                "name": "tovat",
-                "position": [-17.6, 20, -10.5],
-                "rotation": -1.69
+                "name": "Temple_of_Vespatian",
+                "position": [-17.9, 7.4, 6.1],
+                "rotation":  [0, 0, -1.86],
+                "scale": [16, 16, 16]
             }
         },
         {
@@ -91,12 +92,12 @@
             "mesh": {
                 "name": "aoss",
                 "position": [-27, 76, -12],
-                "rotation": -1.69
+                "rotation": [0, 0, -1.69]
             },
             "recon": {
                 "name": "aoss",
                 "position": [-27, 76, -12],
-                "rotation": -1.69
+                "rotation": [0, 0, -1.69]
             }
         },
         {
@@ -110,13 +111,13 @@
             ],
             "recon": {
                 "name": "Arch_of_Augustus",
-                "position": [-979, 537, -13.8],
-                "rotation": -0.48,
-                "scale": [20, 20, 20]
+                "position": [79.2, 185.4, -6.4],
+                "rotation":  [0, 0, -1.86],
+                "scale": [16, 16, 16]
             }
         },
         {
-            "title": "Basilica",
+            "title": "Basilica of Julia",
             "position": [68, 163, -14],
             "cameraPosition": [1, 1, 1],
             "cameraTarget": [0, 0, 0],
@@ -124,11 +125,11 @@
             "children": [
 
             ],
-            "obj": {
+            "recon": {
                 "name": "Basilica_Julia",
-                "position": [-929, 619, -13.8],
-                "rotation": [0.5, -0.48, 0],
-                "scale": 20
+                "position": [69.55, 83.4, 1.9],
+                "rotation": [0, 0, -0.78],
+                "scale": [14, 14, 14]
             }
         }
     ]

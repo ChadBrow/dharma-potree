@@ -36,9 +36,9 @@
                 "rotation": [0, 0, -0.69]
             },
             "recon": {
-                "name": "tos",
-                "position": [9.2, 30.5, -7],
-                "rotation": [0, 0, -0.69]
+                "name": "Temple_of_Saturn",
+                "position": [0, 0, 0],
+                "rotation": [0, 0, -1.6]
             }
         },
         {
