@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "production": "vue-cli-service build --mode production",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },

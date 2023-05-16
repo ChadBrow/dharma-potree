@@ -47,7 +47,8 @@
                         </v-btn>
                     </span>
                     <v-divider vertical class="potree_toolbar_separator"/>
-                    <v-btn icon title="Expand Toolbar" v-on:click="toolbarExpanded = true" v-if="!toolbarExpanded">
+                    <!-- Start Debug Stuff -->
+                    <!-- <v-btn icon title="Expand Toolbar" v-on:click="toolbarExpanded = true" v-if="!toolbarExpanded">
                         <v-icon color="#d87444">mdi-chevron-right</v-icon>
                     </v-btn>
                     <span v-if="toolbarExpanded">
@@ -63,6 +64,7 @@
                     <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
                     <span v-if="toolbarExpanded">
                         <div class="potree_toolbar_label">Debug</div>
+                        <v-btn small outlined color="#d87444" v-on:click="displayAxes()">Display Axes</v-btn>
                         <v-btn small outlined color="#d87444" v-on:click="displayCameraPos()">Print Camera Position</v-btn>
                     </span>
                     <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
@@ -70,7 +72,8 @@
                         <v-btn icon title="Shrink Toolbar" v-on:click="toolbarExpanded = false">
                             <v-icon color="#d87444">mdi-chevron-left</v-icon>
                         </v-btn>
-                    </span>
+                    </span> -->
+                    <!-- End Debug Stuff -->
                 </v-app-bar>
 			</div>
             <div id="monument_selector">
@@ -117,6 +120,7 @@ import AppDropdownItem from '../components/AppDropdownItem.vue'
 //import libraries
 import * as THREE from 'three';
 import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
+import { OBJLoader2 } from '../../public/libs/three.js/loaders/OBJLoader2.js';
 /*
 
 TODO LIST:
@@ -132,15 +136,12 @@ make video
 different view modes
 
 
-Look into databases / hosting site
-    -https://www.heroku.com/
-        -brendan.ohandley@grafana.com
-    -AWS
-Let user add data (long term goal)
-    -Let them add labels
+//arch of augustus
+main arch goes over point: 78, 183, -14
+pillar top right of arch goes at point: 81, 181, -12
+// for rot -0.5 scale 20
+//    "position": [-955, 602.3, -13.8]
 
-For Lorence
-    -https://nanovic.nd.edu
 
 */
 export default{
@@ -177,9 +178,28 @@ export default{
         let data = require("../data/roman_forum.json");
         this.data = data;
 
-        //Declare Potree and mesh loader
+        //Declare threejs loaders and manager
+        let threeJSManager = new THREE.LoadingManager();
+        threeJSManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+            console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+        };
+
+        threeJSManager.onLoad = function ( ) {
+            console.log( 'Loading complete!');
+        };
+
+
+        threeJSManager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+            console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+        };
+
+        threeJSManager.onError = function ( url ) {
+            console.log( 'There was an error loading ' + url );
+        };
+
         const Potree = window.Potree;
-        this.loader = new PLYLoader();
+        this.plyLoader = new PLYLoader(threeJSManager);
+        this.objLoader = new OBJLoader2(threeJSManager);
 
         //Initialize Cesium Viewer
         window.cesiumViewer = new Cesium.Viewer('cesiumContainer', {
@@ -216,7 +236,7 @@ export default{
         window.viewer.loadSettingsFromURL();
         window.viewer.setBackground(null);
         window.viewer.setControls(window.viewer.earthControls);
-        // window.viewer.setControls(window.viewer.fpControls);
+        //window.viewer.setControls(window.viewer.fpControls);
         window.viewer.useHQ = true;
 
         //Initialize pointcloud budget
@@ -252,7 +272,7 @@ export default{
         });
 
         // Load pointcloud
-        Potree.loadPointCloud("http://127.0.0.1:8080/metadata.json", "lion", function(e){
+        Potree.loadPointCloud("https://dharma-visualization-main.s3.amazonaws.com/pointclouds/roman-forum/metadata.json", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
@@ -293,7 +313,6 @@ export default{
             this.addParentAnno(anno, aRoot);
         });
         this.parentAnno = aRoot;
-        console.log(this.parentAnno);
 
         function loop(timestamp){
             window.requestAnimationFrame(loop);
@@ -392,7 +411,7 @@ export default{
             //Add mesh if annotation has that
             let mesh = null;
             if (currAnno.mesh){
-                this.loader.load(Potree.resourcePath + "/models/" + currAnno.mesh.name + ".ply", (geometry) => {
+                this.plyLoader.load(Potree.resourcePath + "/models/" + currAnno.mesh.name + ".ply", (geometry) => {
                     const textureLoader = new THREE.TextureLoader();
 
                     const diffuseMap = textureLoader.load(Potree.resourcePath + "/models/" + currAnno.mesh.name + "_tex.jpg");
@@ -413,7 +432,7 @@ export default{
                         });
                         mesh = new THREE.Mesh(geometry, material);
                         mesh.position.set(currAnno.mesh.position[0], currAnno.mesh.position[1], currAnno.mesh.position[2]);
-                        mesh.rotation.set(0, 0, Math.PI * currAnno.mesh.rotation);
+                        mesh.rotation.set(Math.PI * currAnno.mesh.rotation[0], Math.PI * currAnno.mesh.rotation[1], Math.PI * currAnno.mesh.rotation[2]);
                         mesh.name = currAnno.mesh.name;
                         mesh.visible = false;
 
@@ -435,14 +454,17 @@ export default{
             let line = null;
             let recon = null;
             if (currAnno.recon){
-                this.loader.load(Potree.resourcePath + "/models/recon/" + currAnno.recon.name + ".ply", (geometry) => {
+                this.plyLoader.load(Potree.resourcePath + "/models/recon/" + currAnno.recon.name + ".ply", (geometry) => {
 
                     // Creating and Adding lines
                     const edges = new THREE.EdgesGeometry( geometry );
                     line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xecd9c6 } ) );
 
                     line.position.set(currAnno.recon.position[0], currAnno.recon.position[1], currAnno.recon.position[2]);
-                    line.rotation.set(0, 0, Math.PI * currAnno.recon.rotation) // 
+                    line.rotation.set(Math.PI * currAnno.recon.rotation[0], Math.PI * currAnno.recon.rotation[1], Math.PI * currAnno.recon.rotation[2]) // 
+                    if (currAnno.recon.scale){
+                        line.scale.set(currAnno.recon.scale[0], currAnno.recon.scale[1], currAnno.recon.scale[2]);
+                    }
                     line.name = currAnno.recon.name + " reconline"
                     line.visible = false;
                     viewer.scene.scene.add( line );
@@ -453,12 +475,16 @@ export default{
                     {
                         const material = new THREE.MeshStandardMaterial({
                             color: 0x6e6863,
+                            // color: 0xFF0000,
                             roughness: 0.5,
                         });
 
                         recon = new THREE.Mesh(geometry, material);
                         recon.position.set(currAnno.recon.position[0], currAnno.recon.position[1], currAnno.recon.position[2]);
-                        recon.rotation.set(0, 0, Math.PI * currAnno.recon.rotation) //
+                        recon.rotation.set(Math.PI * currAnno.recon.rotation[0], Math.PI * currAnno.recon.rotation[1], Math.PI * currAnno.recon.rotation[2]) //
+                        if (currAnno.recon.scale){
+                            recon.scale.set(currAnno.recon.scale[0], currAnno.recon.scale[1], currAnno.recon.scale[2]);
+                        }
                         recon.visible = false;
                         recon.name = currAnno.recon.name + " recon";
 
@@ -466,6 +492,29 @@ export default{
                         anno.reconModel = recon;
                     }
                 });
+            }
+            else if (currAnno.obj){//add obj if they have that instead
+                this.objLoader.load(Potree.resourcePath + "/models/obj/" + currAnno.obj.name + ".obj" , ( recon ) => {
+                    recon.rotation.set(Math.PI * currAnno.obj.rotation[0], Math.PI * currAnno.obj.rotation[1], Math.PI * currAnno.obj.rotation[2]) //
+                    recon.scale.multiplyScalar(currAnno.obj.scale);
+                    recon.position.set(currAnno.obj.position[0], currAnno.obj.position[1], currAnno.obj.position[2]);
+                    recon.visible = true;
+                    recon.name = currAnno.obj.name + " recon";
+
+                    const material = new THREE.MeshStandardMaterial({
+                        color: 0xFF0000,
+                        roughness: 0.5,
+                    });
+
+                    recon.children.forEach((reconChild) => {
+                        reconChild.material = material;
+                    });
+
+                    console.log(recon);
+
+                    viewer.scene.scene.add(recon);
+                    anno.reconModel = recon;
+                } );
             }
 
             parAnno.add(anno);
@@ -509,7 +558,7 @@ export default{
 
         addChildAnno(currAnno, parAnno){
             let annoTitle = $(`
-                        <img src="${Potree.resourcePath}/icons/child_annotation_image2.png" style="height: 30px">`)
+                        <img src="${Potree.resourcePath}/icons/child_annotation.png" style="height: 30px">`)
 
             let anno = new Potree.Annotation({
 				title: annoTitle,
@@ -595,7 +644,6 @@ export default{
         },
         toggleCesium(){
             this.showCesium = !this.showCesium;
-            console.log(window.cesiumViewer.scene);
             window.cesiumViewer.scene._globe.show = !window.cesiumViewer.scene._globe.show;
             window.cesiumViewer.scene.skyBox.show = !window.cesiumViewer.scene.skyBox.show;
             window.cesiumViewer.scene.skyAtmosphere.show = !window.cesiumViewer.scene.skyAtmosphere.show;
@@ -610,29 +658,29 @@ export default{
         },
         updateModels(){
             if (this.parentAnno.level() > 0){
-                this.parentAnno.meshModel.visible = this.showMesh;
-                this.parentAnno.reconModel.visible = this.showRecon;
-                this.parentAnno.lineModel.visible = (this.showMesh || this.showRecon);
+                if (this.parentAnno.meshModel) this.parentAnno.meshModel.visible = this.showMesh;
+                if (this.parentAnno.reconModel) this.parentAnno.reconModel.visible = this.showRecon;
+                if (this.parentAnno.lineModel) this.parentAnno.lineModel.visible = (this.showMesh || this.showRecon);
             }
             else{
                 this.parentAnno.children.forEach( child => {
-                    child.meshModel.visible = this.showMesh;
-                    child.reconModel.visible = this.showRecon;
-                    child.lineModel.visible = (this.showMesh || this.showRecon);
+                    if (child.meshModel) child.meshModel.visible = this.showMesh;
+                    if (child.reconModel) child.reconModel.visible = this.showRecon;
+                    if (child.lineModel) child.lineModel.visible = (this.showMesh || this.showRecon);
                 });
             }
         },
         hideModels(anno){
             if (anno.level() > 0){
-                anno.meshModel.visible = false;
-                anno.reconModel.visible = false;
-                anno.lineModel.visible = false;
+                if (anno.meshModel) anno.meshModel.visible = false;
+                if (anno.reconModel) anno.reconModel.visible = false;
+                if (anno.lineModel) anno.lineModel.visible = false;
             }
             else{
                 anno.children.forEach( child => {
-                    child.meshModel.visible = false;
-                    child.reconModel.visible = false;
-                    child.lineModel.visible = false;
+                    if (child.meshModel) child.meshModel.visible = false;
+                    if (child.reconModel) child.reconModel.visible = false;
+                    if (child.lineModel) child.lineModel.visible = false;
                 });
             }
         },
@@ -659,6 +707,11 @@ export default{
         },
         clearMeasurements(){
             window.viewer.scene.removeAllMeasurements();
+        },
+        
+        displayAxes(){
+            var axesHelper = new THREE.AxesHelper( 5 );
+            window.viewer.scene.scene.add( axesHelper );
         },
 
         //UPDATE POINTCLOUD QUALITY
