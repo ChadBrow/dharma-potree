@@ -235,8 +235,8 @@ export default{
         window.viewer.setFOV(60);
         window.viewer.loadSettingsFromURL();
         window.viewer.setBackground(null);
-        //window.viewer.setControls(window.viewer.earthControls);
-        window.viewer.setControls(window.viewer.fpControls);
+        window.viewer.setControls(window.viewer.earthControls);
+        //window.viewer.setControls(window.viewer.fpControls);
         window.viewer.useHQ = true;
 
         //Initialize pointcloud budget
