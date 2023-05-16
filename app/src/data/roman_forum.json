@@ -38,7 +38,8 @@
             "recon": {
                 "name": "tos",
                 "position": [9.2, 30.5, -7],
-                "rotation": [0, 0, -0.69]
+                "rotation": [0, 0, -0.69],
+                "scale": [1, 1, 1]
             }
         },
         {
