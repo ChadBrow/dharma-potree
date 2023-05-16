@@ -235,8 +235,8 @@ export default{
         window.viewer.setFOV(60);
         window.viewer.loadSettingsFromURL();
         window.viewer.setBackground(null);
-        window.viewer.setControls(window.viewer.earthControls);
-        // window.viewer.setControls(window.viewer.fpControls);
+        //window.viewer.setControls(window.viewer.earthControls);
+        window.viewer.setControls(window.viewer.fpControls);
         window.viewer.useHQ = true;
 
         //Initialize pointcloud budget
@@ -272,7 +272,7 @@ export default{
         });
 
         // Load pointcloud
-        Potree.loadPointCloud("http://127.0.0.1:8080/metadata.json", "lion", function(e){
+        Potree.loadPointCloud("https://dharma-visualization-main.s3.amazonaws.com/pointclouds/roman-forum/metadata.json", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
