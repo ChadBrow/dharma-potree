@@ -37,8 +37,9 @@
             },
             "recon": {
                 "name": "tos",
-                "position": [9.2, 30.5, -7],
-                "rotation": [0, 0, -0.69]
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0],
+                "scale": [10, 10, 10]
             }
         },
         {
@@ -64,8 +65,9 @@
             },
             "recon": {
                 "name": "tovat",
-                "position": [-17.6, 20, -10.5],
-                "rotation": [0, 0, -1.69]
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0],
+                "scale": [10, 10, 10]
             }
         },
         {
@@ -95,8 +97,8 @@
             },
             "recon": {
                 "name": "aoss",
-                "position": [-27, 76, -12],
-                "rotation": [0, 0, -1.69]
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0]
             }
         }
     ]
