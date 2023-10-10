@@ -272,7 +272,7 @@ export default{
         });
 
         // Load pointcloud
-        Potree.loadPointCloud("https://dharma-visualization-main.s3.amazonaws.com/pointclouds/roman-forum/metadata.json", "lion", function(e){
+        Potree.loadPointCloud("https://dharma3dz.aws.nd.edu/pointclouds/roman-forum/metadata.json", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
