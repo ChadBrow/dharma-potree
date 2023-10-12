@@ -47,10 +47,26 @@
                         </v-btn>
                     </span>
                     <v-divider vertical class="potree_toolbar_separator"/>
-                    <!-- Start Debug Stuff -->
                     <v-btn icon title="Expand Toolbar" v-on:click="toolbarExpanded = true" v-if="!toolbarExpanded">
                         <v-icon color="#d87444">mdi-chevron-right</v-icon>
                     </v-btn>
+                    <span v-if="toolbarExpanded">
+                        <div class="potree_toolbar_label">Camera Controls</div>
+                        <v-btn
+                            class="square-right" 
+                            v-on:click="updateControls('earth')" 
+                            small outlined color="#d87444" v-bind:disabled="controlMethod=='earth'">
+                            Earth
+                        </v-btn>
+                        <v-btn 
+                            class="square-left" 
+                            v-on:click="updateControls('firstPerson')" 
+                            small outlined color="#d87444" v-bind:disabled="controlMethod=='firstPerson'">
+                            First Person
+                        </v-btn>
+                    </span>
+                    <!-- Start Debug Stuff -->
+                    <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
                     <span v-if="toolbarExpanded">
                         <div class="potree_toolbar_label">Measurements</div>
                         <v-btn icon small title="Locate Point" v-on:click="locatePoint()">
@@ -168,8 +184,8 @@ export default{
             showPointcloud: true,
             showCesium: true,
             showMesh: false,
-            showRecon: false
-            
+            showRecon: false,
+            controlMethod: "earth"
         }
     },
 
@@ -236,7 +252,6 @@ export default{
         window.viewer.loadSettingsFromURL();
         window.viewer.setBackground(null);
         window.viewer.setControls(window.viewer.earthControls);
-        //window.viewer.setControls(window.viewer.fpControls);
         window.viewer.useHQ = true;
 
         //Initialize pointcloud budget
@@ -683,6 +698,19 @@ export default{
                     if (child.lineModel) child.lineModel.visible = false;
                 });
             }
+        },
+
+        //NAVIGATION CONTROLS
+        updateControls(newMethod){
+            //This function updates what kind of control method Potree uses for navigation
+            this.controlMethod = newMethod;
+            if (this.controlMethod == "earth"){
+                window.viewer.setControls(window.viewer.earthControls);
+            }
+            else{
+                window.viewer.setControls(window.viewer.fpControls);
+            }
+
         },
 
         //MEASUREMENTS
