@@ -1,8 +1,10 @@
 
 {
     "view": {
-        "pos": [43,140,80],
-        "lookAt": [-13,40,0]
+        "pos": [-30.4, 221.9, 82.0],
+        "lookAt": [80.5, 26.3, -4.4],
+        "pos2": [43,140,80],
+        "lookAt2": [-13,40,0]
     },
     "pos": [291260, 4640905, 0],
     "rot": -1.6,
@@ -129,6 +131,38 @@
             ],
             "recon": {
                 "name": "Basilica_of_Julia",
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0],
+                "scale": [0.001, 0.001, 0.001]
+            }
+        },
+        {
+            "title": "Temple of Concord",
+            "position": [-38.6, 36.2, 18],
+            "cameraPosition": [-5.21, 56.1, 26.4],
+            "cameraTarget": [-38.6, 36.2, 4.5],
+            "text": "The appearance of this temple too is known from Roman Coinage. It stood on the western end of the Roman forum and was dedicated to the Roman goddess Concordia. It is known to have had several reconstructions and alterations since its foundation vowed by Marcus Furius Camillus in 367 BC, and its latest version by Emperor Tiberius between 7 BC and 10 AD. Its earliest versions served as a meeting place where to resolve political disputes, until with Tiberius, it was used for the display of works of Greek art many of which are described by Pliny, but also a place for Senate meetings. It seems to have maintained the typical rectangular plan, with a deep pronaos and statues of Concordia, Pax and Salus or Fortuna along the top of the pediment. It was finally razed to the ground around 1450 when its stone was used for making lime and marble for new buildings.",
+            "children": [
+
+            ],
+            "recon": {
+                "name": "Temple_of_Concord",
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0],
+                "scale": [0.001, 0.001, 0.001]
+            }
+        },
+        {
+            "title": "Temple of Julius Caesar",
+            "position": [56.9, 177.9, 8],
+            "cameraPosition": [47.9, 133.5, 22.1],
+            "cameraTarget": [57, 182.5, -4],
+            "text": "The temple was decreed in 42 AD after Julius Caesar was deified posthumously. It stands on the site of his cremation in the east side of the main square between the Regia and the Temple of Castor and Pollux. Much is debated regarding its appearance. From coinage it appears to have had either Ionic or Corinthian columns with Cesar’s Comet in the pediment. It would have stood on a high podium.. The position of its staircase is still debated. Its imposing position looking down onto the forum, appears to have been a pointed reminder to the crowds in the forum of the connection between the new imperial order and Caesar's legacy. In the interior stood a colossal statue of Julius Caesar as Pontifex Maximus and paintings by the famous Greek painter Apelles. Remnants of its decoration are visible onsite or in the Forum's museum.",
+            "children": [
+
+            ],
+            "recon": {
+                "name": "Temple_of_Caesar",
                 "position": [0, 0, 0],
                 "rotation": [0, 0, 0],
                 "scale": [0.001, 0.001, 0.001]
