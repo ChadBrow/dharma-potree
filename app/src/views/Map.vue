@@ -607,9 +607,9 @@ export default{
                 this.parentAnno.collapseThreshold = 400;
 
                 //Hide all the old parent's models
-                this.parentAnno.meshModel.visible = false;
-                this.parentAnno.reconModel.visible = false;
-                this.parentAnno.lineModel.visible = false;
+                if (this.parentAnno.meshModel){this.parentAnno.meshModel.visible = false};
+                if (this.parentAnno.reconModel){this.parentAnno.reconModel.visible = false};
+                if (this.parentAnno.lineModel){this.parentAnno.lineModel.visible = false};
 
                 this.parentAnno.moveHere(window.viewer.scene.getActiveCamera()); //This moves the camera to give a good view of the parent
                 this.parentAnno = this.parentAnno.parent;
@@ -634,9 +634,9 @@ export default{
                 this.parentAnno.collapseThreshold = 400;
 
                 //Hide all the old parent's models
-                this.parentAnno.meshModel.visible = false;
-                this.parentAnno.reconModel.visible = false;
-                this.parentAnno.lineModel.visible = false;
+                if (this.parentAnno.meshModel){this.parentAnno.meshModel.visible = false};
+                if (this.parentAnno.reconModel){this.parentAnno.reconModel.visible = false};
+                if (this.parentAnno.lineModel){this.parentAnno.lineModel.visible = false};
 
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
                                     new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion  
