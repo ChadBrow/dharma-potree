@@ -167,6 +167,22 @@
                 "rotation": [0, 0, 0],
                 "scale": [0.001, 0.001, 0.001]
             }
+        },
+        {
+            "title": "Temple of Castor and Pollux",
+            "position": [81.8, 158.9, 4],
+            "cameraPosition": [50.5, 163.5, 16.3],
+            "cameraTarget": [97, 154.5, -8],
+            "text": "The Temple of Castor and Pollux was a significant multi-use structure in the Forum. Castor and Pollux were the sons of Jupiter. Legend has it, they appeared and fought on the battlefield alongside the Romans. On the day of the victory, they were seen at the fountain of Juturna nearby where they watered their horses and proclaimed the Roman victory.  In its present form it is the oldest surviving temple in the Forum dating to the 117 BC restoration. As the cult for which the Temple was built declined, its political importance increased as it came to be used as a meeting place for business. The remains of the Temple are comprised of a rubble base this is faced in tufa and travertine, and several blocks of cappellaccio that were likely remnants of an earlier phase.",
+            "children": [
+
+            ],
+            "recon": {
+                "name": "Temple_of_Castor",
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0],
+                "scale": [0.001, 0.001, 0.001]
+            }
         }
     ]
 }
