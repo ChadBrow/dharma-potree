@@ -66,7 +66,7 @@
                         </v-btn>
                     </span>
                     <!-- Start Debug Stuff -->
-                    <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
+                    <!-- <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
                     <span v-if="toolbarExpanded">
                         <div class="potree_toolbar_label">Measurements</div>
                         <v-btn icon small title="Locate Point" v-on:click="locatePoint()">
@@ -82,14 +82,14 @@
                         <div class="potree_toolbar_label">Debug</div>
                         <v-btn small outlined color="#d87444" v-on:click="displayAxes()">Display Axes</v-btn>
                         <v-btn small outlined color="#d87444" v-on:click="displayCameraPos()">Print Camera Position</v-btn>
-                    </span>
+                    </span> -->
+                    <!-- End Debug Stuff -->
                     <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
                     <span v-if="toolbarExpanded">
                         <v-btn icon title="Shrink Toolbar" v-on:click="toolbarExpanded = false">
                             <v-icon color="#d87444">mdi-chevron-left</v-icon>
                         </v-btn>
                     </span>
-                    <!-- End Debug Stuff -->
                 </v-app-bar>
 			</div>
             <div id="monument_selector">
