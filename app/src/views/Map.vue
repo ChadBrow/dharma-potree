@@ -159,6 +159,8 @@ pillar top right of arch goes at point: 81, 181, -12
 //    "position": [-955, 602.3, -13.8]
 
 
+TODO: fix spotlight casting weird shadows on models when viewed from a specific location
+
 */
 export default{
     name: 'Map',
@@ -258,7 +260,7 @@ export default{
         window.viewer.setPointBudget(3_000_000);
 		
 		// Lights
-		let directionalLight, pointLight, ambientLight, hemiLight;
+		let pointLight, hemiLight;
 
 		hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 2);
 		window.viewer.scene.scene.add(hemiLight);
@@ -269,10 +271,14 @@ export default{
 
 		pointLight = new THREE.SpotLight(0xffa95c, 4);
 		pointLight.castShadow = true;
-		pointLight.shadow.bias = -0.0001;
+        // shadow configuration
+		pointLight.shadow.bias = 0.001;
 		pointLight.shadow.mapSize.width = 1024*4;
 		pointLight.shadow.mapSize.height = 1024*4;
+
+        // add the light
 		window.viewer.scene.scene.add(pointLight);
+        
         
         //Set initial view
         // viewer.scene.view.position.set(data.view.pos[0], data.view.pos[1], data.view.pos[2]);
@@ -287,7 +293,7 @@ export default{
         });
 
         // Load pointcloud
-        Potree.loadPointCloud("http://localhost:8080/metadata.json", "lion", function(e){
+        Potree.loadPointCloud("http://localhost:5501/metadata.json", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
@@ -342,6 +348,7 @@ export default{
 				viewer.scene.cameraP.position.y + 10,
 				viewer.scene.cameraP.position.z + 10
 			);
+            
             
             if(window.toMap !== undefined){
                 {
