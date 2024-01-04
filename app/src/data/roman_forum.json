@@ -183,6 +183,54 @@
                 "rotation": [0, 0, 0],
                 "scale": [0.001, 0.001, 0.001]
             }
+        },
+        {
+            "title": "Temple of Vesta",
+            "position": [98, 190, -2],
+            "cameraPosition": [90, 170, 10],
+            "cameraTarget": [98, 200, -4],
+            "text": "Temple of Vesta: Please add real text and remove placeholder coordinates",
+            "children": [
+
+            ],
+            "recon": {
+                "name": "Temple_of_Vesta",
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0],
+                "scale": [0.001, 0.001, 0.001]
+            }
+        },
+        {
+            "title": "Devine Julius",
+            "position": [56.9, 185, 8],
+            "cameraPosition": [47.9, 143.5, 22.1],
+            "cameraTarget": [57, 202.5, -4],
+            "text": "Devine Julius: Please add real text and remove placeholder coordinates",
+            "children": [
+
+            ],
+            "recon": {
+                "name": "Devine_Julius",
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0],
+                "scale": [0.001, 0.001, 0.001]
+            }
+        },
+        {
+            "title": "Faustina",
+            "position": [50.9, 237, 6],
+            "cameraPosition": [97, 240, 10],
+            "cameraTarget": [50, 237, 4],
+            "text": "Faustina: Please add real text and remove placeholder coordinates",
+            "children": [
+
+            ],
+            "recon": {
+                "name": "Faustina",
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0],
+                "scale": [0.001, 0.001, 0.001]
+            }
         }
     ]
 }

@@ -272,7 +272,9 @@ export default{
 		pointLight = new THREE.SpotLight(0xffa95c, 4);
 		pointLight.castShadow = true;
         // shadow configuration
-		pointLight.shadow.bias = 0.001;
+        // TODO: make the shadow camera able to see the entire model so you do not get any weird shadow
+        // clipping
+        pointLight.shadow.bias = 0.001;
 		pointLight.shadow.mapSize.width = 1024*4;
 		pointLight.shadow.mapSize.height = 1024*4;
 
