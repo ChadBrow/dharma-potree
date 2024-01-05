@@ -189,7 +189,7 @@
             "position": [98, 190, -2],
             "cameraPosition": [90, 170, 10],
             "cameraTarget": [98, 200, -4],
-            "text": "Temple of Vesta: Please add real text and remove placeholder coordinates",
+            "text": "The earliest, most sacred at the Forum, it is dedicated to the goddess of hearth and home. Housing the sacred fire, symbol of the vitality of the Roman state,  it commanded an unsurpassed sacredness. Architecturally, its significance is in its development through many reconstructions that maintained a relative constancy in the circular plan that mirrored closely Vitruvius' ideal peripteral temple The last reconstruction before the definitive closing of all pagan temples was declared 391 C.E , was undertaken by Settimio Severus' wife. . Today's temple is a 20th century reconstruction. By 1883, when it was first excavated under the direction of Boni, Jordan and Scott, little was left. The reconstruction continued with Alfonso Bartoli and Parabeni following Boni's plan. Of the 267 fragments that were excavated, 84 were incorporated into this reconstruction.",
             "children": [
 
             ],
@@ -201,27 +201,11 @@
             }
         },
         {
-            "title": "Devine Julius",
-            "position": [56.9, 185, 8],
-            "cameraPosition": [47.9, 143.5, 22.1],
-            "cameraTarget": [57, 202.5, -4],
-            "text": "Devine Julius: Please add real text and remove placeholder coordinates",
-            "children": [
-
-            ],
-            "recon": {
-                "name": "Devine_Julius",
-                "position": [0, 0, 0],
-                "rotation": [0, 0, 0],
-                "scale": [0.001, 0.001, 0.001]
-            }
-        },
-        {
-            "title": "Faustina",
-            "position": [50.9, 237, 6],
-            "cameraPosition": [97, 240, 10],
+            "title": "Temple of Antoninus and Faustina",
+            "position": [64.9, 233, 6],
+            "cameraPosition": [97, 250, 10],
             "cameraTarget": [50, 237, 4],
-            "text": "Faustina: Please add real text and remove placeholder coordinates",
+            "text": "Annia Galeria Faustina (c. AD 100-140), niece of the emperor Hadrian, was Antoninus’ means of introduction into the royal deified ranks. Temple originally approached by the impressive flight of steps facing via Sacra. Midway was an altar  and within the colonnade “colossal statues, effigies of the deified imperial couple.” The ten monolithic columns support an entablature bearing the dedicatory inscription. Lively heraldic griffins on the frieze represent  “means of transit of the dead persons’ soul”, intermediate candelabra represent the eternal fire. Bestows a temple a tomb-like character.  A doorway may have lead to a room beneath the temple, idea supported by 17th-19th c. engravings and drawings.",
             "children": [
 
             ],

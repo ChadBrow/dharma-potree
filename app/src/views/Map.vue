@@ -138,16 +138,6 @@ import * as THREE from 'three';
 import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
 import { OBJLoader2 } from '../../public/libs/three.js/loaders/OBJLoader2.js';
 /*
-
-TODO LIST:
-Finish toolbar
-    -When toggle cesium make background light grey ****
-    -When user it at start, return and reset buttons should be greyed out
-refine child anno dot (different dots for different types)
-    -make them bigger as you zoom in
-        -make it by theshholds
-
-Make user able to reopen popup ****
 make video
 different view modes
 
@@ -157,6 +147,26 @@ main arch goes over point: 78, 183, -14
 pillar top right of arch goes at point: 81, 181, -12
 // for rot -0.5 scale 20
 //    "position": [-955, 602.3, -13.8]
+
+
+Devine Julius: I have no idea what this is, we do not have text for it
+leaving the details for it here so it does not show up in the website
+{
+    "title": "Devine Julius",
+    "position": [56.9, 185, 8],
+    "cameraPosition": [47.9, 143.5, 22.1],
+    "cameraTarget": [57, 202.5, -4],
+    "text": "Devine Julius: Please add real text and remove placeholder coordinates",
+    "children": [
+
+    ],
+    "recon": {
+        "name": "Devine_Julius",
+        "position": [0, 0, 0],
+        "rotation": [0, 0, 0],
+        "scale": [0.001, 0.001, 0.001]
+    }
+},
 
 
 TODO: fix spotlight casting weird shadows on models when viewed from a specific location
