@@ -168,6 +168,19 @@ leaving the details for it here so it does not show up in the website
     }
 },
 
+Arch of Septimus Severus Children:
+{
+    "title": "Arch",
+    "position": [-28, 76, 2],
+    "cameraPosition": [-28, 76, -8],
+    "cameraTarget": [-28, 76, 2]
+},
+{
+    "title": "Figure",
+    "position": [-21, 77, -5],
+    "cameraPosition": [-16, 84, -2],
+    "cameraTarget": [-21, 77, -7]
+}
 
 TODO: fix spotlight casting weird shadows on models when viewed from a specific location
 
@@ -279,14 +292,10 @@ export default{
 		window.viewer.pRenderer.threeRenderer.toneMappingExposure = 2.3;
 		window.viewer.pRenderer.threeRenderer.shadowMap.enabled = true;
 
+        // https://threejs.org/examples/webgl_lights_spotlight.html
 		pointLight = new THREE.SpotLight(0xffa95c, 4);
-		pointLight.castShadow = true;
-        // shadow configuration
-        // TODO: make the shadow camera able to see the entire model so you do not get any weird shadow
-        // clipping
-        pointLight.shadow.bias = 0.001;
-		pointLight.shadow.mapSize.width = 1024*4;
-		pointLight.shadow.mapSize.height = 1024*4;
+        pointLight.angle = Math.PI;
+		pointLight.castShadow = false;
 
         // add the light
 		window.viewer.scene.scene.add(pointLight);
@@ -360,7 +369,14 @@ export default{
 				viewer.scene.cameraP.position.y + 10,
 				viewer.scene.cameraP.position.z + 10
 			);
-            
+            // light target position
+            /*
+            pointLight.target.position.set(
+                viewer.scene.cameraP.target.x,
+                viewer.scene.cameraP.target.y,
+                viewer.scene.cameraP.target.z
+            )
+            */
             
             if(window.toMap !== undefined){
                 {
