@@ -47,10 +47,26 @@
                         </v-btn>
                     </span>
                     <v-divider vertical class="potree_toolbar_separator"/>
-                    <!-- Start Debug Stuff -->
-                    <!-- <v-btn icon title="Expand Toolbar" v-on:click="toolbarExpanded = true" v-if="!toolbarExpanded">
+                    <v-btn icon title="Expand Toolbar" v-on:click="toolbarExpanded = true" v-if="!toolbarExpanded">
                         <v-icon color="#d87444">mdi-chevron-right</v-icon>
                     </v-btn>
+                    <span v-if="toolbarExpanded">
+                        <div class="potree_toolbar_label">Camera Controls</div>
+                        <v-btn
+                            class="square-right" 
+                            v-on:click="updateControls('earth')" 
+                            small outlined color="#d87444" v-bind:disabled="controlMethod=='earth'">
+                            Earth
+                        </v-btn>
+                        <v-btn 
+                            class="square-left" 
+                            v-on:click="updateControls('firstPerson')" 
+                            small outlined color="#d87444" v-bind:disabled="controlMethod=='firstPerson'">
+                            First Person
+                        </v-btn>
+                    </span>
+                    <!-- Start Debug Stuff -->
+                    <!-- <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
                     <span v-if="toolbarExpanded">
                         <div class="potree_toolbar_label">Measurements</div>
                         <v-btn icon small title="Locate Point" v-on:click="locatePoint()">
@@ -66,14 +82,14 @@
                         <div class="potree_toolbar_label">Debug</div>
                         <v-btn small outlined color="#d87444" v-on:click="displayAxes()">Display Axes</v-btn>
                         <v-btn small outlined color="#d87444" v-on:click="displayCameraPos()">Print Camera Position</v-btn>
-                    </span>
+                    </span> -->
+                    <!-- End Debug Stuff -->
                     <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
                     <span v-if="toolbarExpanded">
                         <v-btn icon title="Shrink Toolbar" v-on:click="toolbarExpanded = false">
                             <v-icon color="#d87444">mdi-chevron-left</v-icon>
                         </v-btn>
-                    </span> -->
-                    <!-- End Debug Stuff -->
+                    </span>
                 </v-app-bar>
 			</div>
             <div id="monument_selector">
@@ -122,16 +138,6 @@ import * as THREE from 'three';
 import { PLYLoader } from "../../public/libs/three.js/loaders/PLYLoader.js";
 import { OBJLoader2 } from '../../public/libs/three.js/loaders/OBJLoader2.js';
 /*
-
-TODO LIST:
-Finish toolbar
-    -When toggle cesium make background light grey ****
-    -When user it at start, return and reset buttons should be greyed out
-refine child anno dot (different dots for different types)
-    -make them bigger as you zoom in
-        -make it by theshholds
-
-Make user able to reopen popup ****
 make video
 different view modes
 
@@ -142,6 +148,41 @@ pillar top right of arch goes at point: 81, 181, -12
 // for rot -0.5 scale 20
 //    "position": [-955, 602.3, -13.8]
 
+
+Devine Julius: I have no idea what this is, we do not have text for it
+leaving the details for it here so it does not show up in the website
+{
+    "title": "Devine Julius",
+    "position": [56.9, 185, 8],
+    "cameraPosition": [47.9, 143.5, 22.1],
+    "cameraTarget": [57, 202.5, -4],
+    "text": "Devine Julius: Please add real text and remove placeholder coordinates",
+    "children": [
+
+    ],
+    "recon": {
+        "name": "Devine_Julius",
+        "position": [0, 0, 0],
+        "rotation": [0, 0, 0],
+        "scale": [0.001, 0.001, 0.001]
+    }
+},
+
+Arch of Septimus Severus Children:
+{
+    "title": "Arch",
+    "position": [-28, 76, 2],
+    "cameraPosition": [-28, 76, -8],
+    "cameraTarget": [-28, 76, 2]
+},
+{
+    "title": "Figure",
+    "position": [-21, 77, -5],
+    "cameraPosition": [-16, 84, -2],
+    "cameraTarget": [-21, 77, -7]
+}
+
+TODO: fix spotlight casting weird shadows on models when viewed from a specific location
 
 */
 export default{
@@ -168,8 +209,8 @@ export default{
             showPointcloud: true,
             showCesium: true,
             showMesh: false,
-            showRecon: false
-            
+            showRecon: false,
+            controlMethod: "earth"
         }
     },
 
@@ -236,14 +277,13 @@ export default{
         window.viewer.loadSettingsFromURL();
         window.viewer.setBackground(null);
         window.viewer.setControls(window.viewer.earthControls);
-        //window.viewer.setControls(window.viewer.fpControls);
         window.viewer.useHQ = true;
 
         //Initialize pointcloud budget
         window.viewer.setPointBudget(3_000_000);
 		
 		// Lights
-		let directionalLight, pointLight, ambientLight, hemiLight;
+		let pointLight, hemiLight;
 
 		hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 2);
 		window.viewer.scene.scene.add(hemiLight);
@@ -252,12 +292,14 @@ export default{
 		window.viewer.pRenderer.threeRenderer.toneMappingExposure = 2.3;
 		window.viewer.pRenderer.threeRenderer.shadowMap.enabled = true;
 
+        // https://threejs.org/examples/webgl_lights_spotlight.html
 		pointLight = new THREE.SpotLight(0xffa95c, 4);
-		pointLight.castShadow = true;
-		pointLight.shadow.bias = -0.0001;
-		pointLight.shadow.mapSize.width = 1024*4;
-		pointLight.shadow.mapSize.height = 1024*4;
+        pointLight.angle = Math.PI;
+		pointLight.castShadow = false;
+
+        // add the light
 		window.viewer.scene.scene.add(pointLight);
+        
         
         //Set initial view
         // viewer.scene.view.position.set(data.view.pos[0], data.view.pos[1], data.view.pos[2]);
@@ -272,7 +314,7 @@ export default{
         });
 
         // Load pointcloud
-        Potree.loadPointCloud("https://dharma-visualization-main.s3.amazonaws.com/pointclouds/roman-forum/metadata.json", "lion", function(e){
+        Potree.loadPointCloud("http://localhost:5501/metadata.json", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
@@ -327,6 +369,14 @@ export default{
 				viewer.scene.cameraP.position.y + 10,
 				viewer.scene.cameraP.position.z + 10
 			);
+            // light target position
+            /*
+            pointLight.target.position.set(
+                viewer.scene.cameraP.target.x,
+                viewer.scene.cameraP.target.y,
+                viewer.scene.cameraP.target.z
+            )
+            */
             
             if(window.toMap !== undefined){
                 {
@@ -592,9 +642,9 @@ export default{
                 this.parentAnno.collapseThreshold = 400;
 
                 //Hide all the old parent's models
-                this.parentAnno.meshModel.visible = false;
-                this.parentAnno.reconModel.visible = false;
-                this.parentAnno.lineModel.visible = false;
+                if (this.parentAnno.meshModel){this.parentAnno.meshModel.visible = false};
+                if (this.parentAnno.reconModel){this.parentAnno.reconModel.visible = false};
+                if (this.parentAnno.lineModel){this.parentAnno.lineModel.visible = false};
 
                 this.parentAnno.moveHere(window.viewer.scene.getActiveCamera()); //This moves the camera to give a good view of the parent
                 this.parentAnno = this.parentAnno.parent;
@@ -619,9 +669,9 @@ export default{
                 this.parentAnno.collapseThreshold = 400;
 
                 //Hide all the old parent's models
-                this.parentAnno.meshModel.visible = false;
-                this.parentAnno.reconModel.visible = false;
-                this.parentAnno.lineModel.visible = false;
+                if (this.parentAnno.meshModel){this.parentAnno.meshModel.visible = false};
+                if (this.parentAnno.reconModel){this.parentAnno.reconModel.visible = false};
+                if (this.parentAnno.lineModel){this.parentAnno.lineModel.visible = false};
 
                 Potree.Utils.moveTo(window.viewer.scene, new THREE.Vector3(this.data.view.pos[0], this.data.view.pos[1], this.data.view.pos[2]), 
                                     new THREE.Vector3(this.data.view.lookAt[0], this.data.view.lookAt[1], this.data.view.lookAt[2])); //This moves the camera back to the start in a smooth fashion  
@@ -683,6 +733,19 @@ export default{
                     if (child.lineModel) child.lineModel.visible = false;
                 });
             }
+        },
+
+        //NAVIGATION CONTROLS
+        updateControls(newMethod){
+            //This function updates what kind of control method Potree uses for navigation
+            this.controlMethod = newMethod;
+            if (this.controlMethod == "earth"){
+                window.viewer.setControls(window.viewer.earthControls);
+            }
+            else{
+                window.viewer.setControls(window.viewer.fpControls);
+            }
+
         },
 
         //MEASUREMENTS

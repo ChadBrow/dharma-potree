@@ -1,8 +1,10 @@
 
 {
     "view": {
-        "pos": [43,140,80],
-        "lookAt": [-13,40,0]
+        "pos": [-30.4, 221.9, 82.0],
+        "lookAt": [80.5, 26.3, -4.4],
+        "pos2": [43,140,80],
+        "lookAt2": [-13,40,0]
     },
     "pos": [291260, 4640905, 0],
     "rot": -1.6,
@@ -36,10 +38,10 @@
                 "rotation": [0, 0, -0.69]
             },
             "recon": {
-                "name": "tos",
+                "name": "Temple_of_Saturn",
                 "position": [0, 0, 0],
                 "rotation": [0, 0, 0],
-                "scale": [10, 10, 10]
+                "scale": [0.001, 0.001, 0.001]
             }
         },
         {
@@ -60,14 +62,14 @@
             ],
             "mesh": {
                 "name": "tovat",
-                "position": [-17.6, 20, -10.5],
+                "position": [-16.6, 15, -10.5],
                 "rotation": [0, 0, -1.69]
             },
             "recon": {
-                "name": "tovat",
+                "name": "Temple_of_Vespatian",
                 "position": [0, 0, 0],
                 "rotation": [0, 0, 0],
-                "scale": [10, 10, 10]
+                "scale": [0.001, 0.001, 0.001]
             }
         },
         {
@@ -77,18 +79,7 @@
             "cameraTarget": [-25, 76, 8],
             "text": "Les of the honorific arches built in the Forum, it was erected to celebrate emperor Septimius Severus' victories in the Eastern provinces Its dedication is inscribed along the two panels above the arch. The via sacra runs through the central arch leading up to the Capitoline; a set of stairs gave passage through the lateral arches. Rich figural reliefs decorate the facades: barbarian prisoners escorted by Roman soldiers; Mars, on the keystone facing the Capitoline; winged victories holding trophies in the central archway. Above the side arches episodes of the emperor's two military campaigns. Historic sources tell us that at the top of the monument were statues of Septimius Severus and his two sons, Caracalla and Geta on a four-hourse chariot led by soldiers.",
             "children": [
-                {
-                    "title": "Arch",
-                    "position": [-28, 76, 2],
-                    "cameraPosition": [-28, 76, -8],
-                    "cameraTarget": [-28, 76, 2]
-                },
-                {
-                    "title": "Figure",
-                    "position": [-21, 77, -5],
-                    "cameraPosition": [-16, 84, -2],
-                    "cameraTarget": [-21, 77, -7]
-                }
+                
             ],
             "mesh": {
                 "name": "aoss",
@@ -96,9 +87,122 @@
                 "rotation": [0, 0, -1.69]
             },
             "recon": {
-                "name": "aoss",
+                "name": "Arch_of_Sep",
                 "position": [0, 0, 0],
-                "rotation": [0, 0, 0]
+                "rotation": [0, 0, 0],
+                "scale": [0.001, 0.001, 0.001]
+            }
+        },
+        {
+            "title": "Arch of Augustus",
+            "position": [78, 183, -2],
+            "cameraPosition": [70, 154, 7],
+            "cameraTarget": [78, 183, -2],
+            "text": "The Triumphal Arch of Augustus was originally located between the Temple of Castor and Pollux and the Temple of Divus Julius in the Roman Forum. As one of the arched entrances on via sacra close to the Temple of Vesta, it formed a formal entrance to the Forum. Though it was secondary on the processional route, it was often used to access the Temple of Castor and Pollux and the Temple of Vesta. The archaeological evidence shows the existence of a three-bayed arch measuring 17,75 x 5.25 meters between the Temple of Caesar and the Temple of Castor and Pollux, although only the travertine foundations of the structure remain. The reconstruction shown here is based on onsite foundation base, information seen through Denarius (silver coin from Second Punic War).",
+            "children": [
+
+            ],
+            "recon": {
+                "name": "Arch_of_Augustus",
+                "position": [0, 0, 0],
+                "rotation":  [0, 0, 0],
+                "scale": [0.001, 0.001, 0.001]
+            }
+        },
+        {
+            "title": "Basilica of Julia",
+            "position": [46, 86, 2],
+            "cameraPosition": [18, 85, 9],
+            "cameraTarget": [46, 86, 2],
+            "text": "Was built over the Republica era Basilica Sempronia, opposite the Basilica Aemilia and begun by Julius Caesar in 54 AD but dedicated by his successor Augustus. It underwent several reconstructions following several destructive fires. The last reconstruction in 283 AD under Diocletian. It stood at the intersection of two important east and west roads. It was three stories high, divided into five east-west aisles with a large central hall. The floor was paved with large multicolored marble slabs set against the plain white marble of the building. It was a favorite meeting place for Romans where the civil law courts, shops offices for government and banking were located. It was partially destroyed during the 410 AD Visigoth sack of Rome, and thereafter fell into ruin. Parts of it were transformed into a Church (Santa Maria de Cannapara). Then also became a location from which marble was sold and a portion of it occupied by rope-makers, thus the name Cannaparia. Excavation of the 18th and 19th centuries brought further destruction and dismantling. What is left to be seen today is its rectangular area floor raised circa one meter above ground level. One of the pavement stones facing the Curia is marked with a grid on which games similar to chess or checkers could have been played.",
+            "children": [
+
+            ],
+            "recon": {
+                "name": "Basilica_of_Julia",
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0],
+                "scale": [0.001, 0.001, 0.001]
+            }
+        },
+        {
+            "title": "Temple of Concord",
+            "position": [-38.6, 36.2, 18],
+            "cameraPosition": [-5.21, 56.1, 26.4],
+            "cameraTarget": [-38.6, 36.2, 4.5],
+            "text": "The appearance of this temple too is known from Roman Coinage. It stood on the western end of the Roman forum and was dedicated to the Roman goddess Concordia. It is known to have had several reconstructions and alterations since its foundation vowed by Marcus Furius Camillus in 367 BC, and its latest version by Emperor Tiberius between 7 BC and 10 AD. Its earliest versions served as a meeting place where to resolve political disputes, until with Tiberius, it was used for the display of works of Greek art many of which are described by Pliny, but also a place for Senate meetings. It seems to have maintained the typical rectangular plan, with a deep pronaos and statues of Concordia, Pax and Salus or Fortuna along the top of the pediment. It was finally razed to the ground around 1450 when its stone was used for making lime and marble for new buildings.",
+            "children": [
+
+            ],
+            "recon": {
+                "name": "Temple_of_Concord",
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0],
+                "scale": [0.001, 0.001, 0.001]
+            }
+        },
+        {
+            "title": "Temple of Julius Caesar",
+            "position": [56.9, 177.9, 8],
+            "cameraPosition": [47.9, 133.5, 22.1],
+            "cameraTarget": [57, 182.5, -4],
+            "text": "The temple was decreed in 42 AD after Julius Caesar was deified posthumously. It stands on the site of his cremation in the east side of the main square between the Regia and the Temple of Castor and Pollux. Much is debated regarding its appearance. From coinage it appears to have had either Ionic or Corinthian columns with Cesar’s Comet in the pediment. It would have stood on a high podium.. The position of its staircase is still debated. Its imposing position looking down onto the forum, appears to have been a pointed reminder to the crowds in the forum of the connection between the new imperial order and Caesar's legacy. In the interior stood a colossal statue of Julius Caesar as Pontifex Maximus and paintings by the famous Greek painter Apelles. Remnants of its decoration are visible onsite or in the Forum's museum.",
+            "children": [
+
+            ],
+            "recon": {
+                "name": "Temple_of_Caesar",
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0],
+                "scale": [0.001, 0.001, 0.001]
+            }
+        },
+        {
+            "title": "Temple of Castor and Pollux",
+            "position": [81.8, 158.9, 4],
+            "cameraPosition": [50.5, 163.5, 16.3],
+            "cameraTarget": [97, 154.5, -8],
+            "text": "The Temple of Castor and Pollux was a significant multi-use structure in the Forum. Castor and Pollux were the sons of Jupiter. Legend has it, they appeared and fought on the battlefield alongside the Romans. On the day of the victory, they were seen at the fountain of Juturna nearby where they watered their horses and proclaimed the Roman victory.  In its present form it is the oldest surviving temple in the Forum dating to the 117 BC restoration. As the cult for which the Temple was built declined, its political importance increased as it came to be used as a meeting place for business. The remains of the Temple are comprised of a rubble base this is faced in tufa and travertine, and several blocks of cappellaccio that were likely remnants of an earlier phase.",
+            "children": [
+
+            ],
+            "recon": {
+                "name": "Temple_of_Castor",
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0],
+                "scale": [0.001, 0.001, 0.001]
+            }
+        },
+        {
+            "title": "Temple of Vesta",
+            "position": [98, 190, -2],
+            "cameraPosition": [90, 170, 10],
+            "cameraTarget": [98, 200, -4],
+            "text": "The earliest, most sacred at the Forum, it is dedicated to the goddess of hearth and home. Housing the sacred fire, symbol of the vitality of the Roman state,  it commanded an unsurpassed sacredness. Architecturally, its significance is in its development through many reconstructions that maintained a relative constancy in the circular plan that mirrored closely Vitruvius' ideal peripteral temple The last reconstruction before the definitive closing of all pagan temples was declared 391 C.E , was undertaken by Settimio Severus' wife. . Today's temple is a 20th century reconstruction. By 1883, when it was first excavated under the direction of Boni, Jordan and Scott, little was left. The reconstruction continued with Alfonso Bartoli and Parabeni following Boni's plan. Of the 267 fragments that were excavated, 84 were incorporated into this reconstruction.",
+            "children": [
+
+            ],
+            "recon": {
+                "name": "Temple_of_Vesta",
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0],
+                "scale": [0.001, 0.001, 0.001]
+            }
+        },
+        {
+            "title": "Temple of Antoninus and Faustina",
+            "position": [64.9, 233, 6],
+            "cameraPosition": [105, 233, 10],
+            "cameraTarget": [50, 233, 4],
+            "text": "Annia Galeria Faustina (c. AD 100-140), niece of the emperor Hadrian, was Antoninus’ means of introduction into the royal deified ranks. Temple originally approached by the impressive flight of steps facing via Sacra. Midway was an altar  and within the colonnade “colossal statues, effigies of the deified imperial couple.” The ten monolithic columns support an entablature bearing the dedicatory inscription. Lively heraldic griffins on the frieze represent  “means of transit of the dead persons’ soul”, intermediate candelabra represent the eternal fire. Bestows a temple a tomb-like character.  A doorway may have lead to a room beneath the temple, idea supported by 17th-19th c. engravings and drawings.",
+            "children": [
+
+            ],
+            "recon": {
+                "name": "Faustina",
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0],
+                "scale": [0.001, 0.001, 0.001]
             }
         }
     ]
