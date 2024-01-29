@@ -314,7 +314,8 @@ export default{
         });
 
         // Load pointcloud
-        Potree.loadPointCloud("http://localhost:5501/metadata.json", "lion", function(e){
+        // Potree.loadPointCloud("http://127.0.0.1:8080/metadata.json", "lion", function(e){ //For testing locally
+        Potree.loadPointCloud("http://localhost:5501/metadata.json", "lion", function(e){ //For running in prod
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
