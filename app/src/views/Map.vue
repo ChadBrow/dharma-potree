@@ -66,7 +66,7 @@
                         </v-btn>
                     </span>
                     <!-- Start Debug Stuff -->
-                    <!-- <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
+                    <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
                     <span v-if="toolbarExpanded">
                         <div class="potree_toolbar_label">Measurements</div>
                         <v-btn icon small title="Locate Point" v-on:click="locatePoint()">
@@ -82,7 +82,7 @@
                         <div class="potree_toolbar_label">Debug</div>
                         <v-btn small outlined color="#d87444" v-on:click="displayAxes()">Display Axes</v-btn>
                         <v-btn small outlined color="#d87444" v-on:click="displayCameraPos()">Print Camera Position</v-btn>
-                    </span> -->
+                    </span>
                     <!-- End Debug Stuff -->
                     <v-divider vertical v-if="toolbarExpanded" class="potree_toolbar_separator"/>
                     <span v-if="toolbarExpanded">
@@ -302,8 +302,6 @@ export default{
         
         
         //Set initial view
-        // viewer.scene.view.position.set(data.view.pos[0], data.view.pos[1], data.view.pos[2]);
-		// viewer.scene.view.lookAt(data.view.lookAt[0], data.view.lookAt[1], data.view.lookAt[2]);
         window.viewer.scene.view.position.set(data.view.pos[0], data.view.pos[1], data.view.pos[2]);
 		window.viewer.scene.view.lookAt(data.view.lookAt[0], data.view.lookAt[1], data.view.lookAt[2]);
 
@@ -314,8 +312,8 @@ export default{
         });
 
         // Load pointcloud
-        // Potree.loadPointCloud("http://127.0.0.1:8080/metadata.json", "lion", function(e){ //For testing locally
-        Potree.loadPointCloud("http://localhost:5501/metadata.json", "lion", function(e){ //For running in prod
+        Potree.loadPointCloud("http://127.0.0.1:8080/metadata.json", "lion", function(e){ //For testing locally
+        // Potree.loadPointCloud("http://localhost:5501/metadata.json", "lion", function(e){ //For running in prod
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
@@ -383,8 +381,6 @@ export default{
                 {
                     let camera = window.viewer.scene.getActiveCamera();
 
-                    // let pPos		= new THREE.Vector3(0, 0, 0).applyMatrix4(camera.matrixWorld);
-                    // let pRight  = new THREE.Vector3(600, 0, 0).applyMatrix4(camera.matrixWorld);
                     let pUp		 = new THREE.Vector3(0, 600, 0).applyMatrix4(camera.matrixWorld);
                     let pPos = new THREE.Vector3(0, 0, 0).applyMatrix4(camera.matrixWorld); //Gets camera position relative to origin
                     let pTarget = scene.view.getPivot(); //Gets camera target relative to origin
@@ -394,11 +390,11 @@ export default{
                     //Offset the viewer by the position of the pointcloud
                     pPos.x += data.pos[0];
                     pPos.y += data.pos[1];
-                    pPos.z += 20;
+                    pPos.z += data.pos[2];
                     pUp.y += data.pos[1];
                     pTarget.x += data.pos[0];
                     pTarget.y += data.pos[1];
-                    pTarget.z += 20;
+                    pTarget.z += data.pos[2];
 
                     let toCes = (pos) => {
                         let xy = [pos.x, pos.y];
