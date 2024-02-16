@@ -149,10 +149,9 @@ pillar top right of arch goes at point: 81, 181, -12
 //    "position": [-955, 602.3, -13.8]
 
 
-Devine Julius: I have no idea what this is, we do not have text for it
-leaving the details for it here so it does not show up in the website
+Temple of Divine Julius is the replacement model for the Temple of Julius Caesar -> same temple from different times
 {
-    "title": "Devine Julius",
+    "title": "Temple of Julius Caesar",
     "position": [56.9, 185, 8],
     "cameraPosition": [47.9, 143.5, 22.1],
     "cameraTarget": [57, 202.5, -4],
