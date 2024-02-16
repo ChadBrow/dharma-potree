@@ -204,22 +204,6 @@
                 "rotation": [0, 0, 0],
                 "scale": [0.001, 0.001, 0.001]
             }
-        },
-        {
-            "title": "Temple of Julius Caesar",
-            "position": [56.9, 185, 8],
-            "cameraPosition": [47.9, 143.5, 22.1],
-            "cameraTarget": [57, 202.5, -4],
-            "text": "The temple was decreed in 42 AD after Julius Caesar was deified posthumously. It stands on the site of his cremation in the east side of the main square between the Regia and the Temple of Castor and Pollux. Much is debated regarding its appearance. From coinage it appears to have had either Ionic or Corinthian columns with Cesar’s Comet in the pediment. It would have stood on a high podium.. The position of its staircase is still debated. Its imposing position looking down onto the forum, appears to have been a pointed reminder to the crowds in the forum of the connection between the new imperial order and Caesar's legacy. In the interior stood a colossal statue of Julius Caesar as Pontifex Maximus and paintings by the famous Greek painter Apelles. Remnants of its decoration are visible onsite or in the Forum's museum.",
-            "children": [
-        
-            ],
-            "recon": {
-                "name": "Devine_Julius",
-                "position": [0, 0, 0],
-                "rotation": [0, 0, 0],
-                "scale": [0.001, 0.001, 0.001]
-            }
         }
     ]
 }
