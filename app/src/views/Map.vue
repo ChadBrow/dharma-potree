@@ -148,39 +148,6 @@ pillar top right of arch goes at point: 81, 181, -12
 // for rot -0.5 scale 20
 //    "position": [-955, 602.3, -13.8]
 
-
-Temple of Divine Julius is the replacement model for the Temple of Julius Caesar -> same temple from different times
-{
-    "title": "Temple of Julius Caesar",
-    "position": [56.9, 185, 8],
-    "cameraPosition": [47.9, 143.5, 22.1],
-    "cameraTarget": [57, 202.5, -4],
-    "text": "Devine Julius: Please add real text and remove placeholder coordinates",
-    "children": [
-
-    ],
-    "recon": {
-        "name": "Devine_Julius",
-        "position": [0, 0, 0],
-        "rotation": [0, 0, 0],
-        "scale": [0.001, 0.001, 0.001]
-    }
-},
-
-Arch of Septimus Severus Children:
-{
-    "title": "Arch",
-    "position": [-28, 76, 2],
-    "cameraPosition": [-28, 76, -8],
-    "cameraTarget": [-28, 76, 2]
-},
-{
-    "title": "Figure",
-    "position": [-21, 77, -5],
-    "cameraPosition": [-16, 84, -2],
-    "cameraTarget": [-21, 77, -7]
-}
-
 TODO: fix spotlight casting weird shadows on models when viewed from a specific location
 
 */
@@ -311,8 +278,8 @@ export default{
         });
 
         // Load pointcloud
-        Potree.loadPointCloud("http://127.0.0.1:8080/metadata.json", "lion", function(e){ //For testing locally
-        // Potree.loadPointCloud("http://localhost:5501/metadata.json", "lion", function(e){ //For running in prod
+        // Potree.loadPointCloud("http://127.0.0.1:8080/metadata.json", "lion", function(e){ //For testing locally
+        Potree.loadPointCloud("https://dharma3dz.aws.nd.edu/pointclouds/roman-forum/metadata.json", "lion", function(e){
             //Initialize some important variable
             let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
