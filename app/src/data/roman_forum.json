@@ -38,10 +38,10 @@
                 "rotation": [0, 0, -0.69]
             },
             "recon": {
-                "name": "Temple_of_Saturn",
+                "name": "decimated_models/Temple_of_Saturn",
                 "position": [0, 0, 0],
                 "rotation": [0, 0, 0],
-                "scale": [0.001, 0.001, 0.001]
+                "scale": [1, 1, 1]
             }
         },
         {
@@ -66,10 +66,10 @@
                 "rotation": [0, 0, -1.69]
             },
             "recon": {
-                "name": "Temple_of_Vespatian",
+                "name": "decimated_models/Temple_of_Vespatian",
                 "position": [0, 0, 0],
                 "rotation": [0, 0, 0],
-                "scale": [0.001, 0.001, 0.001]
+                "scale": [1, 1, 1]
             }
         },
         {
@@ -87,10 +87,10 @@
                 "rotation": [0, 0, -1.69]
             },
             "recon": {
-                "name": "Arch_of_Sep",
+                "name": "decimated_models/Arch_of_Sep",
                 "position": [0, 0, 0],
                 "rotation": [0, 0, 0],
-                "scale": [0.001, 0.001, 0.001]
+                "scale": [1, 1, 1]
             }
         },
         {
@@ -100,13 +100,18 @@
             "cameraTarget": [78, 183, -2],
             "text": "The Triumphal Arch of Augustus was originally located between the Temple of Castor and Pollux and the Temple of Divus Julius in the Roman Forum. As one of the arched entrances on via sacra close to the Temple of Vesta, it formed a formal entrance to the Forum. Though it was secondary on the processional route, it was often used to access the Temple of Castor and Pollux and the Temple of Vesta. The archaeological evidence shows the existence of a three-bayed arch measuring 17,75 x 5.25 meters between the Temple of Caesar and the Temple of Castor and Pollux, although only the travertine foundations of the structure remain. The reconstruction shown here is based on onsite foundation base, information seen through Denarius (silver coin from Second Punic War).",
             "children": [
-
             ],
-            "recon": {
+            "gitf:": {
                 "name": "Arch_of_Augustus",
                 "position": [0, 0, 0],
                 "rotation":  [0, 0, 0],
-                "scale": [0.001, 0.001, 0.001]
+                "scale": [1, 1, 1]
+            },
+            "recon": {
+                "name": "decimated_models/Arch_of_Augustus",
+                "position": [0, 0, 0],
+                "rotation":  [0, 0, 0],
+                "scale": [1, 1, 1]
             }
         },
         {
@@ -119,10 +124,10 @@
 
             ],
             "recon": {
-                "name": "Basilica_of_Julia",
+                "name": "decimated_models/Basilica_of_Julia",
                 "position": [0, 0, 0],
                 "rotation": [0, 0, 0],
-                "scale": [0.001, 0.001, 0.001]
+                "scale": [1, 1, 1]
             }
         },
         {
@@ -135,10 +140,10 @@
 
             ],
             "recon": {
-                "name": "Temple_of_Concord",
+                "name": "decimated_models/Temple_of_Concord",
                 "position": [0, 0, 0],
                 "rotation": [0, 0, 0],
-                "scale": [0.001, 0.001, 0.001]
+                "scale": [1, 1, 1]
             }
         },
         {
@@ -167,10 +172,10 @@
 
             ],
             "recon": {
-                "name": "Temple_of_Castor",
+                "name": "decimated_models/Temple_of_Castor",
                 "position": [0, 0, 0],
                 "rotation": [0, 0, 0],
-                "scale": [0.001, 0.001, 0.001]
+                "scale": [1, 1, 1]
             }
         },
         {
@@ -183,10 +188,10 @@
 
             ],
             "recon": {
-                "name": "Temple_of_Vesta",
+                "name": "decimated_models/Temple_of_Vesta",
                 "position": [0, 0, 0],
                 "rotation": [0, 0, 0],
-                "scale": [0.001, 0.001, 0.001]
+                "scale": [1, 1, 1]
             }
         },
         {
@@ -199,10 +204,26 @@
 
             ],
             "recon": {
-                "name": "Faustina",
+                "name": "decimated_models/Faustina",
                 "position": [0, 0, 0],
                 "rotation": [0, 0, 0],
-                "scale": [0.001, 0.001, 0.001]
+                "scale": [1, 1, 1]
+            }
+        },
+        {
+            "title": "Temple of Julius Caesar",
+            "position": [56.9, 185, 8],
+            "cameraPosition": [47.9, 143.5, 22.1],
+            "cameraTarget": [57, 202.5, -4],
+            "text": "The temple was decreed in 42 AD after Julius Caesar was deified posthumously. It stands on the site of his cremation in the east side of the main square between the Regia and the Temple of Castor and Pollux. Much is debated regarding its appearance. From coinage it appears to have had either Ionic or Corinthian columns with Cesar’s Comet in the pediment. It would have stood on a high podium.. The position of its staircase is still debated. Its imposing position looking down onto the forum, appears to have been a pointed reminder to the crowds in the forum of the connection between the new imperial order and Caesar's legacy. In the interior stood a colossal statue of Julius Caesar as Pontifex Maximus and paintings by the famous Greek painter Apelles. Remnants of its decoration are visible onsite or in the Forum's museum.",
+            "children": [
+        
+            ],
+            "recon": {
+                "name": "decimated_models/Divine_Julius",
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0],
+                "scale": [1, 1, 1]
             }
         }
     ]
